@@ -13,6 +13,14 @@
 |
 */
 
-$router->get('/', function () use ($router) {
+$router->get( '/', function () use ( $router ) {
     return $router->app->version();
-});
+} );
+
+$router->group( [ 'prefix' => 'v1' ], function ( $router ) {
+    $router->post( 'login', 'Auth\LoginController@store' );
+    $router->post( 'register', 'Auth\LoginController@new' );
+} );
+
+
+
