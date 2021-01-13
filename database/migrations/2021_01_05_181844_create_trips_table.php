@@ -15,6 +15,8 @@ class CreateTripsTable extends Migration
     {
         Schema::create( 'trips', function ( Blueprint $table ) {
             $table->id();
+
+            $table->unsignedBigInteger( 'company_id' );
             $table->string( 'customer_name' );
             $table->string( 'customer_primary_phone_number' );
             $table->string( 'customer_secondary_phone_number' );
@@ -25,19 +27,26 @@ class CreateTripsTable extends Migration
             $table->string( 'customer_snoocode' );
 
             $table->string( 'delivery_status' );
-            $table->timestamp( 'collection_date' );
 
-            $table->timestamp( 'collector_country' );
-            $table->timestamp( 'collector_division' );
-            $table->timestamp( 'collector_subdivision' );
-            $table->timestamp( 'collector_snoocode' );
+            $table->string( 'collector_country' );
+            $table->string( 'collector_division' );
+            $table->string( 'collector_subdivision' );
+            $table->string( 'collector_snoocode' );
 
-            $table->timestamp( 'collector_date' );
-            $table->timestamp( 'collector_time' );
-            $table->timestamp( 'collector_signature' );
+            $table->string( 'photo_1' )->nullable();
+            $table->string( 'photo_2' )->nullable();
+            $table->string( 'bin_liner_quantity' )->nullable();
+
+            $table->string( 'collector_date' );
+            $table->string( 'collector_time' );
+            $table->string( 'collector_signature' );
             $table->timestamps();
-
             $table->softDeletes();
+
+            $table->foreign( 'company_id' )
+                ->references( 'id' )
+                ->on( 'trips' )
+                ->cascadeOnDelete();
         } );
     }
 

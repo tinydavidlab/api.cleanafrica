@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "flipbox/lumen-generator": "^8.2",
         "laravel/lumen-framework": "^8.0",
+        "prettus/l5-repository": "^2.7",
         "spatie/laravel-fractal": "^5.8"
     },
     "require-dev": {

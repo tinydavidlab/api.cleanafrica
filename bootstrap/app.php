@@ -28,6 +28,7 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
+$app->register( Prettus\Repository\Providers\LumenRepositoryServiceProvider::class );
 
 
 /*
@@ -64,6 +65,7 @@ $app->singleton(
 
 $app->configure( 'app' );
 $app->configure( 'fractal' );
+$app->configure( 'repository' );
 
 /*
 |--------------------------------------------------------------------------

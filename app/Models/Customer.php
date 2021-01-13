@@ -7,12 +7,25 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
 
 class Customer extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasFactory, SoftDeletes;
+    use Authenticatable,
+        Authorizable,
+        HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'address',
+        'snoocode',
+        'latitude',
+        'longitude',
+        'division',
+        'subdivision',
+        'country',
+        'phone_number',
+        'property_photo',
+        'device_id'
+    ];
 }

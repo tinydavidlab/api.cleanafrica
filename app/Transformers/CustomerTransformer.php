@@ -36,10 +36,14 @@ class CustomerTransformer extends TransformerAbstract
         return [
             'id' => $customer->getAttribute( 'id' ),
             'name' => $customer->getAttribute( 'name' ),
-            'type' => $customer->getAttribute( 'type' ),
-            'phone_number' => $customer->getAttribute( 'phone_number' ),
             'address' => $customer->getAttribute( 'address' ),
+            'snoocode' => $customer->getAttribute( 'snoocode' ),
             'latitude' => $customer->getAttribute( 'latitude' ),
+            'longitude' => $customer->getAttribute( 'longitude' ),
+            'division' => $customer->getAttribute( 'division' ),
+            'subdivision' => $customer->getAttribute( 'subdivision' ),
+            'country' => $customer->getAttribute( 'country' ),
+            'phone_number' => $customer->getAttribute( 'phone_number' ),
             'property_photo' => $customer->getAttribute( 'property_photo' ),
             'date_joined' => $customer->getAttribute( 'created_at' ),
         ];

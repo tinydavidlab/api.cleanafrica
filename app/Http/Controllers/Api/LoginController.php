@@ -1,32 +1,49 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Transformers\CustomerTransformer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
 {
-    public function store( Request $request )
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function store( Request $request ): JsonResponse
     {
         $this->validate( $request, [
             'phone_number' => 'required',
         ] );
 
-        $customer = Customer::where( 'phone_number', $request->get( 'phone_number' ) )->first();
-        if ( !$customer ) return response()->json( [ 'message' => 'The user credential is invalid.' ], Response::HTTP_UNAUTHORIZED );
+        $customer = Customer::wherePhoneNumber( $request->get( 'phone_number' ) )
+            ->first();
+        if ( !$customer ) return response()->json(
+            [ 'message' => 'The user credential is invalid.' ],
+            Response::HTTP_UNAUTHORIZED
+        );
 
         return response()->json( [
             'token' => encrypt( $customer->getAttribute( 'id' ) ),
-            'customer' => fractal( $customer->fresh(), new CustomerTransformer() )->withResourceName( 'customers' )->toArray()
+            'customer' => fractal( $customer->fresh(), new CustomerTransformer() )
+                ->withResourceName( 'customers' )->toArray()
         ], Response::HTTP_OK );
     }
 
-    public function new( Request $request )
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function new( Request $request ): JsonResponse
     {
         $this->validate( $request, [
             'name' => 'required',

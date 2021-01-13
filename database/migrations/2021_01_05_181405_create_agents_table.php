@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompaniesTable extends Migration
+class CreateAgentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,19 @@ class CreateCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create( 'companies', function ( Blueprint $table ) {
+        Schema::create( 'agents', function ( Blueprint $table ) {
             $table->id();
+            $table->bigInteger( 'company_id' )->unsigned();
+            $table->string( 'type' )->default( 'waste_collector' );
             $table->string( 'name' );
-            $table->string( 'logo' )->nullable();
-            $table->string( 'tagline' )->nullable();
-            $table->string( 'email' )->nullable();
-            $table->string( 'phone_number' )->nullable();
-            $table->string( 'website' )->nullable();
+            $table->string( 'phone_number' );
             $table->timestamp( 'activated_at' )->nullable();
-            $table->bigInteger( 'activated_by' )->nullable();
             $table->timestamps();
-            $table->softDeletes();
+
+            $table->foreign( 'company_id' )
+                ->references( 'id' )
+                ->on( 'companies' )
+                ->onDelete( 'cascade' );
         } );
     }
 
@@ -35,6 +36,6 @@ class CreateCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists( 'companies' );
+        Schema::dropIfExists( 'agents' );
     }
 }
