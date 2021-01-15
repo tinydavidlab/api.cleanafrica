@@ -17,6 +17,8 @@ class CreateAdminsTable extends Migration
             $table->id();
             $table->string( 'name' );
             $table->string( 'phone_number' );
+            $table->string( 'password' )->nullable();
+            $table->string( 'type' )->default( 'collector' );
             $table->string( 'device_id' )->nullable();
             $table->string( 'activated_at' )->nullable();
             $table->timestamps();

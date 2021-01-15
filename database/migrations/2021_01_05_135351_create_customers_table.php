@@ -17,6 +17,7 @@ class CreateCustomersTable extends Migration
             $table->id();
             $table->string( 'name' );
             $table->string( 'address' )->nullable();
+            $table->string( 'type' )->default( 'customer' );
             $table->string( 'snoocode' )->nullable();
             $table->string( 'latitude' )->nullable();
             $table->string( 'longitude' )->nullable();
@@ -24,6 +25,7 @@ class CreateCustomersTable extends Migration
             $table->string( 'subdivision' )->nullable();
             $table->string( 'country' )->nullable();
             $table->string( 'phone_number' )->nullable();
+            $table->string( 'password' )->nullable();
             $table->string( 'property_photo' )->nullable();
             $table->string( 'device_id' )->nullable();
             $table->timestamps();

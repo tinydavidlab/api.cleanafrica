@@ -9,6 +9,7 @@ use App\Transformers\FeedbackTransformer;
 use App\Utilities\ImageUploader;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -49,9 +50,16 @@ class FeedbackController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidatorException
+     * @throws ValidationException
      */
     public function store( Request $request ): JsonResponse
     {
+        $this->validate( $request, [
+//            'message' => 'required',
+            'customer_id' => 'required',
+            'photo' => 'required',
+        ] );
+
         $feedback = $this->repository->create( $request->except( 'photo' ) );
         if ( $request->hasFile( 'photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'photo' ) );
@@ -63,7 +71,7 @@ class FeedbackController extends Controller
             ->withResourceName( 'feedback' )
             ->toArray();
 
-        return response()->json( [ 'agent' => $feedback ], Response::HTTP_CREATED );
+        return response()->json( [ 'feedback' => $feedback ], Response::HTTP_CREATED );
     }
 
     /**
@@ -79,7 +87,7 @@ class FeedbackController extends Controller
             ->withResourceName( 'feedback' )
             ->toArray();
 
-        return response()->json( [ 'agent' => $feedback ], Response::HTTP_OK );
+        return response()->json( [ 'feedback' => $feedback ], Response::HTTP_OK );
     }
 
     /**
@@ -97,7 +105,7 @@ class FeedbackController extends Controller
             ->withResourceName( 'feedback' )
             ->toArray();
 
-        return response()->json( [ 'agent' => $feedback ], Response::HTTP_OK );
+        return response()->json( [ 'feedback' => $feedback ], Response::HTTP_OK );
     }
 
     /**

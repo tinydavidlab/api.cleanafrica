@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\CorsMiddleware;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 ( new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -24,7 +26,6 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->withFacades();
-
 $app->withEloquent();
 
 $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
@@ -64,6 +65,7 @@ $app->singleton(
 */
 
 $app->configure( 'app' );
+$app->configure( 'auth' );
 $app->configure( 'fractal' );
 $app->configure( 'repository' );
 
@@ -78,13 +80,13 @@ $app->configure( 'repository' );
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware( [
+    CorsMiddleware::class,
+] );
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware( [
+    'auth' => App\Http\Middleware\Authenticate::class,
+] );
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +102,10 @@ $app->configure( 'repository' );
 $app->register( App\Providers\AppServiceProvider::class );
 $app->register( App\Providers\AuthServiceProvider::class );
 $app->register( Spatie\Fractal\FractalServiceProvider::class );
+
+/*======== Custom Providers ============*/
+$app->register( Tymon\JWTAuth\Providers\LumenServiceProvider::class );
+
 
 /*
 |--------------------------------------------------------------------------

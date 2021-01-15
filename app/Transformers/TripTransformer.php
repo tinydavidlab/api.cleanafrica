@@ -43,22 +43,31 @@ class TripTransformer extends TransformerAbstract
             'customer_division' => $trip->getAttribute( 'customer_division' ),
             'customer_subdivision' => $trip->getAttribute( 'customer_subdivision' ),
             'customer_snoocode' => $trip->getAttribute( 'customer_snoocode' ),
+            'customer_longitude' => $trip->getAttribute( 'customer_longitude' ),
+            'customer_latitude' => $trip->getAttribute( 'customer_latitude' ),
+            'customer_latitude_number' => $trip->getAttribute( 'customer_latitude_number' ),
+            'customer_longitude_number' => $trip->getAttribute( 'customer_longitude_number' ),
+
+            'collector_name' => $trip->getAttribute( 'collector_name' ),
             'collector_country' => $trip->getAttribute( 'collector_country' ),
             'collector_division' => $trip->getAttribute( 'collector_division' ),
             'collector_subdivision' => $trip->getAttribute( 'collector_subdivision' ),
             'collector_snoocode' => $trip->getAttribute( 'collector_snoocode' ),
-            'photo_1' => $trip->getAttribute( 'photo_1' ),
-            'photo_2' => $trip->getAttribute( 'photo_2' ),
             'collector_date' => $trip->getAttribute( 'collector_date' ),
             'collector_time' => $trip->getAttribute( 'collector_time' ),
             'collector_signature' => $trip->getAttribute( 'collector_signature' ),
+
+            'bin_image' => $trip->getAttribute( 'bin_image' ),
+            'property_photo' => $trip->getAttribute( 'property_photo' ),
             'status' => $trip->getAttribute( 'delivery_status' ),
             'bin_liner_quantity' => $trip->getAttribute( 'bin_liner_quantity' ),
+            'notes' => $trip->getAttribute( 'notes' ),
         ];
     }
 
     public function includeCompany( Trip $trip )
     {
+        if ( !$trip->company ) return null;
         return $this->item( $trip->company, new CompanyTransformer, 'companies' );
     }
 }

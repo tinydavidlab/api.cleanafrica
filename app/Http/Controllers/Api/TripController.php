@@ -36,7 +36,7 @@ class TripController extends Controller
      */
     public function index(): JsonResponse
     {
-        $trips = $this->repository->all();
+        $trips = $this->repository->orderBy( 'created_at', 'desc' )->all();
 
         $trips = fractal( $trips, new TripTransformer() )
             ->withResourceName( 'trips' )
@@ -63,10 +63,13 @@ class TripController extends Controller
             'customer_division' => 'required',
             'customer_subdivision' => 'required',
             'customer_snoocode' => 'required',
+            'customer_latitude' => 'required',
+            'customer_longitude' => 'required',
 
             'delivery_status' => 'required',
 
             'collection_date' => 'required',
+            'collector_name' => 'required',
             'collector_country' => 'required',
             'collector_division' => 'required',
             'collector_subdivision' => 'required',

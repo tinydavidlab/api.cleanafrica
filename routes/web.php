@@ -15,6 +15,17 @@
 
 use Laravel\Lumen\Routing\Router;
 
+/* ============= Authentication ============= */
+$router->group( [ 'prefix' => 'auth' ], function ( $router ) {
+    $router->post( 'login', 'AuthController@login' );
+    $router->post( 'register', 'AuthController@register' );
+} );
+
+
+$router->group( [ 'prefix' => 'auth', 'middleware' => 'auth' ], function () use ( $router ) {
+    $router->get( 'me', 'AuthController@me' );
+} );
+
 $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
     /* ============= Authentication ============= */
     $router->post( 'login', 'Auth\LoginController@store' );
@@ -30,6 +41,9 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'trips', 'TripController@store' );
     $router->put( 'trips/{id}', 'TripController@update' );
     $router->delete( 'trips/{id}', 'TripController@destroy' );
+
+    /* ============= Completed Trips ============= */
+    $router->post( 'trips/{id}/completed', 'CompletedTripController@store' );
 
     /* ============= Customers ============= */
     $router->get( 'customers', 'CustomerController@index' );
@@ -54,9 +68,6 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     /* ============= Company Trips ============= */
     $router->get( 'companies/{id}/trips', 'CompanyTripController@index' );
     $router->post( 'companies/{id}/trips', 'CompanyTripController@store' );
-//    $router->get( 'companies/{id}/trips/{trip_id}', 'CompanyTripController@show' );
-//    $router->put( 'companies/{id}/trips/{trip_id}', 'CompanyTripController@update' );
-//    $router->delete( 'companies/{id}/trips/{trip_id}', 'CompanyTripController@destroy' );
 
     /* ============= Agents ============= */
     $router->get( 'agents', 'AgentController@index' );
@@ -78,5 +89,12 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'feedback', 'FeedbackController@store' );
     $router->put( 'feedback/{id}', 'FeedbackController@update' );
     $router->delete( 'feedback/{id}', 'FeedbackController@destroy' );
+
+    /* ============= Admins ============= */
+    $router->get( 'admins', 'AdminController@index' );
+    $router->get( 'admins/{id}', 'AdminController@show' );
+    $router->post( 'admins', 'AdminController@store' );
+    $router->put( 'admins/{id}', 'AdminController@update' );
+    $router->delete( 'admins/{id}', 'AdminController@destroy' );
 
 } );

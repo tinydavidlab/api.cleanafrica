@@ -61,13 +61,15 @@ class CompanyController extends Controller
     public function store( Request $request ): JsonResponse
     {
         $this->validate( $request, [
-            'name' => 'required',
+            'name' => 'required|unique:companies,name',
+            'phone_number' => 'required|unique:companies,phone_number',
             'logo' => 'image'
         ] );
 
         $company = $this->repository->create( $request->except( 'logo' ) );
 
         if ( $request->hasFile( 'logo' ) ) {
+
             $filename = ImageUploader::upload( $request->file( 'logo' ) );
             $this->dispatch( new ProcessImageUpload( $filename, 'companies' ) );
             $this->repository->update( [ 'logo' => $filename ], $company->id );
@@ -106,28 +108,19 @@ class CompanyController extends Controller
      */
     public function update( Request $request, int $id ): JsonResponse
     {
-        try {
-            $company = $this->repository->find( $id );
+        $company = $this->repository->update( $request->except( 'logo' ), $id );
 
-            if ( $request->hasFile( 'logo' ) ) {
-                $filename = ImageUploader::update(
-                    $request->file( 'logo' ),
-                    $company->getAttribute( 'logo' ), 'companies' );
-                $this->dispatch( new ProcessImageUpload( $filename, 'companies' ) );
-                $this->repository->update( [ 'logo' => $filename ], $company->id );
-            }
-
-            $this->repository->update( $request->except( 'logo' ), $id );
-
-            $company = fractal( $company->fresh(), new CompanyTransformer() )
-                ->withResourceName( 'companies' )
-                ->toArray();
-
-            return response()->json( [ 'company' => $company ], Response::HTTP_OK );
-        } catch ( ModelNotFoundException $exception ) {
-            return response()->json(
-                [ 'message' => 'No company was found with: ' . $id ], Response::HTTP_NOT_FOUND );
+        if ( $request->hasFile( 'logo' ) ) {
+            $filename = ImageUploader::upload( $request->file( 'logo' ) );
+            $this->dispatch( new ProcessImageUpload( $filename, 'companies' ) );
+            $this->repository->update( [ 'logo' => $filename ], $id );
         }
+
+        $company = fractal( $company->fresh(), new CompanyTransformer() )
+            ->withResourceName( 'companies' )
+            ->toArray();
+
+        return response()->json( [ 'company' => $company ], Response::HTTP_OK );
     }
 
     /**

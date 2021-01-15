@@ -25,21 +25,27 @@ class CreateTripsTable extends Migration
             $table->string( 'customer_division' );
             $table->string( 'customer_subdivision' );
             $table->string( 'customer_snoocode' );
+            $table->string( 'customer_latitude' );
+            $table->string( 'customer_longitude' );
+            $table->string( 'customer_latitude_number' )->default( '0' );
+            $table->string( 'customer_longitude_number' )->default( '0' );
 
-            $table->string( 'delivery_status' );
-
+            $table->string( 'collector_name' );
             $table->string( 'collector_country' );
             $table->string( 'collector_division' );
             $table->string( 'collector_subdivision' );
             $table->string( 'collector_snoocode' );
-
-            $table->string( 'photo_1' )->nullable();
-            $table->string( 'photo_2' )->nullable();
-            $table->string( 'bin_liner_quantity' )->nullable();
-
             $table->string( 'collector_date' );
             $table->string( 'collector_time' );
             $table->string( 'collector_signature' );
+
+            $table->string( 'delivery_status' );
+            $table->string( 'bin_image' )->nullable();
+            $table->string( 'property_image' )->nullable();
+            $table->string( 'bin_liner_quantity' )->nullable();
+
+            $table->string( 'notes' )->nullable();
+
             $table->timestamps();
             $table->softDeletes();
 

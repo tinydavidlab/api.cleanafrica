@@ -10,6 +10,7 @@ use App\Utilities\ImageUploader;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,8 +56,21 @@ class CustomerController extends Controller
      */
     public function store( Request $request ): JsonResponse
     {
-        $this->validate( $request, [ 'property_photo' => 'image' ] );
-        $customer = $this->repository->create( $request->except( 'property_photo' ) );
+        $this->validate( $request, [
+            'name' => 'required',
+            'phone_number' => 'required|unique:customers',
+            'country' => 'required',
+            'division' => 'required',
+            'subdivision' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'property_photo' => 'image'
+        ] );
+        $customer = $this->repository->create(
+            array_merge(
+                $request->except( [ 'property_photo', 'password' ] ),
+                [ 'password' => Hash::make( $request->get( 'phone_number' ) ) ]
+            ) );
 
         if ( $request->hasFile( 'property_photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'property_photo' ) );
