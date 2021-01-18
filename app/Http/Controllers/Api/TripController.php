@@ -65,19 +65,6 @@ class TripController extends Controller
             'customer_snoocode' => 'required',
             'customer_latitude' => 'required',
             'customer_longitude' => 'required',
-
-            'delivery_status' => 'required',
-
-            'collection_date' => 'required',
-            'collector_name' => 'required',
-            'collector_country' => 'required',
-            'collector_division' => 'required',
-            'collector_subdivision' => 'required',
-            'collector_snoocode' => 'required',
-
-            'collector_date' => 'required',
-            'collector_time' => 'required',
-            'collector_signature' => 'required',
         ] );
 
         $trip = $this->repository->create( $request->all() );
