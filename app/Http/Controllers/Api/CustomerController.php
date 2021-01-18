@@ -66,6 +66,7 @@ class CustomerController extends Controller
             'longitude' => 'required',
             'property_photo' => 'image'
         ] );
+
         $customer = $this->repository->create(
             array_merge(
                 $request->except( [ 'property_photo', 'password' ] ),

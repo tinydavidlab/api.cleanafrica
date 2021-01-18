@@ -28,7 +28,8 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
         'phone_number',
         'password',
         'property_photo',
-        'device_id'
+        'device_id',
+        'apartment_number'
     ];
 
     // Rest omitted for brevity

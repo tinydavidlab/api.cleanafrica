@@ -45,6 +45,7 @@ class CustomerTransformer extends TransformerAbstract
             'country' => $customer->getAttribute( 'country' ),
             'phone_number' => $customer->getAttribute( 'phone_number' ),
             'property_photo' => $customer->getAttribute( 'property_photo' ),
+            'apartment_number' => $customer->getAttribute( 'apartment_number' ),
             'date_joined' => $customer->getAttribute( 'created_at' ),
         ];
     }
