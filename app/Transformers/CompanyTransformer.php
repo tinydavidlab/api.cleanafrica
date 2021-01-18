@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Company;
+use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
 
 class CompanyTransformer extends TransformerAbstract
@@ -22,7 +23,7 @@ class CompanyTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        //
+        'customers', 'trips'
     ];
 
     /**
@@ -44,5 +45,15 @@ class CompanyTransformer extends TransformerAbstract
             'is_activated' => $company->getIsActivatedAttribute(),
             'activated_at' => $company->getAttribute( 'activated_at' ),
         ];
+    }
+
+    public function includeCustomers( Company $company ): Collection
+    {
+        return $this->collection( $company->customers, new CustomerTransformer, 'customers' );
+    }
+
+    public function includeTrips( Company $company ): Collection
+    {
+        return $this->collection( $company->trips, new TripTransformer, 'trips' );
     }
 }
