@@ -30,9 +30,10 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
         'password',
         'property_photo',
         'device_id',
-        'apartment_number'
+        'apartment_number',
+        'company_id'
     ];
-    
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

@@ -15,14 +15,15 @@
 
 use Laravel\Lumen\Routing\Router;
 
+$router->get( '/', function () { } );
+
 /* ============= Authentication ============= */
 $router->group( [ 'prefix' => 'auth' ], function ( $router ) {
     $router->post( 'login', 'AuthController@login' );
     $router->post( 'register', 'AuthController@register' );
 } );
 
-
-$router->group( [ 'prefix' => 'auth', 'middleware' => 'auth' ], function () use ( $router ) {
+$router->group( [ 'prefix' => 'auth' ], function () use ( $router ) {
     $router->get( 'me', 'AuthController@me' );
 } );
 

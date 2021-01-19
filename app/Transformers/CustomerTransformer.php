@@ -13,7 +13,7 @@ class CustomerTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [
-        //
+        'company'
     ];
 
     /**
@@ -22,7 +22,7 @@ class CustomerTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        //
+        'company'
     ];
 
     /**
@@ -35,6 +35,7 @@ class CustomerTransformer extends TransformerAbstract
     {
         return [
             'id' => $customer->getAttribute( 'id' ),
+            'company_id' => $customer->getAttribute( 'company_id' ),
             'name' => $customer->getAttribute( 'name' ),
             'address' => $customer->getAttribute( 'address' ),
             'snoocode' => $customer->getAttribute( 'snoocode' ),
@@ -48,5 +49,11 @@ class CustomerTransformer extends TransformerAbstract
             'apartment_number' => $customer->getAttribute( 'apartment_number' ),
             'date_joined' => $customer->getAttribute( 'created_at' ),
         ];
+    }
+
+    public function includeCompany( Customer $admin )
+    {
+        if ( is_null( $admin->company ) ) return null;
+        return $this->item( $admin->company, new CompanyTransformer, 'companies' );
     }
 }

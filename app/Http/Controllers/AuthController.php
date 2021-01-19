@@ -58,7 +58,7 @@ class AuthController extends Controller
         $credentials = [
             $login_type => $request->get( 'username' ),
             'password' => $request->get( 'username' ),
-            'type' => $request->get( 'type' ),
+            'type' => $request->get( 'type' )
         ];
 
         if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
@@ -75,7 +75,9 @@ class AuthController extends Controller
      */
     public function me(): JsonResponse
     {
-        return response()->json( [ 'me' => auth()->user() ] );
+        $guard = request( 'type' );
+        $me    = fractal( auth()->guard( $guard )->user(), $guard == 'customer' ? new CustomerTransformer : new AdminTransformer )->withResourceName( Str::plural( $guard ) )->toArray();
+        return response()->json( [ 'me' => $me ] );
     }
 
     /**
@@ -132,17 +134,22 @@ class AuthController extends Controller
      */
     public function register( Request $request ): JsonResponse
     {
+        $table = Str::plural( $request->get( 'type', 'customer' ) );
+        $table = $table == "collectors" ? "admins" : $table;
+
         $this->validate( $request, [
             'name' => 'required',
             'type' => 'required|in:customer,collector,admin',
-            'phone_number' => 'required|unique:customers,phone_number',
+            'phone_number' => 'required|unique:' . $table . ',phone_number',
+            'company_id' => 'exists:companies,id'
         ] );
 
         $this->createUserWithType( $request->all(), $request->get( 'type' ) );
 
         $credentials = [
             'phone_number' => $request->get( 'phone_number' ),
-            'password' => $request->get( 'phone_number' )
+            'password' => $request->get( 'phone_number' ),
+            'company_id' => $request->get( 'company_id' ),
         ];
 
         if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -16,7 +17,9 @@ class Admin extends Model implements AuthenticatableContract, AuthorizableContra
         Authorizable,
         HasFactory;
 
-    protected $fillable = [ 'name', 'type', 'phone_number', 'password' ];
+    protected $fillable = [
+        'name', 'type', 'phone_number', 'password', 'company_id'
+    ];
 
     // Rest omitted for brevity
 
@@ -38,5 +41,15 @@ class Admin extends Model implements AuthenticatableContract, AuthorizableContra
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    /**
+     * Company relationship.
+     *
+     * @return BelongsTo
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo( Company::class );
     }
 }
