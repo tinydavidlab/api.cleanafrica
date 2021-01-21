@@ -68,6 +68,7 @@ $app->configure( 'deploy' );
 $app->configure( 'debugbar' );
 $app->configure( 'fractal' );
 $app->configure( 'repository' );
+$app->configure( 'filesystems' );
 
 /*
 |--------------------------------------------------------------------------

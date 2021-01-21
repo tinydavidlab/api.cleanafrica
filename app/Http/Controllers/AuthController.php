@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\AdminRepository;
+use App\Repositories\AgentRepository;
 use App\Repositories\CustomerRepository;
 use App\Transformers\AdminTransformer;
+use App\Transformers\AgentTransformer;
 use App\Transformers\CustomerTransformer;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -27,16 +29,23 @@ class AuthController extends Controller
      * @var AdminRepository
      */
     private $adminRepository;
+    /**
+     * @var AgentRepository
+     */
+    private $agentRepository;
+
 
     /**
      * AuthController constructor.
      * @param CustomerRepository $customerRepository
      * @param AdminRepository $adminRepository
+     * @param AgentRepository $agentRepository
      */
-    public function __construct( CustomerRepository $customerRepository, AdminRepository $adminRepository )
+    public function __construct( CustomerRepository $customerRepository, AdminRepository $adminRepository , AgentRepository $agentRepository )
     {
         $this->customerRepository = $customerRepository;
         $this->adminRepository    = $adminRepository;
+        $this->agentRepository = $agentRepository;
     }
 
     /**
@@ -118,10 +127,26 @@ class AuthController extends Controller
             'expires_in' => Carbon::now()->addYear()->timestamp,
         ];
 
+
+
+        if ($type == 'collector') {
+            $user = fractal(auth()->guard($type)->user(), new AgentTransformer())
+                ->withResourceName( Str::plural( $type ) )
+                ->toArray();
+        }else if ($type == 'customer') {
+            $user = fractal(auth()->guard($type)->user(), new CustomerTransformer())
+                ->withResourceName( Str::plural( $type ) )
+                ->toArray();
+        }else{
+            $user = fractal(auth()->guard($type)->user(), new AdminTransformer())
+                ->withResourceName( Str::plural( $type ) )
+                ->toArray();
+        }
+
         return response()->json( [
             'auth' => [
                 'token' => $token,
-                $type => fractal( auth()->guard( $type )->user(), $type == 'customer' ? new CustomerTransformer : new AdminTransformer )->withResourceName( Str::plural( $type ) )->toArray()
+                $type => $user
             ]
         ] );
     }
@@ -173,6 +198,15 @@ class AuthController extends Controller
                     $data,
                     [ 'password' => Hash::make( $data[ 'phone_number' ] ),
                         'snoocode' => $data[ 'code' ] ]
+                )
+            );
+        }
+
+        if ( $type == 'collector' ) {
+            return $this->agentRepository->create(
+                array_merge(
+                    $data,
+                    [ 'password' => Hash::make( $data[ 'phone_number' ] ),]
                 )
             );
         }

@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Trip;
+use Illuminate\Support\Facades\Storage;
 use League\Fractal\TransformerAbstract;
 
 class TripTransformer extends TransformerAbstract
@@ -35,6 +36,7 @@ class TripTransformer extends TransformerAbstract
     {
         return [
             'id' => $trip->getAttribute( 'id' ),
+            'company_id' => $trip->getAttribute( 'company_id' ),
             'customer_name' => $trip->getAttribute( 'customer_name' ),
             'customer_primary_phone_number' => $trip->getAttribute( 'customer_primary_phone_number' ),
             'customer_secondary_phone_number' => $trip->getAttribute( 'customer_secondary_phone_number' ),
@@ -57,12 +59,22 @@ class TripTransformer extends TransformerAbstract
             'collector_time' => $trip->getAttribute( 'collector_time' ),
             'collector_signature' => $trip->getAttribute( 'collector_signature' ),
 
-            'bin_image' => $trip->getAttribute( 'bin_image' ),
+            'bin_image' => $this->getImageUrl($trip),
             'property_photo' => $trip->getAttribute( 'property_photo' ),
             'status' => $trip->getAttribute( 'delivery_status' ),
             'bin_liner_quantity' => $trip->getAttribute( 'bin_liner_quantity' ),
             'notes' => $trip->getAttribute( 'notes' ),
+            'link' => $trip->getLinkAttribute()
         ];
+    }
+
+    private function getImageUrl( Trip $trip )
+    {
+        if ( $trip->getAttribute( 'bin_image' ) == null ) {
+            return null;
+        }
+
+        return Storage::disk( 's3' )->url( 'bins/' . $trip->getAttribute( 'bin_image' ) );
     }
 
     public function includeCompany( Trip $trip )

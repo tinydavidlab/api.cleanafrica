@@ -46,6 +46,9 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     /* ============= Completed Trips ============= */
     $router->post( 'trips/{id}/completed', 'CompletedTripController@store' );
 
+    /* ============= Canceled Trips ============= */
+    $router->get( 'trips/{id}/canceled', 'CompletedTripController@cancelTrip' );
+
     /* ============= Customers ============= */
     $router->get( 'customers', 'CustomerController@index' );
     $router->get( 'customers/{id}', 'CustomerController@show' );
@@ -69,6 +72,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     /* ============= Company Trips ============= */
     $router->get( 'companies/{id}/trips', 'CompanyTripController@index' );
     $router->post( 'companies/{id}/trips', 'CompanyTripController@store' );
+    $router->get( 'companies/{id}/trips/{status}', 'CompanyTripController@getCompanyTripsPerStatus' );
 
     /* ============= Agents ============= */
     $router->get( 'agents', 'AgentController@index' );
