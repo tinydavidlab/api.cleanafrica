@@ -9,6 +9,7 @@ use App\Transformers\CustomerTransformer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,7 +62,15 @@ class AgentController extends Controller
             'type' => 'required',
         ] );
 
-        $agent = $this->repository->create( $request->all() );
+        //$agent = $this->repository->create( $request->all() );
+        $agent = $this->repository->create( [
+           'password' => Hash::make( $request[ 'phone_number' ] ),
+            'name' => $request['name'],
+            'phone_number' => $request['phone_number'],
+            'type' => $request['type'],
+            'company_id' => $request['company_id'],
+
+        ] );
         $agent = fractal( $agent, new AgentTransformer() )
             ->withResourceName( 'agents' )
             ->toArray();
