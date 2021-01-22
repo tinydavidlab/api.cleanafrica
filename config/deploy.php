@@ -37,7 +37,7 @@ return [
     | Hooks
     |--------------------------------------------------------------------------
     |
-    | Hooks let you customize your deployments conveniently by pushing tasks 
+    | Hooks let you customize your deployments conveniently by pushing tasks
     | into strategic places of your deployment flow. Each of the official
     | strategies invoke hooks in different ways to implement their logic.
     |
@@ -48,32 +48,32 @@ return [
         'start' => [
             //
         ],
-        
+
         // Code and composer vendors are ready but nothing is built.
         'build' => [
             //
         ],
-        
+
         // Deployment is done but not live yet (before symlink)
         'ready' => [
             'artisan:migrate',
         ],
-        
+
         // Deployment is done and live
         'done' => [
             'fpm:reload',
         ],
-        
+
         // Deployment succeeded.
         'success' => [
             //
         ],
-        
+
         // Deployment failed.
         'fail' => [
             //
         ],
-        
+
         // After a deployment has been rolled back.
         'rollback' => [
             'fpm:reload',
@@ -93,7 +93,7 @@ return [
 
     'options' => [
         'application' => env('APP_NAME', 'Laravel'),
-        'repository' => 'https://modern-badger-72.loca.lt/samtoya/api.cleankenya.com.git',
+        'repository' => 'http://a640fcaa8bd8.ngrok.io/samtoya/api.cleankenya.com',
         'php_fpm_service' => 'php7.4-fpm',
     ],
 
@@ -135,7 +135,7 @@ return [
     | Include additional Deployer recipes
     |--------------------------------------------------------------------------
     |
-    | Here, you can add any third party recipes to provide additional tasks, 
+    | Here, you can add any third party recipes to provide additional tasks,
     | options and strategies. Therefore, it also allows you to create and
     | include your own recipes to define more complex deployment flows.
     |
