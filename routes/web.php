@@ -72,7 +72,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     /* ============= Company Trips ============= */
     $router->get( 'companies/{id}/trips', 'CompanyTripController@index' );
     $router->post( 'companies/{id}/trips', 'CompanyTripController@store' );
-    $router->get( 'companies/{id}/trips/{status}', 'CompanyTripController@getCompanyTripsPerStatus' );
+    $router->get( 'companies/{id}/trips/{status}/{date}', 'CompanyTripController@getCompanyTripsPerStatus' );
 
     /* ============= Agents ============= */
     $router->get( 'agents', 'AgentController@index' );

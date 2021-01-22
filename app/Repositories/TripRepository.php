@@ -21,12 +21,12 @@ class TripRepository extends BaseRepository
         ] );
     }
 
-    public function getTripsForCompany(int $id, $status/*, $date*/)
+    public function getTripsForCompany(int $id, $status, $date)
     {
         return $this->findWhere([
             'company_id' => $id,
             'delivery_status' => $status,
-            //'collector_date' => $date
+            'collector_date' => $date
         ]);
     }
 
