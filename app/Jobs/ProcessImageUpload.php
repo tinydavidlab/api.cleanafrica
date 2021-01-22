@@ -5,25 +5,15 @@ namespace App\Jobs;
 use App\Models\Trip;
 use App\Repositories\TripRepository;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProcessImageUpload extends Job
 {
-    /**
-     * @var Trip
-     */
-    public $model;
-    /**
-     * @var Request
-     */
-    public $request;
+    private $filename;
     /**
      * @var string
      */
-    public $name;
-    /**
-     * @var TripRepository
-     */
-    private $repository;
+    private $folder;
 
     /**
      * Create a new job instance.
@@ -32,6 +22,8 @@ class ProcessImageUpload extends Job
      */
     public function __construct( string $filename, string $folder )
     {
+        $this->filename = $filename;
+        $this->folder = $folder;
     }
 
     /**
@@ -41,8 +33,9 @@ class ProcessImageUpload extends Job
      */
     public function handle()
     {
-        // TODO: Handle image upload.
+        $file     = storage_path( 'uploads/' . $this->filename );
+        $uploaded = Storage::disk( 's3' )->put( $this->folder . $this->filename, fopen( $file, 'rb+' ), 'public' );
 
-
+        if ( $uploaded ) unlink( $file );
     }
 }

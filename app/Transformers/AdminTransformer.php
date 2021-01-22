@@ -13,7 +13,7 @@ class AdminTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [
-        //
+        'company'
     ];
 
     /**
@@ -22,7 +22,7 @@ class AdminTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        //
+        'company'
     ];
 
     /**
@@ -36,7 +36,14 @@ class AdminTransformer extends TransformerAbstract
         return [
             'id' => $admin->getAttribute( 'id' ),
             'name' => $admin->getAttribute( 'name' ),
+            'company_id' => $admin->getAttribute( 'company_id' ),
             'phone_number' => $admin->getAttribute( 'phone_number' ),
         ];
+    }
+
+    public function includeCompany( Admin $admin )
+    {
+        if ( is_null( $admin->company ) ) return null;
+        return $this->item( $admin->company, new CompanyTransformer, 'companies' );
     }
 }

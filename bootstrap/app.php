@@ -65,8 +65,10 @@ $app->singleton(
 $app->configure( 'app' );
 $app->configure( 'auth' );
 $app->configure( 'deploy' );
+$app->configure( 'debugbar' );
 $app->configure( 'fractal' );
 $app->configure( 'repository' );
+$app->configure( 'filesystems' );
 
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +109,9 @@ $app->register( Tymon\JWTAuth\Providers\LumenServiceProvider::class );
 $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
 $app->register( Prettus\Repository\Providers\LumenRepositoryServiceProvider::class );
 $app->register( LaravelDeployerServiceProvider::class );
+if ( env( 'APP_DEBUG' ) ) {
+    $app->register( Barryvdh\Debugbar\LumenServiceProvider::class );
+}
 
 
 /*

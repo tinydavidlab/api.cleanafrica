@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\AdminRepository;
+use App\Repositories\AgentRepository;
 use App\Repositories\CustomerRepository;
 use App\Transformers\AdminTransformer;
+use App\Transformers\AgentTransformer;
 use App\Transformers\CustomerTransformer;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -27,16 +29,23 @@ class AuthController extends Controller
      * @var AdminRepository
      */
     private $adminRepository;
+    /**
+     * @var AgentRepository
+     */
+    private $agentRepository;
+
 
     /**
      * AuthController constructor.
      * @param CustomerRepository $customerRepository
      * @param AdminRepository $adminRepository
+     * @param AgentRepository $agentRepository
      */
-    public function __construct( CustomerRepository $customerRepository, AdminRepository $adminRepository )
+    public function __construct( CustomerRepository $customerRepository, AdminRepository $adminRepository , AgentRepository $agentRepository )
     {
         $this->customerRepository = $customerRepository;
         $this->adminRepository    = $adminRepository;
+        $this->agentRepository = $agentRepository;
     }
 
     /**
@@ -58,7 +67,7 @@ class AuthController extends Controller
         $credentials = [
             $login_type => $request->get( 'username' ),
             'password' => $request->get( 'username' ),
-            'type' => $request->get( 'type' ),
+            'type' => $request->get( 'type' )
         ];
 
         if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
@@ -75,7 +84,9 @@ class AuthController extends Controller
      */
     public function me(): JsonResponse
     {
-        return response()->json( [ 'me' => auth()->user() ] );
+        $guard = request( 'type' );
+        $me    = fractal( auth()->guard( $guard )->user(), $guard == 'customer' ? new CustomerTransformer : new AdminTransformer )->withResourceName( Str::plural( $guard ) )->toArray();
+        return response()->json( [ 'me' => $me ] );
     }
 
     /**
@@ -116,10 +127,26 @@ class AuthController extends Controller
             'expires_in' => Carbon::now()->addYear()->timestamp,
         ];
 
+
+
+        if ($type == 'collector') {
+            $user = fractal(auth()->guard($type)->user(), new AgentTransformer())
+                ->withResourceName( Str::plural( $type ) )
+                ->toArray();
+        }else if ($type == 'customer') {
+            $user = fractal(auth()->guard($type)->user(), new CustomerTransformer())
+                ->withResourceName( Str::plural( $type ) )
+                ->toArray();
+        }else{
+            $user = fractal(auth()->guard($type)->user(), new AdminTransformer())
+                ->withResourceName( Str::plural( $type ) )
+                ->toArray();
+        }
+
         return response()->json( [
             'auth' => [
                 'token' => $token,
-                $type => fractal( auth()->guard( $type )->user(), $type == 'customer' ? new CustomerTransformer : new AdminTransformer )->withResourceName( Str::plural( $type ) )->toArray()
+                $type => $user
             ]
         ] );
     }
@@ -132,17 +159,22 @@ class AuthController extends Controller
      */
     public function register( Request $request ): JsonResponse
     {
+        $table = Str::plural( $request->get( 'type', 'customer' ) );
+        $table = $table == "collectors" ? "admins" : $table;
+
         $this->validate( $request, [
             'name' => 'required',
             'type' => 'required|in:customer,collector,admin',
-            'phone_number' => 'required|unique:customers,phone_number',
+            'phone_number' => 'required|unique:' . $table . ',phone_number',
+            'company_id' => 'exists:companies,id'
         ] );
 
         $this->createUserWithType( $request->all(), $request->get( 'type' ) );
 
         $credentials = [
             'phone_number' => $request->get( 'phone_number' ),
-            'password' => $request->get( 'phone_number' )
+            'password' => $request->get( 'phone_number' ),
+            'company_id' => $request->get( 'company_id' ),
         ];
 
         if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
@@ -166,6 +198,15 @@ class AuthController extends Controller
                     $data,
                     [ 'password' => Hash::make( $data[ 'phone_number' ] ),
                         'snoocode' => $data[ 'code' ] ]
+                )
+            );
+        }
+
+        if ( $type == 'collector' ) {
+            return $this->agentRepository->create(
+                array_merge(
+                    $data,
+                    [ 'password' => Hash::make( $data[ 'phone_number' ] ),]
                 )
             );
         }

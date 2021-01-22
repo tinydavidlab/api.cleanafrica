@@ -15,14 +15,15 @@
 
 use Laravel\Lumen\Routing\Router;
 
+$router->get( '/', function () { } );
+
 /* ============= Authentication ============= */
 $router->group( [ 'prefix' => 'auth' ], function ( $router ) {
     $router->post( 'login', 'AuthController@login' );
     $router->post( 'register', 'AuthController@register' );
 } );
 
-
-$router->group( [ 'prefix' => 'auth', 'middleware' => 'auth' ], function () use ( $router ) {
+$router->group( [ 'prefix' => 'auth' ], function () use ( $router ) {
     $router->get( 'me', 'AuthController@me' );
 } );
 
@@ -44,6 +45,9 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
 
     /* ============= Completed Trips ============= */
     $router->post( 'trips/{id}/completed', 'CompletedTripController@store' );
+
+    /* ============= Canceled Trips ============= */
+    $router->get( 'trips/{id}/canceled', 'CompletedTripController@cancelTrip' );
 
     /* ============= Customers ============= */
     $router->get( 'customers', 'CustomerController@index' );
@@ -68,6 +72,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     /* ============= Company Trips ============= */
     $router->get( 'companies/{id}/trips', 'CompanyTripController@index' );
     $router->post( 'companies/{id}/trips', 'CompanyTripController@store' );
+    $router->get( 'companies/{id}/trips/{status}/{date}', 'CompanyTripController@getCompanyTripsPerStatus' );
 
     /* ============= Agents ============= */
     $router->get( 'agents', 'AgentController@index' );

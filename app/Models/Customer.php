@@ -18,6 +18,7 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
 
     protected $fillable = [
         'name',
+        'customer_id',
         'address',
         'snoocode',
         'latitude',
@@ -28,10 +29,10 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
         'phone_number',
         'password',
         'property_photo',
-        'device_id'
+        'device_id',
+        'apartment_number',
+        'company_id'
     ];
-
-    // Rest omitted for brevity
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

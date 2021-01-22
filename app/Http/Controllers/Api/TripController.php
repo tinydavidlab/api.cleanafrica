@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filters\TripFilter;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
 use App\Repositories\TripRepository;
@@ -34,9 +35,11 @@ class TripController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(TripFilter $filter): JsonResponse
     {
-        $trips = $this->repository->orderBy( 'created_at', 'desc' )->all();
+
+        $trips = $this->repository->filter($filter )->get();
+
 
         $trips = fractal( $trips, new TripTransformer() )
             ->withResourceName( 'trips' )
@@ -57,7 +60,6 @@ class TripController extends Controller
         $this->validate( $request, [
             'customer_name' => 'required',
             'customer_primary_phone_number' => 'required',
-            'customer_secondary_phone_number' => 'required',
             'customer_apartment_number' => 'required',
             'customer_country' => 'required',
             'customer_division' => 'required',
@@ -65,19 +67,6 @@ class TripController extends Controller
             'customer_snoocode' => 'required',
             'customer_latitude' => 'required',
             'customer_longitude' => 'required',
-
-            'delivery_status' => 'required',
-
-            'collection_date' => 'required',
-            'collector_name' => 'required',
-            'collector_country' => 'required',
-            'collector_division' => 'required',
-            'collector_subdivision' => 'required',
-            'collector_snoocode' => 'required',
-
-            'collector_date' => 'required',
-            'collector_time' => 'required',
-            'collector_signature' => 'required',
         ] );
 
         $trip = $this->repository->create( $request->all() );
@@ -94,7 +83,7 @@ class TripController extends Controller
             $this->repository->update( [ 'property_image' => $filename ], $trip->id );
         }
 
-        $trip = fractal( $trip, new TripTransformer() )
+        $trip = fractal( $trip->fresh(), new TripTransformer() )
             ->withResourceName( 'trips' )
             ->toArray();
 

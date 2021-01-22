@@ -34,6 +34,7 @@ class AgentTransformer extends TransformerAbstract
     {
         return [
             'id' => $agent->getAttribute( 'id' ),
+            'company_id' => $agent->getAttribute( 'company_id' ),
             'name' => $agent->getAttribute( 'name' ),
             'type' => $agent->getAttribute( 'type' ),
             'phone_number' => $agent->getAttribute( 'phone_number' ),

@@ -25,6 +25,7 @@ class CreateCustomersTable extends Migration
             $table->string( 'subdivision' )->nullable();
             $table->string( 'country' )->nullable();
             $table->string( 'phone_number' )->nullable();
+            $table->string( 'secondary_phone_number' )->nullable();
             $table->string( 'password' )->nullable();
             $table->string( 'property_photo' )->nullable();
             $table->string( 'device_id' )->nullable();
