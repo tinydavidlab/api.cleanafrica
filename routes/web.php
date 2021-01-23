@@ -103,6 +103,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'feedback', 'FeedbackController@store' );
     $router->put( 'feedback/{id}', 'FeedbackController@update' );
     $router->delete( 'feedback/{id}', 'FeedbackController@destroy' );
+    $router->get( 'companies/{id}/feedback', 'FeedbackController@getFeedBackForCompany' );
 
     /* ============= Admins ============= */
     $router->get( 'admins', 'AdminController@index' );

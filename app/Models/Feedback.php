@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Feedback extends Model
 {
-    protected $fillable = [ 'message', 'photo', 'customer_id' ];
+    protected $fillable = [ 'message', 'photo', 'customer_id', 'company_id' ];
 
     /**
      * Customer relationship.
@@ -18,4 +18,11 @@ class Feedback extends Model
     {
         return $this->belongsTo( Customer::class );
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

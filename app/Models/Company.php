@@ -43,4 +43,9 @@ class Company extends Model
     {
         return $this->hasMany( Trip::class );
     }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
+    }
 }

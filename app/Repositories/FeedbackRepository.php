@@ -13,6 +13,11 @@ class FeedbackRepository extends BaseRepository
         return 'App\Models\Feedback';
     }
 
+    public function getForCompany( int $company_id )
+    {
+        return $this->findWhere( [ 'company_id' => $company_id ] );
+    }
+
     public function getForCustomer( int $id )
     {
         return $this->findWhere( [
