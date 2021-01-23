@@ -44,6 +44,17 @@ class TruckController extends Controller
         return response()->json( [ 'trucks' => $trucks ], Response::HTTP_OK );
     }
 
+    public function trucksForCompany(int $id)
+    {
+        $trucks = $this->repository->scopeQuery(function ($query) {
+            return $query->orderBy('created_at','desc');
+        })->getForCompany($id);
+        $trucks = fractal($trucks, new TruckTransformer())
+        ->withResourceName('trucks')
+        ->toArray();
+        return response()->json( [ 'trucks' => $trucks ], Response::HTTP_OK );
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -62,7 +73,7 @@ class TruckController extends Controller
         $truck = $this->repository->create( $request->all() );
         if ( $request->hasFile( 'photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'photo' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'trucks' ) );
+            $this->dispatch( new ProcessImageUpload( $filename, 'trucks/' ) );
             $this->repository->update( [ 'photo' => $filename ], $truck->id );
         }
 

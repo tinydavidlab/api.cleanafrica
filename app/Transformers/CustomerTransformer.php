@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Customer;
+use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class CustomerTransformer extends TransformerAbstract
@@ -12,9 +13,7 @@ class CustomerTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
-        'company'
-    ];
+    protected $defaultIncludes = [];
 
     /**
      * List of resources possible to include
@@ -47,7 +46,8 @@ class CustomerTransformer extends TransformerAbstract
             'phone_number' => $customer->getAttribute( 'phone_number' ),
             'property_photo' => $customer->getAttribute( 'property_photo' ),
             'apartment_number' => $customer->getAttribute( 'apartment_number' ),
-            'date_joined' => $customer->getAttribute( 'created_at' ),
+            'date_joined' =>Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
+            'link' => $customer->getLinkAttribute()
         ];
     }
 

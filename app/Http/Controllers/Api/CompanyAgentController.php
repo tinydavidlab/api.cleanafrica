@@ -110,7 +110,7 @@ class CompanyAgentController extends Controller
         try {
             $agent = $this->repository->update( $request->all(), $id );
 
-            $agent = fractal( $agent->fresh(), new CustomerTransformer() )
+            $agent = fractal( $agent->fresh(), new AgentTransformer() )
                 ->withResourceName( 'agents' )
                 ->toArray();
 

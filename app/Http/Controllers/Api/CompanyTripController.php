@@ -38,7 +38,10 @@ class CompanyTripController extends Controller
      */
     public function index( int $id ): JsonResponse
     {
-        $trips = $this->repository->getForCompany( $id );
+
+        $trips = $this->repository->scopeQuery(function ($query) {
+            return $query->orderBy('created_at','desc');
+        })->getForCompany($id);
 
         $trips = fractal( $trips, new TripTransformer )
             ->withResourceName( 'trips' )

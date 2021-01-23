@@ -69,6 +69,12 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'companies/{id}/agents', 'CompanyAgentController@store' );
     $router->delete( 'companies/{id}/agents/{agent_id}', 'CompanyAgentController@destroy' );
 
+    /* ============= Company Customer ============= */
+    $router->get( 'companies/{id}/customers', 'CompanyCustomerController@index' );
+    $router->get( 'companies/{id}/customers/{customer_id}', 'CompanyCustomerController@show' );
+    $router->post( 'companies/{id}/customers', 'CompanyCustomerController@store' );
+    $router->delete( 'companies/{id}/customers/{customer_id}', 'CompanyCustomerController@destroy' );
+
     /* ============= Company Trips ============= */
     $router->get( 'companies/{id}/trips', 'CompanyTripController@index' );
     $router->post( 'companies/{id}/trips', 'CompanyTripController@store' );
@@ -88,6 +94,9 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->put( 'trucks/{id}', 'TruckController@update' );
     $router->delete( 'trucks/{id}', 'TruckController@destroy' );
 
+    /* ============= Company Trucks ============= */
+    $router->get( 'companies/{id}/trucks', 'TruckController@trucksForCompany' );
+
     /* ============= Feedback ============= */
     $router->get( 'feedback', 'FeedbackController@index' );
     $router->get( 'feedback/{id}', 'FeedbackController@show' );
@@ -101,5 +110,6 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'admins', 'AdminController@store' );
     $router->put( 'admins/{id}', 'AdminController@update' );
     $router->delete( 'admins/{id}', 'AdminController@destroy' );
+    $router->get( 'companies/{id}/admins', 'AdminController@getAdminForCompany' );
 
 } );
