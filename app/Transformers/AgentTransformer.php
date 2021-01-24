@@ -12,9 +12,7 @@ class AgentTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
-        'company'
-    ];
+    protected $defaultIncludes = [];
 
     /**
      * List of resources possible to include
@@ -22,6 +20,7 @@ class AgentTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
+        'company'
     ];
 
     /**

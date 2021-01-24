@@ -12,9 +12,7 @@ class AdminTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
-        'company'
-    ];
+    protected $defaultIncludes = [];
 
     /**
      * List of resources possible to include
@@ -38,6 +36,7 @@ class AdminTransformer extends TransformerAbstract
             'name' => $admin->getAttribute( 'name' ),
             'company_id' => $admin->getAttribute( 'company_id' ),
             'phone_number' => $admin->getAttribute( 'phone_number' ),
+            'type' => $admin->getAttribute( 'type' ),
         ];
     }
 

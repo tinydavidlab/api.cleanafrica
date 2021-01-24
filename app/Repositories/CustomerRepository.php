@@ -12,4 +12,17 @@ class CustomerRepository extends BaseRepository
     {
         return 'App\Models\Customer';
     }
+
+    public function getForCompany( int $company_id )
+    {
+        return $this->findWhere( [ 'company_id' => $company_id ] );
+    }
+
+    public function findForCompany( int $id, int $customer_id )
+    {
+        return $this->findWhere( [
+            'company_id' => $id,
+            'id' => $customer_id
+        ] )->first();
+    }
 }

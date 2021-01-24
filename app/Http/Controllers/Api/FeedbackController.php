@@ -74,6 +74,19 @@ class FeedbackController extends Controller
         return response()->json( [ 'feedback' => $feedback ], Response::HTTP_CREATED );
     }
 
+    public function getFeedBackForCompany(int $id)
+    {
+        $feedback = $this->repository->scopeQuery(function ($query) {
+            return $query->orderBy('created_at','desc');
+        })->getForCompany($id);
+
+        $feedback = fractal( $feedback, new FeedbackTransformer )
+            ->withResourceName( 'feedback' )
+            ->toArray();
+
+        return response()->json( [ 'feedback' => $feedback ], Response::HTTP_OK );
+    }
+
     /**
      * Display the specified resource.
      *

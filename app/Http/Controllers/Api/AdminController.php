@@ -43,6 +43,16 @@ class AdminController extends Controller
         return response()->json( [ 'admins' => $admins ], Response::HTTP_OK );
     }
 
+    public function getAdminForCompany(int $id)
+    {
+        $admins = $this->repository->getForCompany($id);
+        $admins = fractal( $admins, new AdminTransformer )
+            ->withResourceName( 'admins' )
+            ->toArray();
+
+        return response()->json( [ 'admins' => $admins ], Response::HTTP_OK );
+    }
+
     /**
      * Store a newly created resource in storage.
      *

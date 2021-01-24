@@ -12,9 +12,7 @@ class TruckTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
-        'company'
-    ];
+    protected $defaultIncludes = [];
 
     /**
      * List of resources possible to include
@@ -22,7 +20,7 @@ class TruckTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        //
+        'company'
     ];
 
     /**
@@ -35,6 +33,7 @@ class TruckTransformer extends TransformerAbstract
     {
         return [
             'id' => $truck->getAttribute( 'id' ),
+            'company_id' => $truck->company->id,
             'name' => $truck->getAttribute( 'name' ),
             'license_number' => $truck->getAttribute( 'license_number' ),
         ];

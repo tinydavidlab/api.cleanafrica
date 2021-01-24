@@ -13,9 +13,7 @@ class TripTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
-        'company'
-    ];
+    protected $defaultIncludes = [];
 
     /**
      * List of resources possible to include
@@ -23,7 +21,7 @@ class TripTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        //
+        'company'
     ];
 
     /**
