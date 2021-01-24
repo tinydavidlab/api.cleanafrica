@@ -58,7 +58,7 @@ class AgentController extends Controller
     {
         $this->validate( $request, [
             'name' => 'required',
-            'phone_number' => 'required',
+            'phone_number' => 'required|unique:agents',
             'type' => 'required',
         ] );
 
