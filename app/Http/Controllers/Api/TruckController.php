@@ -73,7 +73,7 @@ class TruckController extends Controller
         $truck = $this->repository->create( $request->all() );
         if ( $request->hasFile( 'photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'photo' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'trucks/' ) );
+            $this->dispatch( new ProcessImageUpload( $filename, 'trucks' ) );
             $this->repository->update( [ 'photo' => $filename ], $truck->id );
         }
 

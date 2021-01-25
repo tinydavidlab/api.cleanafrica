@@ -62,7 +62,6 @@ class AgentController extends Controller
             'type' => 'required',
         ] );
 
-        //$agent = $this->repository->create( $request->all() );
         $agent = $this->repository->create( [
            'password' => Hash::make( $request[ 'phone_number' ] ),
             'name' => $request['name'],

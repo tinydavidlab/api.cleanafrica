@@ -64,7 +64,7 @@ class CompanyCustomerController extends Controller
 
         if ( $request->hasFile( 'property_photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'property_photo' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'properties/' ) );
+            $this->dispatch( new ProcessImageUpload( $filename, 'properties' ) );
             $this->repository->update( [ 'property_photo' => $filename ], $customer->id );
         }
 

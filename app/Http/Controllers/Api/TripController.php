@@ -72,13 +72,13 @@ class TripController extends Controller
 
         if ( $request->hasFile( 'bin_image' ) ) {
             $filename = ImageUploader::upload( $request->file( 'bin_image' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'bins/' ) );
+            $this->dispatch( new ProcessImageUpload( $filename, 'bins' ) );
             $this->repository->update( [ 'bin_image' => $filename ], $trip->id );
         }
 
         if ( $request->hasFile( 'property_image' ) ) {
             $filename = ImageUploader::upload( $request->file( 'property_image' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'properties/' ) );
+            $this->dispatch( new ProcessImageUpload( $filename, 'properties' ) );
             $this->repository->update( [ 'property_image' => $filename ], $trip->id );
         }
 
