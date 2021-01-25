@@ -109,7 +109,7 @@ $app->register( Tymon\JWTAuth\Providers\LumenServiceProvider::class );
 $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
 $app->register( Prettus\Repository\Providers\LumenRepositoryServiceProvider::class );
 $app->register( LaravelDeployerServiceProvider::class );
-if ( env( 'APP_DEBUG' ) == 'local' ) {
+if ( env( 'APP_ENV' ) == 'local' ) {
     $app->register( Barryvdh\Debugbar\LumenServiceProvider::class );
 }
 
