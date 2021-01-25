@@ -31,7 +31,7 @@ class ProcessImageUpload extends Job
     public function handle()
     {
         $file     = storage_path( 'uploads/' . $this->filename );
-        $uploaded = Storage::disk( 's3' )->put( "{$this->folder}/{$this->filename}", fopen( $file, 'rb+' ), 'public' );
+        $uploaded = Storage::disk( 's3' )->put( $this->folder . "/" . $this->filename, fopen( $file, 'rb+' ), 'public' );
 
         if ( $uploaded ) unlink( $file );
     }

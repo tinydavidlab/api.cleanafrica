@@ -21,8 +21,6 @@ class Admin extends Model implements AuthenticatableContract, AuthorizableContra
         'name', 'type', 'phone_number', 'password', 'company_id'
     ];
 
-    // Rest omitted for brevity
-
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
