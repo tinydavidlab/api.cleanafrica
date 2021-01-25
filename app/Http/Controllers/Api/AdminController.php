@@ -7,6 +7,7 @@ use App\Repositories\AdminRepository;
 use App\Transformers\AdminTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,9 +44,9 @@ class AdminController extends Controller
         return response()->json( [ 'admins' => $admins ], Response::HTTP_OK );
     }
 
-    public function getAdminForCompany(int $id)
+    public function getAdminForCompany( int $id )
     {
-        $admins = $this->repository->getForCompany($id);
+        $admins = $this->repository->getForCompany( $id );
         $admins = fractal( $admins, new AdminTransformer )
             ->withResourceName( 'admins' )
             ->toArray();
@@ -69,7 +70,12 @@ class AdminController extends Controller
             'type' => 'required',
         ] );
 
-        $admin = $this->repository->create( $request->all() );
+        $admin = $this->repository->create(
+            array_merge(
+                $request->all(),
+                [ 'password' => Hash::make( $request->get( 'phone_number' ) ) ]
+            )
+        );
         $admin = fractal( $admin, new AdminTransformer )
             ->withResourceName( 'admins' )
             ->toArray();
