@@ -70,7 +70,8 @@ class TripController extends Controller
             'customer_longitude' => 'required',
         ] );
 
-        $trip = $this->repository->create( $request->all() );
+        //$trip = $this->repository->create( $request->all() );
+        $trip = $this->repository->create( array_merge($request->all(), ['delivery_status' => 'pending']));
 
         if ( $request->hasFile( 'bin_image' ) ) {
             $filename = ImageUploader::upload( $request->file( 'bin_image' ) );
