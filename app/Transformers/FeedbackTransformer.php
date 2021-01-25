@@ -23,7 +23,6 @@ class FeedbackTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        //
         'company'
     ];
 
@@ -39,7 +38,7 @@ class FeedbackTransformer extends TransformerAbstract
             'id' => $feedback->getAttribute( 'id' ),
             'message' => $feedback->getAttribute( 'message' ),
             'photo' => $feedback->getAttribute( 'photo' ),
-            'company_id' => $feedback->company->id,
+            'company_id' => $feedback->company_id,
         ];
     }
 
@@ -48,9 +47,9 @@ class FeedbackTransformer extends TransformerAbstract
         return $this->item( $feedback->customer, new CustomerTransformer, 'customers' );
     }
 
-    public function includeCompany(Feedback $feedback)
+    public function includeCompany( Feedback $feedback )
     {
         if ( is_null( $feedback->company ) ) return null;
-        return $this->item($feedback->company, new CompanyTransformer, 'companies');
+        return $this->item( $feedback->company, new CompanyTransformer, 'companies' );
     }
 }

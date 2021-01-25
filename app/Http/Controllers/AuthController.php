@@ -41,11 +41,11 @@ class AuthController extends Controller
      * @param AdminRepository $adminRepository
      * @param AgentRepository $agentRepository
      */
-    public function __construct( CustomerRepository $customerRepository, AdminRepository $adminRepository , AgentRepository $agentRepository )
+    public function __construct( CustomerRepository $customerRepository, AdminRepository $adminRepository, AgentRepository $agentRepository )
     {
         $this->customerRepository = $customerRepository;
         $this->adminRepository    = $adminRepository;
-        $this->agentRepository = $agentRepository;
+        $this->agentRepository    = $agentRepository;
     }
 
     /**
@@ -128,17 +128,16 @@ class AuthController extends Controller
         ];
 
 
-
-        if ($type == 'collector') {
-            $user = fractal(auth()->guard($type)->user(), new AgentTransformer())
+        if ( $type == 'collector' ) {
+            $user = fractal( auth()->guard( $type )->user(), new AgentTransformer() )
                 ->withResourceName( Str::plural( $type ) )
                 ->toArray();
-        }else if ($type == 'customer') {
-            $user = fractal(auth()->guard($type)->user(), new CustomerTransformer())
+        } else if ( $type == 'customer' ) {
+            $user = fractal( auth()->guard( $type )->user(), new CustomerTransformer() )
                 ->withResourceName( Str::plural( $type ) )
                 ->toArray();
-        }else{
-            $user = fractal(auth()->guard($type)->user(), new AdminTransformer())
+        } else {
+            $user = fractal( auth()->guard( $type )->user(), new AdminTransformer() )
                 ->withResourceName( Str::plural( $type ) )
                 ->toArray();
         }
@@ -206,7 +205,7 @@ class AuthController extends Controller
             return $this->agentRepository->create(
                 array_merge(
                     $data,
-                    [ 'password' => Hash::make( $data[ 'phone_number' ] ),]
+                    [ 'password' => Hash::make( $data[ 'phone_number' ] ), ]
                 )
             );
         }
