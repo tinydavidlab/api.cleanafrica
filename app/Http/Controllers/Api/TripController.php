@@ -36,11 +36,9 @@ class TripController extends Controller
      * @param TripFilter $filter
      * @return JsonResponse
      */
-    public function index(TripFilter $filter): JsonResponse
+    public function index( TripFilter $filter ): JsonResponse
     {
-
-        $trips = $this->repository->filter($filter )->get();
-
+        $trips = $this->repository->filter( $filter )->get();
 
         $trips = fractal( $trips, new TripTransformer() )
             ->withResourceName( 'trips' )
@@ -70,8 +68,7 @@ class TripController extends Controller
             'customer_longitude' => 'required',
         ] );
 
-        //$trip = $this->repository->create( $request->all() );
-        $trip = $this->repository->create( array_merge($request->all(), ['delivery_status' => 'pending']));
+        $trip = $this->repository->create( $request->except( [ 'bin_image', 'property_image' ] ) );
 
         if ( $request->hasFile( 'bin_image' ) ) {
             $filename = ImageUploader::upload( $request->file( 'bin_image' ) );
