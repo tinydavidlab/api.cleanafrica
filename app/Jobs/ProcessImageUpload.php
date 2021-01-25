@@ -20,7 +20,7 @@ class ProcessImageUpload extends Job
     public function __construct( string $filename, string $folder )
     {
         $this->filename = $filename;
-        $this->folder   = $folder;
+        $this->folder   = $folder . '/';
     }
 
     /**
@@ -31,7 +31,12 @@ class ProcessImageUpload extends Job
     public function handle()
     {
         $file     = storage_path( 'uploads/' . $this->filename );
-        $uploaded = Storage::disk( 's3' )->put( $this->folder . "/" . $this->filename, fopen( $file, 'rb+' ), 'public' );
+        $uploaded = Storage::disk( 's3' )
+            ->put(
+                $this->folder . $this->filename,
+                fopen( $file, 'rb+' ),
+                'public'
+            );
 
         if ( $uploaded ) unlink( $file );
     }
