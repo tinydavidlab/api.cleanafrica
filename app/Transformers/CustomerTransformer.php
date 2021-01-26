@@ -3,7 +3,9 @@
 namespace App\Transformers;
 
 use App\Models\Customer;
+use App\Models\Trip;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use League\Fractal\TransformerAbstract;
 
 class CustomerTransformer extends TransformerAbstract
@@ -44,12 +46,22 @@ class CustomerTransformer extends TransformerAbstract
             'subdivision' => $customer->getAttribute( 'subdivision' ),
             'country' => $customer->getAttribute( 'country' ),
             'phone_number' => $customer->getAttribute( 'phone_number' ),
-            'property_photo' => $customer->getAttribute( 'property_photo' ),
+            'property_photo' => $this->getImageUrl($customer),
             'apartment_number' => $customer->getAttribute( 'apartment_number' ),
             'date_joined' =>Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
             'link' => $customer->getLinkAttribute()
         ];
     }
+
+    private function getImageUrl( Customer $customer )
+    {
+        if ( $customer->getAttribute( 'property_photo' ) == null ) {
+            return null;
+        }
+
+        return Storage::disk( 's3' )->url( 'properties/' . $customer->getAttribute( 'property_photo' ) );
+    }
+
 
     public function includeCompany( Customer $admin )
     {
