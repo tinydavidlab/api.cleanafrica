@@ -4,7 +4,6 @@ namespace App\Transformers;
 
 use App\Models\Customer;
 use Carbon\Carbon;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
 class CustomerTransformer extends TransformerAbstract
@@ -52,9 +51,9 @@ class CustomerTransformer extends TransformerAbstract
         ];
     }
 
-    public function includeCompany( Customer $customer ): ?Item
+    public function includeCompany( Customer $admin )
     {
-        if ( is_null( $customer->company ) ) return null;
-        return $this->item( $customer->company, new CompanyTransformer, 'companies' );
+        if ( is_null( $admin->company ) ) return null;
+        return $this->item( $admin->company, new CompanyTransformer, 'companies' );
     }
 }
