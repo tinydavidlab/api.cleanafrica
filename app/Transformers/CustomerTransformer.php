@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use App\Models\Customer;
 use Carbon\Carbon;
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
 class CustomerTransformer extends TransformerAbstract
@@ -46,14 +47,14 @@ class CustomerTransformer extends TransformerAbstract
             'phone_number' => $customer->getAttribute( 'phone_number' ),
             'property_photo' => $customer->getAttribute( 'property_photo' ),
             'apartment_number' => $customer->getAttribute( 'apartment_number' ),
-            'date_joined' =>Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
+            'date_joined' => Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
             'link' => $customer->getLinkAttribute()
         ];
     }
 
-    public function includeCompany( Customer $admin )
+    public function includeCompany( Customer $customer ): ?Item
     {
-        if ( is_null( $admin->company ) ) return null;
-        return $this->item( $admin->company, new CompanyTransformer, 'companies' );
+        if ( is_null( $customer->company ) ) return null;
+        return $this->item( $customer->company, new CompanyTransformer, 'companies' );
     }
 }
