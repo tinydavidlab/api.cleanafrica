@@ -46,7 +46,7 @@ class CustomerTransformer extends TransformerAbstract
             'phone_number' => $customer->getAttribute( 'phone_number' ),
             'property_photo' => $customer->getAttribute( 'property_photo' ),
             'apartment_number' => $customer->getAttribute( 'apartment_number' ),
-            'date_joined' => Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
+            'date_joined' =>Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
             'link' => $customer->getLinkAttribute()
         ];
     }
