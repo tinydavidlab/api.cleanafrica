@@ -50,11 +50,24 @@ class CompanyTripController extends Controller
         return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
     }
 
-    public function getCompanyTripsPerStatus(int $id, $status, $date): JsonResponse
+    public function getCompanyTripsPerStatusAndDate(int $id, $status, $date): JsonResponse
     {
         $trips = $this->repository->scopeQuery(function($query){
             return $query->orderBy('created_at','desc');
         })->getTripsForCompany($id, $status, $date);
+
+        $trips = fractal( $trips, new TripTransformer )
+            ->withResourceName( 'trips' )
+            ->toArray();
+
+        return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
+    }
+
+    public function getCompanyTripsPerStatus(int $id, $status): JsonResponse
+    {
+        $trips = $this->repository->scopeQuery(function($query){
+            return $query->orderBy('created_at','desc');
+        })->getTripsByStatusForCompany($id, $status);
 
         $trips = fractal( $trips, new TripTransformer )
             ->withResourceName( 'trips' )

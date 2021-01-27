@@ -30,6 +30,14 @@ class TripRepository extends BaseRepository
         ]);
     }
 
+    public function getTripsByStatusForCompany(int $id, $status)
+    {
+        return $this->findWhere([
+            'company_id' => $id,
+            'delivery_status' => $status,
+        ]);
+    }
+
     public function filter(\App\Filters\TripFilter $filter)
     {
         return Trip::filter($filter);
