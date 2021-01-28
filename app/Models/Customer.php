@@ -65,10 +65,10 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
         return [];
     }
 
-    public function getLinkAttribute()
+    public function getLinkAttribute(): string
     {
-        $latitude  = $this->getAttribute( 'latitude' );
-        $longitude = $this->getAttribute( 'longitude' );
+        $latitude  = $this->getAttribute('latitude');
+        $longitude = $this->getAttribute('longitude');
         return "http://maps.google.com/maps?q={$latitude},{$longitude}";
     }
 }
