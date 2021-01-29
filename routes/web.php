@@ -119,4 +119,6 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post('property/registration', 'PropertyRegistrationController@store');
     $router->get('property/registration/check', 'PropertyRegistrationController@check');
 
+    /* ============= Statistics ============= */
+    $router->get( 'companies/{id}/stats', 'DashBoardController@index' );
 } );
