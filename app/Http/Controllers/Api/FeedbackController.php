@@ -7,6 +7,7 @@ use App\Jobs\ProcessImageUpload;
 use App\Repositories\FeedbackRepository;
 use App\Transformers\FeedbackTransformer;
 use App\Utilities\ImageUploader;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -129,8 +130,14 @@ class FeedbackController extends Controller
      */
     public function destroy( int $id ): JsonResponse
     {
-        $this->repository->delete( $id );
-        return response()->json( [], Response::HTTP_NO_CONTENT );
+        try {
+            $this->repository->delete( $id );
+
+            return response()->json( [], Response::HTTP_NO_CONTENT );
+        } catch ( ModelNotFoundException $exception ) {
+            return response()->json(
+                [ 'message' => 'No feedback was found with: ' . $id ], Response::HTTP_NOT_FOUND );
+        }
     }
 }
 

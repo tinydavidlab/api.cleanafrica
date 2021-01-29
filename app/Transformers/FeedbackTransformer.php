@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Feedback;
+use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
@@ -13,9 +14,7 @@ class FeedbackTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
-        'customer'
-    ];
+    protected $defaultIncludes = [];
 
     /**
      * List of resources possible to include
@@ -23,7 +22,7 @@ class FeedbackTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        'company'
+        'company','customer'
     ];
 
     /**
@@ -37,9 +36,22 @@ class FeedbackTransformer extends TransformerAbstract
         return [
             'id' => $feedback->getAttribute( 'id' ),
             'message' => $feedback->getAttribute( 'message' ),
-            'photo' => $feedback->getAttribute( 'photo' ),
+            'photo' => $this->getImageUrl( $feedback ),
             'company_id' => $feedback->company_id,
+            'customer_name' => $feedback->customer->name,
+            'phone_number' => $feedback->customer->phone_number,
+            'customer_address' => $feedback->customer->address,
+            'snoocode' => $feedback->customer->snoocode,
         ];
+    }
+
+    private function getImageUrl( Feedback $feedback )
+    {
+        if ( $feedback->getAttribute( 'photo' ) == null ) {
+            return null;
+        }
+
+        return Storage::disk( 's3' )->url( 'feedback/' . $feedback->getAttribute( 'photo' ) );
     }
 
     public function includeCustomer( Feedback $feedback ): Item
