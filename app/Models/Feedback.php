@@ -12,7 +12,7 @@ class Feedback extends Model
         'photo',
         'customer_id',
         'company_id',
-        'user_agent',
+        'device_id',
         'user_agent',
         'app_version',
     ];
