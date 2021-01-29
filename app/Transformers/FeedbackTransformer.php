@@ -44,7 +44,7 @@ class FeedbackTransformer extends TransformerAbstract
             'customer_address' => $feedback->customer->address,
             'snoocode'         => $feedback->customer->snoocode,
             'app_version'      => $feedback->getAttribute('app_version'),
-            'unique_id'        => $feedback->getAttribute('unique_id'),
+            'user_agent'       => $feedback->getAttribute('user_agent'),
             'device_id'        => $feedback->getAttribute('device_id'),
         ];
     }
