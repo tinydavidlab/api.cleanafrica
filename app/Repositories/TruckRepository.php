@@ -19,4 +19,11 @@ class TruckRepository extends BaseRepository
             'company_id' => $id
         ] );
     }
+
+    public function countCompanyTrucks(int $id)
+    {
+        return $this->count([
+            'company_id' => $id
+        ]);
+    }
 }

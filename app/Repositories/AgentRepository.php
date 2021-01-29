@@ -25,4 +25,12 @@ class AgentRepository extends BaseRepository
             'id' => $agent_id
         ] )->first();
     }
+
+    public function countCollectorsForCompany(int $company_id)
+    {
+        return $this->count([
+            'company_id' => $company_id,
+            'type' => 'collector'
+        ]);
+    }
 }
