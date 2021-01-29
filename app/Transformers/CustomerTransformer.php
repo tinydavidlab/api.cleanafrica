@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Trip;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
 class CustomerTransformer extends TransformerAbstract
@@ -53,19 +54,19 @@ class CustomerTransformer extends TransformerAbstract
         ];
     }
 
-    private function getImageUrl( Customer $customer )
+    private function getImageUrl(Customer $customer): ?string
     {
-        if ( $customer->getAttribute( 'property_photo' ) == null ) {
+        if ( $customer->getAttribute('property_photo') == null ) {
             return null;
         }
 
-        return Storage::disk( 's3' )->url( 'properties/' . $customer->getAttribute( 'property_photo' ) );
+        return Storage::url('properties/' . $customer->getAttribute('property_photo'));
     }
 
 
-    public function includeCompany( Customer $admin )
+    public function includeCompany(Customer $admin): ?Item
     {
-        if ( is_null( $admin->company ) ) return null;
-        return $this->item( $admin->company, new CompanyTransformer, 'companies' );
+        if ( is_null($admin->company) ) return null;
+        return $this->item($admin->company, new CompanyTransformer, 'companies');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Admin;
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
 class AdminTransformer extends TransformerAbstract
@@ -27,22 +28,23 @@ class AdminTransformer extends TransformerAbstract
      * A Fractal transformer.
      *
      * @param Admin $admin
+     *
      * @return array
      */
-    public function transform( Admin $admin ): array
+    public function transform(Admin $admin): array
     {
         return [
-            'id' => $admin->getAttribute( 'id' ),
-            'name' => $admin->getAttribute( 'name' ),
-            'company_id' => $admin->getAttribute( 'company_id' ),
-            'phone_number' => $admin->getAttribute( 'phone_number' ),
-            'type' => $admin->getAttribute( 'type' ),
+            'id'           => $admin->getAttribute('id'),
+            'name'         => $admin->getAttribute('name'),
+            'company_id'   => $admin->getAttribute('company_id'),
+            'phone_number' => $admin->getAttribute('phone_number'),
+            'type'         => $admin->getAttribute('type'),
         ];
     }
 
-    public function includeCompany( Admin $admin )
+    public function includeCompany(Admin $admin): ?Item
     {
-        if ( is_null( $admin->company ) ) return null;
-        return $this->item( $admin->company, new CompanyTransformer, 'companies' );
+        if ( is_null($admin->company) ) return null;
+        return $this->item($admin->company, new CompanyTransformer, 'companies');
     }
 }
