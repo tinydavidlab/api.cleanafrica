@@ -38,6 +38,15 @@ class TripRepository extends BaseRepository
         ]);
     }
 
+    public function countTripsPerStatusPerDate(int $id, $status, $date)
+    {
+        return $this->count([
+                'company_id' => $id,
+                'delivery_status' => $status,
+                'collector_date' => $date
+        ]);
+    }
+
     public function filter(\App\Filters\TripFilter $filter)
     {
         return Trip::filter($filter);
