@@ -113,7 +113,4 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->put( 'admins/{id}', 'AdminController@update' );
     $router->delete( 'admins/{id}', 'AdminController@destroy' );
     $router->get( 'companies/{id}/admins', 'AdminController@getAdminForCompany' );
-
-    /* ============= Statistics ============= */
-    $router->get( 'companies/{id}/stats', 'DashBoardController@index' );
 } );
