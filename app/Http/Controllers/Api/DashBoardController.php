@@ -45,16 +45,16 @@ class DashBoardController extends Controller
         $canceledTrips = $this->tripRepository->countTripsPerStatusPerDate($id, 'canceled', $today );
 
         $companyTrucks = $this->truckRepository->countCompanyTrucks($id);
-
         $companyCollectors = $this->agentRepository->countCollectorsForCompany($id);
-
+        $companyCustomers = $this->customerRepository->countCustomersForCompany($id);
         return response()->json( [
             'trips' => [
                 'completed_trips' => $completedTrips,
                 'pending_trips' => $pendingTrips,
                 'canceled_trips' => $canceledTrips,],
             'trucks' => ['no_of_trucks' => $companyTrucks],
-            'collectors' => ['no_of_collectors' => $companyCollectors]
+            'collectors' => ['no_of_collectors' => $companyCollectors],
+            'customers' => ['no_of_customers' => $companyCustomers],
         ], Response::HTTP_OK );
     }
 }

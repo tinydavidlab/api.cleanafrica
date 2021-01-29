@@ -25,4 +25,9 @@ class CustomerRepository extends BaseRepository
             'id' => $customer_id
         ] )->first();
     }
+
+    public function countCustomersForCompany(int $company_id)
+    {
+        return $this->count(['company_id' => $company_id]);
+    }
 }
