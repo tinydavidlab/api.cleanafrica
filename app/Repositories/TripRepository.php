@@ -14,11 +14,11 @@ class TripRepository extends BaseRepository
         return 'App\Models\Trip';
     }
 
-    public function getForCompany( int $id )
+    public function getForCompany(int $id)
     {
-        return $this->findWhere( [
+        return $this->findWhere([
             'company_id' => $id
-        ] );
+        ]);
     }
 
     public function getTripsForCompany(int $id, $status, $date)
@@ -41,9 +41,17 @@ class TripRepository extends BaseRepository
     public function countTripsPerStatusPerDate(int $id, $status, $date)
     {
         return $this->count([
-                'company_id' => $id,
-                'delivery_status' => $status,
-                'collector_date' => $date
+            'company_id' => $id,
+            'delivery_status' => $status,
+            'collector_date' => $date
+        ]);
+    }
+
+    public function countTripsForToday(int $id, $date)
+    {
+        return $this->count([
+            'company_id' => $id,
+            'collector_date' => $date
         ]);
     }
 

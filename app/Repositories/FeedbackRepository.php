@@ -24,4 +24,12 @@ class FeedbackRepository extends BaseRepository
             'customer_id' => $id
         ] );
     }
+
+    public function countTotalFeedbacksForToday( int $company_id, $date)
+    {
+        return $this->count([
+            'company_id' => $company_id,
+            'collector_date' => $date
+        ]);
+    }
 }
