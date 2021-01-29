@@ -29,7 +29,6 @@ class FeedbackRepository extends BaseRepository
     {
         return $this->count([
             'company_id' => $company_id,
-            'collector_date' => $date
         ]);
     }
 }
