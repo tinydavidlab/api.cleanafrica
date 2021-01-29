@@ -28,7 +28,7 @@ class AddDeviceFieldsToFeedbackTable extends Migration
     public function down()
     {
         Schema::table('feedback', function (Blueprint $table) {
-            $table->dropcolumn([ 'device_id', 'app_version', 'unique_id' ]);
+            $table->dropcolumn([ 'device_id', 'app_version', 'user_agent' ]);
         });
     }
 }
