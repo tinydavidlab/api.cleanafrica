@@ -93,7 +93,7 @@ return [
 
     'options' => [
         'application' => env('APP_NAME', 'Laravel'),
-        'repository' => 'http://a640fcaa8bd8.ngrok.io/samtoya/api.cleankenya.com',
+        'repository' => 'http://bbed1c6049d0.ngrok.io/samtoya/api.cleankenya.com',
         'php_fpm_service' => 'php7.4-fpm',
     ],
 
