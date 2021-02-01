@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Feedback;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
@@ -46,6 +47,7 @@ class FeedbackTransformer extends TransformerAbstract
             'app_version'      => $feedback->getAttribute('app_version'),
             'user_agent'       => $feedback->getAttribute('user_agent'),
             'device_id'        => $feedback->getAttribute('device_id'),
+            'received_at'      => Carbon::parse( $feedback->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
         ];
     }
 
