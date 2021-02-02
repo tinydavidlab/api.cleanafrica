@@ -15,6 +15,14 @@ class Feedback extends Model
         'device_id',
         'user_agent',
         'app_version',
+        'brand',
+        'manufacturer',
+        'model',
+        'stamp'
+    ];
+
+    protected $casts = [
+        'stamp' => 'array'
     ];
 
     /**
@@ -24,11 +32,11 @@ class Feedback extends Model
      */
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo( Customer::class );
     }
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo( Company::class );
     }
 }
