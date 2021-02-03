@@ -42,7 +42,7 @@ class Trip extends Model
 
     ];
 
-    public function getLinkAttribute()
+    public function getLinkAttribute(): string
     {
         $latitude  = $this->getAttribute( 'customer_latitude' );
         $longitude = $this->getAttribute( 'customer_longitude' );

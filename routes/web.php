@@ -15,8 +15,8 @@
 
 use Laravel\Lumen\Routing\Router;
 
-$router->get('/', function () {
-});
+$router->get( '/', function () {
+} );
 
 /* ============= Authentication ============= */
 $router->group( [ 'prefix' => 'auth' ], function ( $router ) {
@@ -105,20 +105,38 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'feedback', 'FeedbackController@store' );
     $router->put( 'feedback/{id}', 'FeedbackController@update' );
     $router->delete( 'feedback/{id}', 'FeedbackController@destroy' );
-    $router->get('companies/{id}/feedback', 'FeedbackController@getFeedBackForCompany');
+    $router->get( 'companies/{id}/feedback', 'FeedbackController@getFeedBackForCompany' );
 
     /* ============= Admins ============= */
-    $router->get('admins', 'AdminController@index');
-    $router->get('admins/{id}', 'AdminController@show');
-    $router->post('admins', 'AdminController@store');
-    $router->put('admins/{id}', 'AdminController@update');
-    $router->delete('admins/{id}', 'AdminController@destroy');
-    $router->get('companies/{id}/admins', 'AdminController@getAdminForCompany');
+    $router->get( 'admins', 'AdminController@index' );
+    $router->get( 'admins/{id}', 'AdminController@show' );
+    $router->post( 'admins', 'AdminController@store' );
+    $router->put( 'admins/{id}', 'AdminController@update' );
+    $router->delete( 'admins/{id}', 'AdminController@destroy' );
+    $router->get( 'companies/{id}/admins', 'AdminController@getAdminForCompany' );
 
     /* ============= Propert Registration ============= */
-    $router->post('property/registration', 'PropertyRegistrationController@store');
-    $router->get('property/registration/check', 'PropertyRegistrationController@check');
+    $router->post( 'property/registration', 'PropertyRegistrationController@store' );
+    $router->get( 'property/registration/check', 'PropertyRegistrationController@check' );
 
     /* ============= Statistics ============= */
     $router->get( 'companies/{id}/stats', 'DashBoardController@index' );
+
+    /* ============= Categories ============= */
+    $router->get( 'categories', 'CategoryController@index' );
+    $router->post( 'categories', 'CategoryController@store' );
+    $router->get( 'categories/{id}', 'CategoryController@show' );
+    $router->put( 'categories/{id}', 'CategoryController@update' );
+    $router->delete( 'categories/{id}', 'CategoryController@destroy' );
+
+
+    /* ============= Tickets ============= */
+    $router->get( 'tickets', 'TicketController@index' );
+    $router->get( 'tickets/{id}', 'TicketController@index' );
+    $router->post( 'tickets', 'TicketController@store' );
+
+    /* ============= Ticket Replies ============= */
+    $router->get( 'tickets/{id}/replies', 'TicketReplyController@index' );
+    $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
+
 } );

@@ -25,7 +25,7 @@ class PropertyRegistrationController extends Controller
      *
      * @param CustomerRepository $repository
      */
-    public function __construct(CustomerRepository $repository)
+    public function __construct( CustomerRepository $repository )
     {
         $this->repository = $repository;
     }
@@ -37,23 +37,23 @@ class PropertyRegistrationController extends Controller
      * @return JsonResponse
      * @throws ValidationException|ValidatorException
      */
-    public function store(Request $request): JsonResponse
+    public function store( Request $request ): JsonResponse
     {
-        $this->validate($request, [
+        $this->validate( $request, [
             'property_photo' => 'required'
-        ]);
+        ] );
 
-        if ( $request->hasFile('property_photo') ) {
-            $filename = ImageUploader::upload($request->file('property_photo'));
-            $this->dispatch(new ProcessImageUpload($filename, 'properties'));
-            $this->repository->update([ 'property_photo' => $filename ], auth()->id());
+        if ( $request->hasFile( 'property_photo' ) ) {
+            $filename = ImageUploader::upload( $request->file( 'property_photo' ) );
+            $this->dispatch( new ProcessImageUpload( $filename, 'properties' ) );
+            $this->repository->update( [ 'property_photo' => $filename ], auth()->id() );
         }
 
-        $customer = fractal(auth()->user()->fresh(), new CustomerTransformer)
-            ->withResourceName('customers')
+        $customer = fractal( auth()->user()->fresh(), new CustomerTransformer )
+            ->withResourceName( 'customers' )
             ->toArray();
 
-        return response()->json([ 'customer' => $customer ], Response::HTTP_OK);
+        return response()->json( [ 'customer' => $customer ], Response::HTTP_OK );
     }
 
     /**
@@ -64,8 +64,8 @@ class PropertyRegistrationController extends Controller
     public function check(): JsonResponse
     {
         $checker = auth()->check() ? (bool)auth()->user()->property_photo : true;
-        return response()->json([
+        return response()->json( [
             'property_photo_exists' => $checker,
-        ]);
+        ] );
     }
 }

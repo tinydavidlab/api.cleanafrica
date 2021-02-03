@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\FeedbackRelations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Feedback extends Model
 {
+    use FeedbackRelations;
+
     protected $fillable = [
         'message',
         'photo',
@@ -24,19 +27,4 @@ class Feedback extends Model
     protected $casts = [
         'stamp' => 'array'
     ];
-
-    /**
-     * Customer relationship.
-     *
-     * @return BelongsTo
-     */
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo( Customer::class );
-    }
-
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo( Company::class );
-    }
 }

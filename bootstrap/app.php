@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CorsMiddleware;
+use BenSampo\Enum\EnumServiceProvider;
 use Lorisleiva\LaravelDeployer\LaravelDeployerServiceProvider;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -105,6 +106,7 @@ $app->register( App\Providers\AuthServiceProvider::class );
 $app->register( Spatie\Fractal\FractalServiceProvider::class );
 
 /*======== Custom Providers ============*/
+$app->register( EnumServiceProvider::class );
 $app->register( Tymon\JWTAuth\Providers\LumenServiceProvider::class );
 $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
 $app->register( Prettus\Repository\Providers\LumenRepositoryServiceProvider::class );

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\JWTProps;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -15,31 +16,12 @@ class Admin extends Model implements AuthenticatableContract, AuthorizableContra
 {
     use Authenticatable,
         Authorizable,
-        HasFactory;
+        HasFactory,
+        JWTProps;
 
     protected $fillable = [
         'name', 'type', 'phone_number', 'password', 'company_id'
     ];
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier(): string
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims(): array
-    {
-        return [];
-    }
 
     /**
      * Company relationship.

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\JWTProps;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -15,7 +16,9 @@ class Agent extends Model implements AuthenticatableContract, AuthorizableContra
 {
     use Authenticatable,
         Authorizable,
+        JWTProps,
         HasFactory;
+
     protected $fillable = [
         'name',
         'phone_number',
@@ -36,26 +39,5 @@ class Agent extends Model implements AuthenticatableContract, AuthorizableContra
     public function company(): BelongsTo
     {
         return $this->belongsTo( Company::class );
-    }
-
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier(): string
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims(): array
-    {
-        return [];
     }
 }
