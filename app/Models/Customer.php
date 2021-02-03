@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Traits\CustomerProps;
-use App\Traits\CustomerRelations;
 use App\Traits\JWTProps;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
