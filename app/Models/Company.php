@@ -31,7 +31,7 @@ class Company extends Model
      */
     public function customers(): HasMany
     {
-        return $this->hasMany(Customer::class);
+        return $this->hasMany( Customer::class );
     }
 
     /**
@@ -41,7 +41,7 @@ class Company extends Model
      */
     public function trips(): HasMany
     {
-        return $this->hasMany(Trip::class);
+        return $this->hasMany( Trip::class );
     }
 
     /**
@@ -51,6 +51,6 @@ class Company extends Model
      */
     public function feedback(): HasMany
     {
-        return $this->hasMany(Feedback::class);
+        return $this->hasMany( Feedback::class );
     }
 }
