@@ -30,5 +30,4 @@ trait CustomerRelations
     {
         return $this->hasMany( Ticket::class );
     }
-
 }

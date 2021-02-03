@@ -20,9 +20,10 @@ class CategoryController extends Controller
 
     /**
      * CategoryController constructor.
+     *
      * @param CategoryRepository $repository
      */
-    public function __construct( CategoryRepository $repository )
+    public function __construct(CategoryRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -34,82 +35,86 @@ class CategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $categories = $this->repository->orderBy( 'name' )->get();
-        $categories = fractal( $categories, new CategoryTransformer )
-            ->withResourceName( 'categories' )
+        $categories = $this->repository->orderBy('name')->get();
+        $categories = fractal($categories, new CategoryTransformer)
+            ->withResourceName('categories')
             ->toArray();
 
-        return response()->json( [ 'categories' => $categories ], Response::HTTP_OK );
+        return response()->json([ 'categories' => $categories ], Response::HTTP_OK);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      * @throws ValidationException|ValidatorException
      */
-    public function store( Request $request ): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        $this->validate( $request, [
-            'name' => 'required',
-            'parent' => 'required',
-            'type' => 'required|in:support,general',
+        $this->validate($request, [
+            'name'        => 'required',
+            'parent'      => 'required',
+            'type'        => 'required|in:support,general',
             'description' => 'required',
-        ] );
+        ]);
 
-        $category = $this->repository->create( $request->all() );
-        $category = fractal( $category, new CategoryTransformer )
-            ->withResourceName( 'categories' )
+        $category = $this->repository->create($request->all());
+        $category = fractal($category, new CategoryTransformer)
+            ->withResourceName('categories')
             ->toArray();
 
-        return response()->json( [ 'category' => $category ], Response::HTTP_CREATED );
+        return response()->json([ 'category' => $category ], Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return JsonResponse
      */
-    public function show( int $id ): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $category = $this->repository->find( $id );
-        $category = fractal( $category, new CategoryTransformer )
-            ->withResourceName( 'categories' )
+        $category = $this->repository->find($id);
+        $category = fractal($category, new CategoryTransformer)
+            ->withResourceName('categories')
             ->toArray();
 
-        return response()->json( [ 'category' => $category ], Response::HTTP_OK );
+        return response()->json([ 'category' => $category ], Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param int $id
+     * @param int     $id
+     *
      * @return JsonResponse
      * @throws ValidatorException
      */
-    public function update( Request $request, int $id ): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
-        $category = $this->repository->update( $request->all(), $id );
-        $category = fractal( $category, new CategoryTransformer )
-            ->withResourceName( 'categories' )
+        $category = $this->repository->update($request->all(), $id);
+        $category = fractal($category, new CategoryTransformer)
+            ->withResourceName('categories')
             ->toArray();
 
-        return response()->json( [ 'category' => $category ], Response::HTTP_OK );
+        return response()->json([ 'category' => $category ], Response::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return JsonResponse
      */
-    public function destroy( int $id ): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $this->repository->delete( $id );
+        $this->repository->delete($id);
 
-        return response()->json( [], Response::HTTP_NO_CONTENT );
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 }
