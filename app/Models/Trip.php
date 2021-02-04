@@ -3,13 +3,17 @@
 namespace App\Models;
 
 use App\CanFilter;
+use App\Traits\TripProps;
+use App\Traits\TripRelations;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Trip extends Model
 {
-    use SoftDeletes, CanFilter;
+    use SoftDeletes,
+        CanFilter,
+        TripProps,
+        TripRelations;
 
     protected $fillable = [
         'customer_name',
@@ -41,21 +45,4 @@ class Trip extends Model
         'bin_liner_quantity',
 
     ];
-
-    public function getLinkAttribute()
-    {
-        $latitude  = $this->getAttribute( 'customer_latitude' );
-        $longitude = $this->getAttribute( 'customer_longitude' );
-        return "http://maps.google.com/maps?q={$latitude},{$longitude}";
-    }
-
-    /**
-     * Company relationship.
-     *
-     * @return BelongsTo
-     */
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo( Company::class );
-    }
 }

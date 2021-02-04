@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\TruckRelations;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Truck extends Model
 {
-    protected $fillable = [ 'name', 'license_number', 'company_id' ];
+    use TruckRelations;
 
-    /**
-     * Company relationship.
-     *
-     * @return BelongsTo
-     */
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo( Company::class );
-    }
+    protected $fillable = [
+        'name',
+        'company_id',
+        'license_number',
+    ];
 }

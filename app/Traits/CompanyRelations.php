@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Feedback;
 use App\Models\Trip;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 trait CompanyRelations
 {
@@ -34,10 +35,10 @@ trait CompanyRelations
     /**
      * Feedback relationship.
      *
-     * @return HasMany
+     * @return HasManyThrough
      */
-    public function feedback(): HasMany
+    public function feedback(): HasManyThrough
     {
-        return $this->hasMany( Feedback::class );
+        return $this->hasManyThrough( Feedback::class, Customer::class );
     }
 }

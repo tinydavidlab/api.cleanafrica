@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CorsMiddleware;
 use BenSampo\Enum\EnumServiceProvider;
+use Laravel\Tinker\TinkerServiceProvider;
 use Lorisleiva\LaravelDeployer\LaravelDeployerServiceProvider;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -106,6 +107,7 @@ $app->register( App\Providers\AuthServiceProvider::class );
 $app->register( Spatie\Fractal\FractalServiceProvider::class );
 
 /*======== Custom Providers ============*/
+//$app->register( TinkerServiceProvider::class );
 $app->register( EnumServiceProvider::class );
 $app->register( Tymon\JWTAuth\Providers\LumenServiceProvider::class );
 $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
@@ -129,7 +131,7 @@ if ( env( 'APP_ENV' ) == 'local' ) {
 
 $app->router->group( [
     'namespace' => 'App\Http\Controllers',
-], function ( $router ) {
+], function ($router) {
     require __DIR__ . '/../routes/web.php';
 } );
 

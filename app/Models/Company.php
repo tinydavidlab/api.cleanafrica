@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\CompanyProps;
+use App\Traits\CompanyRelations;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends Model
 {
+    use CompanyRelations,
+        CompanyProps;
+
     protected $fillable = [
         'name',
         'logo',
@@ -18,39 +22,4 @@ class Company extends Model
     ];
 
     protected $dates = [ 'activated_at' ];
-
-    public function getIsActivatedAttribute(): bool
-    {
-        return !is_null( $this->getAttribute( 'activated' ) );
-    }
-
-    /**
-     * Customer relationship.
-     *
-     * @return HasMany
-     */
-    public function customers(): HasMany
-    {
-        return $this->hasMany( Customer::class );
-    }
-
-    /**
-     * Trip relationship.
-     *
-     * @return HasMany
-     */
-    public function trips(): HasMany
-    {
-        return $this->hasMany( Trip::class );
-    }
-
-    /**
-     * Feedback relationship.
-     *
-     * @return HasMany
-     */
-    public function feedback(): HasMany
-    {
-        return $this->hasMany( Feedback::class );
-    }
 }
