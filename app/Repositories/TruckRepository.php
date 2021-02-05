@@ -26,4 +26,9 @@ class TruckRepository extends BaseRepository
             'company_id' => $id
         ]);
     }
+
+    public function countAllTrucks()
+    {
+        return $this->count();
+    }
 }

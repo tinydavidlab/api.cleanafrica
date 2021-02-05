@@ -60,4 +60,33 @@ class TripRepository extends BaseRepository
         return Trip::filter($filter);
     }
 
+    /* super admin stats */
+
+    public function countAllTrips()
+    {
+        return $this->count();
+    }
+
+    public function countAllTripsByStatus($status)
+    {
+        return $this->count([
+            'delivery_status' => $status
+        ]);
+    }
+
+    public function countAllTripsByStatusAndDate($status, $date)
+    {
+        return $this->count([
+            'delivery_status' => $status,
+            'collector_date' => $date
+        ]);
+    }
+
+    public function countAllTripsForToday($date)
+    {
+        return $this->count([
+            'collector_date' => $date
+        ]);
+    }
+
 }

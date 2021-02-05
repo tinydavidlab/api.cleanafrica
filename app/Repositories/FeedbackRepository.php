@@ -31,4 +31,9 @@ class FeedbackRepository extends BaseRepository
             'company_id' => $company_id,
         ]);
     }
+
+    public function countAllFeedBacks()
+    {
+        return $this->count();
+    }
 }

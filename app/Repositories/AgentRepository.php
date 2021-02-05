@@ -33,4 +33,11 @@ class AgentRepository extends BaseRepository
             'type' => 'collector'
         ]);
     }
+
+    public function countAllCollectors()
+    {
+        return $this->count([
+            'type' => 'collector'
+        ]);
+    }
 }

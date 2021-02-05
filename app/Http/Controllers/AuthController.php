@@ -59,7 +59,7 @@ class AuthController extends Controller
     {
         $this->validate( $request, [
             'username' => 'required',
-            'type' => 'required|in:customer,collector,admin',
+            'type' => 'required|in:customer,collector,admin,super_admin',
         ] );
 
         $login_type = filter_var( $request->get( 'username' ), FILTER_VALIDATE_EMAIL ) ? 'email' : 'phone_number';
@@ -159,11 +159,11 @@ class AuthController extends Controller
     public function register( Request $request ): JsonResponse
     {
         $table = Str::plural( $request->get( 'type', 'customer' ) );
-        $table = $table == "collectors" ? "admins" : $table;
+        $table = ($table == "collectors") ? "admins" : (($table == "super_admins") ? "admins" : $table) ;
 
         $this->validate( $request, [
             'name' => 'required',
-            'type' => 'required|in:customer,collector,admin',
+            'type' => 'required|in:customer,collector,admin,super_admin',
             'phone_number' => 'required|unique:' . $table . ',phone_number',
             'company_id' => 'exists:companies,id'
         ] );
