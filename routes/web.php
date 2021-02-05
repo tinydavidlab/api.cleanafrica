@@ -121,6 +121,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
 
     /* ============= Statistics ============= */
     $router->get( 'companies/{id}/stats', 'DashBoardController@index' );
+    $router->get( 'statistics', 'DashBoardController@getStatistics' );
 
     /* ============= Categories ============= */
     $router->get( 'categories', 'CategoryController@index' );

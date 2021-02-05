@@ -11,6 +11,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'admins',
         ],
+        'super_admin' => [
+            'driver' => 'jwt',
+            'provider' => 'admins',
+        ],
         'customer' => [
             'driver' => 'jwt',
             'provider' => 'customers',

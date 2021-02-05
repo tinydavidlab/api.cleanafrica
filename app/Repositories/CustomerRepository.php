@@ -30,4 +30,9 @@ class CustomerRepository extends BaseRepository
     {
         return $this->count(['company_id' => $company_id]);
     }
+
+    public function countAllCustomers()
+    {
+        return $this->count();
+    }
 }
