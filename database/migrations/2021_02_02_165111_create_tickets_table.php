@@ -27,15 +27,13 @@ class CreateTicketsTable extends Migration
 
             $table->timestamps();
 
-            $table->foreign( 'customer_id' )
+           /* $table->foreign( 'customer_id' )
                 ->references( 'id' )
-                ->on( 'customers' )
-                ->cascadeOnDelete();
+                ->on( 'customers' );
 
             $table->foreign( 'admin_id' )
                 ->references( 'id' )
-                ->on( 'admins' )
-                ->cascadeOnDelete();
+                ->on( 'admins' );*/
         } );
     }
 
