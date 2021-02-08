@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Company;
+use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
 
@@ -37,7 +38,7 @@ class CompanyTransformer extends TransformerAbstract
         return [
             'id' => $company->getAttribute( 'id' ),
             'name' => $company->getAttribute( 'name' ),
-            'logo' => $company->getAttribute( 'logo' ),
+            'logo' => $this->getImageUrl($company),
             'tagline' => $company->getAttribute( 'tagline' ),
             'email' => $company->getAttribute( 'email' ),
             'phone_number' => $company->getAttribute( 'phone_number' ),
@@ -45,6 +46,15 @@ class CompanyTransformer extends TransformerAbstract
             'is_activated' => $company->getIsActivatedAttribute(),
             'activated_at' => $company->getAttribute( 'activated_at' ),
         ];
+    }
+
+    public function getImageUrl(Company $company)
+    {
+        if ($company->getAttribute( 'logo' ) == null) {
+            return null;
+        }
+        return Storage::disk( 's3' )->url( 'companies/' . $company->getAttribute( 'logo' ) );
+
     }
 
     public function includeCustomers( Company $company ): Collection
