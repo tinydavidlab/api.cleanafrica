@@ -23,9 +23,9 @@ class CSVImporter extends Controller
             $csv = Reader::createFromPath($csv, 'r');
             $csv->setHeaderOffset( 0 );
 
-            Schema::disableForeignKeyConstraints();
-            DB::table( 'trips' )->truncate();
-            Schema::enableForeignKeyConstraints();
+            //Schema::disableForeignKeyConstraints();
+            //DB::table( 'trips' )->truncate();
+            //Schema::enableForeignKeyConstraints();
 
             foreach ( $csv->getRecords() as $record ) {
                 Trip::create([
@@ -50,7 +50,7 @@ class CSVImporter extends Controller
 
         }
         return response()->json([
-            'message' => 'File uploaded successfully...'. $id
+            'message' => 'File uploaded successfully...'
         ], Response::HTTP_OK);
     }
 }

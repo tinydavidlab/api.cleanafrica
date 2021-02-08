@@ -20,10 +20,9 @@ class CreateFeedbackTable extends Migration
             $table->longText( 'message' );
             $table->timestamps();
 
-            $table->foreign( 'customer_id' )
+           /* $table->foreign( 'customer_id' )
                 ->references( 'id' )
-                ->on( 'customers' )
-                ->cascadeOnDelete();
+                ->on( 'customers' );*/
         } );
     }
 
