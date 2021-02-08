@@ -46,6 +46,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
 
     /* ============= Completed Trips ============= */
     $router->post( 'trips/{id}/completed', 'CompletedTripController@store' );
+    $router->get( 'trips/{id}/complete_without_image', 'CompletedTripController@completeWithoutImages' );
 
     /* ============= Canceled Trips ============= */
     $router->get( 'trips/{id}/canceled', 'CompletedTripController@cancelTrip' );

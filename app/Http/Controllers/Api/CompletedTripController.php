@@ -66,6 +66,20 @@ class CompletedTripController extends Controller
         return response()->json( [ 'trip' => $trip ], Response::HTTP_OK );
     }
 
+    public function completeWithoutImages(int $id)
+    {
+        $trip = $this->repository->update(
+            [ 'delivery_status' => 'completed'],
+            $id
+        );
+
+        $trip = fractal( $trip->fresh(), new TripTransformer() )
+            ->withResourceName( 'trips' )
+            ->toArray();
+
+        return response()->json( [ 'trip' => $trip ], Response::HTTP_OK );
+    }
+
     public function cancelTrip(int $id)
     {
         $trip = $this->repository->update(['delivery_status' => 'canceled'], $id);
