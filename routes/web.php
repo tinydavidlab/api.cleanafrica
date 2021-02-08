@@ -140,4 +140,6 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->get( 'tickets/{id}/replies', 'TicketReplyController@index' );
     $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
 
+    /* ============= CSV Uploader ============= */
+    $router->post('uploadcsv/{id}','CSVImporter@import');
 } );
