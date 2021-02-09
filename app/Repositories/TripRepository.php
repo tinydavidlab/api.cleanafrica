@@ -89,4 +89,9 @@ class TripRepository extends BaseRepository
         ]);
     }
 
+    public function deleteCompanyTrips()
+    {
+
+    }
+
 }
