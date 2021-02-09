@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
+use App\Models\Trip;
 use App\Repositories\TripRepository;
 use App\Transformers\TripTransformer;
 use App\Utilities\ImageUploader;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +27,7 @@ class CompanyTripController extends Controller
      * CompanyTripController constructor.
      * @param TripRepository $repository
      */
-    public function __construct( TripRepository $repository )
+    public function __construct(TripRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -36,44 +38,44 @@ class CompanyTripController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function index( int $id ): JsonResponse
+    public function index(int $id): JsonResponse
     {
 
         $trips = $this->repository->scopeQuery(function ($query) {
-            return $query->orderBy('created_at','desc');
+            return $query->orderBy('created_at', 'desc');
         })->getForCompany($id);
 
-        $trips = fractal( $trips, new TripTransformer )
-            ->withResourceName( 'trips' )
+        $trips = fractal($trips, new TripTransformer)
+            ->withResourceName('trips')
             ->toArray();
 
-        return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
+        return response()->json(['trips' => $trips], Response::HTTP_OK);
     }
 
     public function getCompanyTripsPerStatusAndDate(int $id, $status, $date): JsonResponse
     {
-        $trips = $this->repository->scopeQuery(function($query){
-            return $query->orderBy('created_at','desc');
+        $trips = $this->repository->scopeQuery(function ($query) {
+            return $query->orderBy('created_at', 'desc');
         })->getTripsForCompany($id, $status, $date);
 
-        $trips = fractal( $trips, new TripTransformer )
-            ->withResourceName( 'trips' )
+        $trips = fractal($trips, new TripTransformer)
+            ->withResourceName('trips')
             ->toArray();
 
-        return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
+        return response()->json(['trips' => $trips], Response::HTTP_OK);
     }
 
     public function getCompanyTripsPerStatus(int $id, $status): JsonResponse
     {
-        $trips = $this->repository->scopeQuery(function($query){
-            return $query->orderBy('created_at','desc');
+        $trips = $this->repository->scopeQuery(function ($query) {
+            return $query->orderBy('created_at', 'desc');
         })->getTripsByStatusForCompany($id, $status);
 
-        $trips = fractal( $trips, new TripTransformer )
-            ->withResourceName( 'trips' )
+        $trips = fractal($trips, new TripTransformer)
+            ->withResourceName('trips')
             ->toArray();
 
-        return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
+        return response()->json(['trips' => $trips], Response::HTTP_OK);
     }
 
     /**
@@ -85,9 +87,9 @@ class CompanyTripController extends Controller
      * @throws ValidationException
      * @throws ValidatorException
      */
-    public function store( int $id, Request $request ): JsonResponse
+    public function store(int $id, Request $request): JsonResponse
     {
-        $this->validate( $request, [
+        $this->validate($request, [
             'customer_name' => 'required',
             'customer_primary_phone_number' => 'required',
             'customer_secondary_phone_number' => 'required',
@@ -105,29 +107,29 @@ class CompanyTripController extends Controller
             'collector_date' => 'required',
             'collector_time' => 'required',
             'collector_signature' => 'required',
-        ] );
+        ]);
 
         $trip = $this->repository->create(
-            array_merge( $request->except( [ 'bin_image', 'property_image' ] ), [ 'company_id' => $id ] )
+            array_merge($request->except(['bin_image', 'property_image']), ['company_id' => $id])
         );
 
-        if ( $request->hasFile( 'bin_image' ) ) {
-            $filename = ImageUploader::upload( $request->file( 'bin_image' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'bins' ) );
-            $this->repository->update( [ 'bin_image' => $filename ], $trip->id );
+        if ($request->hasFile('bin_image')) {
+            $filename = ImageUploader::upload($request->file('bin_image'));
+            $this->dispatch(new ProcessImageUpload($filename, 'bins'));
+            $this->repository->update(['bin_image' => $filename], $trip->id);
         }
 
-        if ( $request->hasFile( 'property_image' ) ) {
-            $filename = ImageUploader::upload( $request->file( 'property_image' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'properties' ) );
-            $this->repository->update( [ 'property_image' => $filename ], $trip->id );
+        if ($request->hasFile('property_image')) {
+            $filename = ImageUploader::upload($request->file('property_image'));
+            $this->dispatch(new ProcessImageUpload($filename, 'properties'));
+            $this->repository->update(['property_image' => $filename], $trip->id);
         }
 
-        $trip = fractal( $trip, new TripTransformer )
-            ->withResourceName( 'trips' )
+        $trip = fractal($trip, new TripTransformer)
+            ->withResourceName('trips')
             ->toArray();
 
-        return response()->json( [ 'trip' => $trip ], Response::HTTP_CREATED );
+        return response()->json(['trip' => $trip], Response::HTTP_CREATED);
     }
 
     /**
@@ -136,15 +138,15 @@ class CompanyTripController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show( int $id ): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $trip = $this->repository->find( $id );
+        $trip = $this->repository->find($id);
 
-        $trip = fractal( $trip, new TripTransformer )
-            ->withResourceName( 'trips' )
+        $trip = fractal($trip, new TripTransformer)
+            ->withResourceName('trips')
             ->toArray();
 
-        return response()->json( [ 'trip' => $trip ], Response::HTTP_OK );
+        return response()->json(['trip' => $trip], Response::HTTP_OK);
     }
 
     /**
@@ -154,7 +156,7 @@ class CompanyTripController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update( Request $request, $id )
+    public function update(Request $request, $id)
     {
         //
     }
@@ -165,13 +167,32 @@ class CompanyTripController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function destroy( int $id ): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
-            $this->repository->delete( $id );
-        } catch ( ModelNotFoundException $exception ) {
+            $this->repository->delete($id);
+            return response()->json( [], Response::HTTP_NO_CONTENT );
+        } catch (ModelNotFoundException $exception) {
             return response()->json(
-                [ 'message' => 'No trip was found with: ' . $id ], Response::HTTP_NOT_FOUND );
+                ['message' => 'No trip was found with: ' . $id], Response::HTTP_NOT_FOUND);
         }
+    }
+
+    public function deleteForCompany(int $id)
+    {
+        try {
+            DB::table('trips')->where(['company_id' => $id,])->delete();
+            return response()->json( [], Response::HTTP_NO_CONTENT );
+        }catch (ModelNotFoundException $exception) {
+            return response()->json(
+                ['message' => 'No trip was found with: ' . $id], Response::HTTP_NOT_FOUND);
+        }
+
+    }
+
+    public function truncateTrips()
+    {
+        Trip::query()->truncate();
+        return response()->json( [], Response::HTTP_NO_CONTENT );
     }
 }
