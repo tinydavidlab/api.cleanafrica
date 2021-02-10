@@ -82,6 +82,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'companies/{id}/trips', 'CompanyTripController@store' );
     $router->get( 'companies/{id}/trips/{status}/{date}', 'CompanyTripController@getCompanyTripsPerStatusAndDate' );
     $router->get( 'companies/{id}/trips/{status}', 'CompanyTripController@getCompanyTripsPerStatus' );
+    $router->get( 'companies/{id}/trip_date/{date}', 'CompanyTripController@getTripsPerDateForCompany' );
     $router->get( 'companies/{id}/delete_trips', 'CompanyTripController@deleteForCompany' );
     $router->get( 'truncate_trips', 'CompanyTripController@truncateTrips' );
 
@@ -144,5 +145,6 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
 
     /* ============= CSV Uploader ============= */
-    $router->post('uploadcsv/{id}','CSVImporter@import');
+    //$router->post('uploadcsv/{id}','CSVImporter@import');
+    $router->post('uploadcsv/{type}','CSVImporter@import');
 } );

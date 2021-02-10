@@ -8,6 +8,7 @@ use App\Jobs\ProcessImageUpload;
 use App\Repositories\TripRepository;
 use App\Transformers\TripTransformer;
 use App\Utilities\ImageUploader;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -68,7 +69,7 @@ class TripController extends Controller
             'customer_longitude' => 'required',
         ] );
 
-        $trip = $this->repository->create( $request->except( [ 'bin_image', 'property_image' ] ) );
+        $trip = $this->repository->create([ 'bin_image', 'property_image']);
 
         if ( $request->hasFile( 'bin_image' ) ) {
             $filename = ImageUploader::upload( $request->file( 'bin_image' ) );

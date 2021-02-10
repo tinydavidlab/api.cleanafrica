@@ -38,6 +38,14 @@ class TripRepository extends BaseRepository
         ]);
     }
 
+    public function getTripsPerDateForCompany(int $id, $date)
+    {
+        return $this->findWhere([
+            'company_id' => $id,
+            'collector_date' => $date,
+        ]);
+    }
+
     public function countTripsPerStatusPerDate(int $id, $status, $date)
     {
         return $this->count([
@@ -89,9 +97,5 @@ class TripRepository extends BaseRepository
         ]);
     }
 
-    public function deleteCompanyTrips()
-    {
-
-    }
 
 }

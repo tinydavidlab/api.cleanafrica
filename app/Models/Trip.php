@@ -45,4 +45,8 @@ class Trip extends Model
         'bin_liner_quantity',
 
     ];
+
+   // protected $dates = ['collector_date'];
+
+    //protected $dateFormat = 'Y-m-d';
 }

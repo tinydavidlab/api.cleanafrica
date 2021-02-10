@@ -8,6 +8,7 @@ use App\Models\Trip;
 use App\Repositories\TripRepository;
 use App\Transformers\TripTransformer;
 use App\Utilities\ImageUploader;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -70,6 +71,17 @@ class CompanyTripController extends Controller
         $trips = $this->repository->scopeQuery(function ($query) {
             return $query->orderBy('created_at', 'desc');
         })->getTripsByStatusForCompany($id, $status);
+
+        $trips = fractal($trips, new TripTransformer)
+            ->withResourceName('trips')
+            ->toArray();
+
+        return response()->json(['trips' => $trips], Response::HTTP_OK);
+    }
+
+    public function getTripsPerDateForCompany(int $id, $date)
+    {
+        $trips = $this->repository->getTripsPerDateForCompany($id, $date);
 
         $trips = fractal($trips, new TripTransformer)
             ->withResourceName('trips')
@@ -182,6 +194,7 @@ class CompanyTripController extends Controller
     {
         try {
             DB::table('trips')->where(['company_id' => $id,])->delete();
+            //$this->repository->deleteWhere(['company_id' => $id]);
             return response()->json( [], Response::HTTP_NO_CONTENT );
         }catch (ModelNotFoundException $exception) {
             return response()->json(
