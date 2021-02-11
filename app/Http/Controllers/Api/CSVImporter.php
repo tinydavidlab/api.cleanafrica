@@ -32,7 +32,7 @@ class CSVImporter extends Controller
         return response()->json(['message' => 'Method not found'], Response::HTTP_FORBIDDEN);
     }
 
-    public function company($type, $key): \Illuminate\Http\JsonResponse
+    public function trip($type, $key): \Illuminate\Http\JsonResponse
     {
         if (request()->hasFile('csv')) {
             $csv = request()->file( 'csv' );

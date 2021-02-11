@@ -138,4 +138,25 @@ class TripController extends Controller
 
         return response()->json( [], Response::HTTP_NO_CONTENT );
     }
+
+    public function getTripsPerDate($date)
+    {
+        $trips = $this->repository->getTripsPerDate($date);
+
+        $trips = fractal($trips, new TripTransformer())
+            ->withResourceName('trips')
+            ->toArray();
+
+        return response()->json(['trips' => $trips], Response::HTTP_OK);
+    }
+
+    public function getTripsForThisWeek()
+    {
+        $trips = $this->repository->getAllTripsForThisWeek();
+        $trips = fractal($trips, new TripTransformer())
+        ->withResourceName('trips')
+        ->toArray();
+
+        return response()->json(['trips' => $trips], Response::HTTP_OK);
+    }
 }

@@ -43,6 +43,8 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'trips', 'TripController@store' );
     $router->put( 'trips/{id}', 'TripController@update' );
     $router->delete( 'trips/{id}', 'TripController@destroy' );
+    $router->get( 'trips/{date}/per_date', 'TripController@getTripsPerDate' );
+    $router->get( 'trips_per_week', 'TripController@getTripsForThisWeek' );
 
     /* ============= Completed Trips ============= */
     $router->post( 'trips/{id}/completed', 'CompletedTripController@store' );
@@ -85,6 +87,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->get( 'companies/{id}/trip_date/{date}', 'CompanyTripController@getTripsPerDateForCompany' );
     $router->get( 'companies/{id}/delete_trips', 'CompanyTripController@deleteForCompany' );
     $router->get( 'truncate_trips', 'CompanyTripController@truncateTrips' );
+    $router->get( 'companies/{id}/weekly_trips', 'CompanyTripController@getCompanyTripsForTheWeek' );
 
     /* ============= Agents ============= */
     $router->get( 'agents', 'AgentController@index' );
@@ -126,6 +129,8 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     /* ============= Statistics ============= */
     $router->get( 'companies/{id}/stats', 'DashBoardController@index' );
     $router->get( 'statistics', 'DashBoardController@getStatistics' );
+    $router->get( 'statistics_per_date/{criteria}', 'DashBoardController@getStatisticsPerCriteria' );
+    $router->get( 'companies/{id}/statistics_per_date/{criteria}', 'DashBoardController@getStatisticPerCriteriaPerCompany' );
 
     /* ============= Categories ============= */
     $router->get( 'categories', 'CategoryController@index' );
@@ -145,6 +150,5 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
 
     /* ============= CSV Uploader ============= */
-    //$router->post('uploadcsv/{id}','CSVImporter@import');
     $router->post('uploadcsv/{type}','CSVImporter@import');
 } );

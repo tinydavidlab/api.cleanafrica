@@ -208,4 +208,16 @@ class CompanyTripController extends Controller
         Trip::query()->truncate();
         return response()->json( [], Response::HTTP_NO_CONTENT );
     }
+
+    public function getCompanyTripsForTheWeek(int $id)
+    {
+        $trips = $this->repository->scopeQuery(function ($query) use ($id) {
+            return $query->where(['company_id' => $id]);
+        })->getAllTripsForThisWeek();
+        $trips = fractal($trips, new TripTransformer())
+            ->withResourceName('trips')
+            ->toArray();
+
+        return response()->json(['trips' => $trips], Response::HTTP_OK);
+    }
 }

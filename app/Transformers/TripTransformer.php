@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Trip;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\TransformerAbstract;
 
@@ -54,6 +55,7 @@ class TripTransformer extends TransformerAbstract
             'collector_subdivision' => $trip->getAttribute( 'collector_subdivision' ),
             'collector_snoocode' => $trip->getAttribute( 'collector_snoocode' ),
             'collector_date' => $trip->getAttribute( 'collector_date' ),
+            //'collector_date' => Carbon::parse( $trip->getAttribute( 'collector_date' ) )->format( 'l F d Y H:i:s' ),
             'collector_time' => $trip->getAttribute( 'collector_time' ),
             'collector_signature' => $trip->getAttribute( 'collector_signature' ),
 
@@ -62,7 +64,8 @@ class TripTransformer extends TransformerAbstract
             'status' => $trip->getAttribute( 'delivery_status' ),
             'bin_liner_quantity' => $trip->getAttribute( 'bin_liner_quantity' ),
             'notes' => $trip->getAttribute( 'notes' ),
-            'link' => $trip->getLinkAttribute()
+            'link' => $trip->getLinkAttribute(),
+            'created_at' => Carbon::parse( $trip->getAttribute( 'created_at' ) )->format( 'l, d F Y @ H:i:s' ),
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Models\Trip;
+use Carbon\Carbon;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class TripRepository extends BaseRepository
@@ -46,20 +47,10 @@ class TripRepository extends BaseRepository
         ]);
     }
 
-    public function countTripsPerStatusPerDate(int $id, $status, $date)
+    public function getTripsPerDate($date)
     {
-        return $this->count([
-            'company_id' => $id,
-            'delivery_status' => $status,
-            'collector_date' => $date
-        ]);
-    }
-
-    public function countTripsForToday(int $id, $date)
-    {
-        return $this->count([
-            'company_id' => $id,
-            'collector_date' => $date
+        return $this->findWhere([
+            'collector_date' => $date,
         ]);
     }
 
@@ -68,7 +59,41 @@ class TripRepository extends BaseRepository
         return Trip::filter($filter);
     }
 
-    /* super admin stats */
+    public function getAllTripsForThisWeek()
+    {
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+    }
+
+    public function getAllTripsForThisMonth()
+    {
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+    }
+
+    public function getAllTripsForThisYear()
+    {
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+    }
+
+
+
+    /** ======== Statistics ========* */
+
+    public function countCompanyTripsPerStatusPerDate(int $id, $status, $date)
+    {
+        return $this->count([
+            'company_id' => $id,
+            'delivery_status' => $status,
+            'collector_date' => $date
+        ]);
+    }
+
+    public function countCompanyTripsForToday(int $id, $date)
+    {
+        return $this->count([
+            'company_id' => $id,
+            'collector_date' => $date
+        ]);
+    }
 
     public function countAllTrips()
     {
@@ -95,6 +120,21 @@ class TripRepository extends BaseRepository
         return $this->count([
             'collector_date' => $date
         ]);
+    }
+
+    public function countTotalTripsForTheWeek()
+    {
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
+    }
+
+    public function countTotalTripsForTheMonth()
+    {
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->count();
+    }
+
+    public function countTotalTripsForThisYear()
+    {
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()])->count();
     }
 
 
