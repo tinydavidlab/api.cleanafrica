@@ -212,7 +212,8 @@ class CompanyTripController extends Controller
     public function getCompanyTripsForTheWeek(int $id)
     {
         $trips = $this->repository->scopeQuery(function ($query) use ($id) {
-            return $query->where(['company_id' => $id]);
+            return $query->where(['company_id' => $id])
+                ->orderBy('created_at', 'desc');
         })->getAllTripsForThisWeek();
         $trips = fractal($trips, new TripTransformer())
             ->withResourceName('trips')

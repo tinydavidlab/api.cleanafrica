@@ -139,4 +139,20 @@ class AgentController extends Controller
                 [ 'message' => 'No agent was found with: ' . $id ], Response::HTTP_NOT_FOUND );
         }
     }
+
+    public function getAgentByType($type)
+    {
+        $agents = $this->repository->
+            scopeQuery(function ($query) use ($type) {
+            return $query->where('type', $type);
+        })->all();
+
+        $agents = fractal( $agents, new AgentTransformer() )
+            ->withResourceName( 'agents' )
+            ->toArray();
+
+        return response()->json( [ 'agents' => $agents ], Response::HTTP_OK );
+    }
+
+
 }

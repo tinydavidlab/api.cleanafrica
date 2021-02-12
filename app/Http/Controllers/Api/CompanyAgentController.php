@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\AgentRepository;
 use App\Transformers\AgentTransformer;
-use App\Transformers\CustomerTransformer;
+use App\Transformers\TripTransformer;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +25,7 @@ class CompanyAgentController extends Controller
      * CompanyAgentController constructor.
      * @param AgentRepository $repository
      */
-    public function __construct( AgentRepository $repository )
+    public function __construct(AgentRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -36,15 +36,15 @@ class CompanyAgentController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function index( int $id ): JsonResponse
+    public function index(int $id): JsonResponse
     {
-        $agents = $this->repository->getForCompany( $id );
+        $agents = $this->repository->getForCompany($id);
 
-        $agents = fractal( $agents, new AgentTransformer() )
-            ->withResourceName( 'agents' )
+        $agents = fractal($agents, new AgentTransformer())
+            ->withResourceName('agents')
             ->toArray();
 
-        return response()->json( [ 'agents' => $agents ], Response::HTTP_OK );
+        return response()->json(['agents' => $agents], Response::HTTP_OK);
     }
 
     /**
@@ -55,23 +55,23 @@ class CompanyAgentController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store( Request $request, int $id ): JsonResponse
+    public function store(Request $request, int $id): JsonResponse
     {
-        $this->validate( $request, [
+        $this->validate($request, [
             'name' => 'required',
             'phone_number' => 'required|unique:agents',
             'type' => 'required',
-        ] );
+        ]);
 
         try {
-            $agent = $this->repository->create( array_merge( $request->all(), [ 'company_id' => $id ] ) );
-            $agent = fractal( $agent, new AgentTransformer() )
-                ->withResourceName( 'agents' )
+            $agent = $this->repository->create(array_merge($request->all(), ['company_id' => $id]));
+            $agent = fractal($agent, new AgentTransformer())
+                ->withResourceName('agents')
                 ->toArray();
 
-            return response()->json( [ 'agent' => $agent ], Response::HTTP_CREATED );
-        } catch ( Exception $exception ) {
-            return response()->json( [ 'message' => 'Please check the company if it exists.' ], Response::HTTP_BAD_REQUEST );
+            return response()->json(['agent' => $agent], Response::HTTP_CREATED);
+        } catch (Exception $exception) {
+            return response()->json(['message' => 'Please check the company if it exists.'], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -82,18 +82,18 @@ class CompanyAgentController extends Controller
      * @param int $agent_id
      * @return JsonResponse
      */
-    public function show( int $id, int $agent_id ): JsonResponse
+    public function show(int $id, int $agent_id): JsonResponse
     {
         try {
-            $agent = $this->repository->findForCompany( $id, $agent_id );
+            $agent = $this->repository->findForCompany($id, $agent_id);
 
-            $agent = fractal( $agent, new AgentTransformer )
-                ->withResourceName( 'agents' )
+            $agent = fractal($agent, new AgentTransformer)
+                ->withResourceName('agents')
                 ->toArray();
 
-            return response()->json( [ 'agent' => $agent ], Response::HTTP_OK );
-        } catch ( ModelNotFoundException $exception ) {
-            return response()->json( [ 'message' => 'No agent was found with id: ' . $agent_id ], Response::HTTP_NOT_FOUND );
+            return response()->json(['agent' => $agent], Response::HTTP_OK);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['message' => 'No agent was found with id: ' . $agent_id], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -105,19 +105,19 @@ class CompanyAgentController extends Controller
      * @return JsonResponse
      * @throws ValidatorException
      */
-    public function update( Request $request, int $id ): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         try {
-            $agent = $this->repository->update( $request->all(), $id );
+            $agent = $this->repository->update($request->all(), $id);
 
-            $agent = fractal( $agent->fresh(), new AgentTransformer() )
-                ->withResourceName( 'agents' )
+            $agent = fractal($agent->fresh(), new AgentTransformer())
+                ->withResourceName('agents')
                 ->toArray();
 
-            return response()->json( [ 'agent' => $agent ], Response::HTTP_OK );
-        } catch ( ModelNotFoundException $exception ) {
+            return response()->json(['agent' => $agent], Response::HTTP_OK);
+        } catch (ModelNotFoundException $exception) {
             return response()->json(
-                [ 'message' => 'No agent was found with: ' . $id ], Response::HTTP_NOT_FOUND );
+                ['message' => 'No agent was found with: ' . $id], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -128,15 +128,49 @@ class CompanyAgentController extends Controller
      * @param int $agent_id
      * @return JsonResponse
      */
-    public function destroy( int $id, int $agent_id ): JsonResponse
+    public function destroy(int $id, int $agent_id): JsonResponse
     {
         try {
-            $this->repository->delete( $agent_id );
+            $this->repository->delete($agent_id);
 
-            return response()->json( [], Response::HTTP_NO_CONTENT );
-        } catch ( ModelNotFoundException $exception ) {
+            return response()->json([], Response::HTTP_NO_CONTENT);
+        } catch (ModelNotFoundException $exception) {
             return response()->json(
-                [ 'message' => 'No agent was found with: ' . $id ], Response::HTTP_NOT_FOUND );
+                ['message' => 'No agent was found with: ' . $id], Response::HTTP_NOT_FOUND);
         }
+    }
+
+    public function getCompanyAgentByType(int $id, $type)
+    {
+        $agents = $this->repository->
+        scopeQuery(function ($query) use ($id, $type) {
+            return $query->where([
+                'type' => $type,
+                'company_id' => $id
+            ]);
+        })->all();
+
+        $agents = fractal($agents, new AgentTransformer())
+            ->withResourceName('agents')
+            ->toArray();
+
+        return response()->json(['agents' => $agents], Response::HTTP_OK);
+    }
+
+    public function getTripsForSpecificTruckAndAgent(int $id): JsonResponse
+    {
+        $collector = $this->repository->find($id);
+        $trips = collect();
+        foreach ($collector->trucks as $truck) {
+            $trips[] = $truck->trips;
+        }
+
+        $trips = $trips->flatten()->where('collector_date','2021-02-12');
+
+        $trips = fractal($trips, new TripTransformer)
+            ->withResourceName('trips')
+            ->toArray();
+
+        return response()->json(['trips' => $trips], Response::HTTP_OK);
     }
 }

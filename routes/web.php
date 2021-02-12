@@ -72,6 +72,8 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->get( 'companies/{id}/agents/{agent_id}', 'CompanyAgentController@show' );
     $router->post( 'companies/{id}/agents', 'CompanyAgentController@store' );
     $router->delete( 'companies/{id}/agents/{agent_id}', 'CompanyAgentController@destroy' );
+    $router->get( 'companies/{id}/type/{type}', 'CompanyAgentController@getCompanyAgentByType' );
+    $router->get( 'collectors/{id}', 'CompanyAgentController@getTripsForSpecificTruckAndAgent' );
 
     /* ============= Company Customer ============= */
     $router->get( 'companies/{id}/customers', 'CompanyCustomerController@index' );
@@ -95,6 +97,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'agents', 'AgentController@store' );
     $router->put( 'agents/{id}', 'AgentController@update' );
     $router->delete( 'agents/{id}', 'AgentController@destroy' );
+    $router->get( 'agents/{type}/type', 'AgentController@getAgentByType' );
 
     /* ============= Trucks ============= */
     $router->get( 'trucks', 'TruckController@index' );
@@ -102,6 +105,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'trucks', 'TruckController@store' );
     $router->put( 'trucks/{id}', 'TruckController@update' );
     $router->delete( 'trucks/{id}', 'TruckController@destroy' );
+    $router->post( 'assign_trucks/{id}/agents', 'TruckController@assignTruckToCollector' );
 
     /* ============= Company Trucks ============= */
     $router->get( 'companies/{id}/trucks', 'TruckController@trucksForCompany' );

@@ -41,12 +41,9 @@ class Trip extends Model
         'bin_image',
         'property_photo',
         'company_id',
+        'truck_id',
         'delivery_status',
         'bin_liner_quantity',
 
     ];
-
-   // protected $dates = ['collector_date'];
-
-    //protected $dateFormat = 'Y-m-d';
 }
