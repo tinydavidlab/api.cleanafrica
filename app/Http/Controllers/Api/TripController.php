@@ -69,7 +69,7 @@ class TripController extends Controller
             'customer_longitude' => 'required',
         ] );
 
-        $trip = $this->repository->create([ 'bin_image', 'property_image']);
+        $trip = $this->repository->create($request->except([ 'bin_image', 'property_image']));
 
         if ( $request->hasFile( 'bin_image' ) ) {
             $filename = ImageUploader::upload( $request->file( 'bin_image' ) );
@@ -139,7 +139,7 @@ class TripController extends Controller
         return response()->json( [], Response::HTTP_NO_CONTENT );
     }
 
-    public function getTripsPerDate($date)
+    public function getTripsPerDate($date): JsonResponse
     {
         $trips = $this->repository->getTripsPerDate($date);
 
@@ -150,7 +150,7 @@ class TripController extends Controller
         return response()->json(['trips' => $trips], Response::HTTP_OK);
     }
 
-    public function getTripsForThisWeek()
+    public function getTripsForThisWeek(): JsonResponse
     {
         $trips = $this->repository->getAllTripsForThisWeek();
         $trips = fractal($trips, new TripTransformer())

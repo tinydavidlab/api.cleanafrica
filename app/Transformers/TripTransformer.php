@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Trip;
+use App\Models\Truck;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\TransformerAbstract;
@@ -22,7 +23,7 @@ class TripTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        'company'
+        'company', 'truck'
     ];
 
     /**
@@ -36,6 +37,7 @@ class TripTransformer extends TransformerAbstract
         return [
             'id' => $trip->getAttribute( 'id' ),
             'company_id' => $trip->getAttribute( 'company_id' ),
+            'truck_id' => $trip->getAttribute( 'truck_id' ),
             'customer_name' => $trip->getAttribute( 'customer_name' ),
             'customer_primary_phone_number' => $trip->getAttribute( 'customer_primary_phone_number' ),
             'customer_secondary_phone_number' => $trip->getAttribute( 'customer_secondary_phone_number' ),
@@ -82,5 +84,12 @@ class TripTransformer extends TransformerAbstract
     {
         if ( !$trip->company ) return null;
         return $this->item( $trip->company, new CompanyTransformer, 'companies' );
+    }
+
+    public function includeTruck(Trip $trip)
+    {
+        if (!$trip->truck) return null;
+
+        return $this->item($trip->truck, new TruckTransformer(), 'trucks');
     }
 }

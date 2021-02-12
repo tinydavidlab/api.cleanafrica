@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
+use App\Models\Truck;
 use App\Repositories\TruckRepository;
 use App\Transformers\TruckTransformer;
 use App\Utilities\ImageUploader;
@@ -24,7 +25,7 @@ class TruckController extends Controller
      * TruckController constructor.
      * @param TruckRepository $repository
      */
-    public function __construct( TruckRepository $repository )
+    public function __construct(TruckRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -37,22 +38,22 @@ class TruckController extends Controller
     public function index(): JsonResponse
     {
         $trucks = $this->repository->all();
-        $trucks = fractal( $trucks, new TruckTransformer )
-            ->withResourceName( 'trucks' )
+        $trucks = fractal($trucks, new TruckTransformer)
+            ->withResourceName('trucks')
             ->toArray();
 
-        return response()->json( [ 'trucks' => $trucks ], Response::HTTP_OK );
+        return response()->json(['trucks' => $trucks], Response::HTTP_OK);
     }
 
     public function trucksForCompany(int $id)
     {
         $trucks = $this->repository->scopeQuery(function ($query) {
-            return $query->orderBy('created_at','desc');
+            return $query->orderBy('created_at', 'desc');
         })->getForCompany($id);
         $trucks = fractal($trucks, new TruckTransformer())
-        ->withResourceName('trucks')
-        ->toArray();
-        return response()->json( [ 'trucks' => $trucks ], Response::HTTP_OK );
+            ->withResourceName('trucks')
+            ->toArray();
+        return response()->json(['trucks' => $trucks], Response::HTTP_OK);
     }
 
     /**
@@ -63,25 +64,25 @@ class TruckController extends Controller
      * @throws ValidatorException
      * @throws ValidationException
      */
-    public function store( Request $request ): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        $this->validate( $request, [
+        $this->validate($request, [
             'name' => 'required',
             'license_number' => 'required'
-        ] );
+        ]);
 
-        $truck = $this->repository->create( $request->all() );
-        if ( $request->hasFile( 'photo' ) ) {
-            $filename = ImageUploader::upload( $request->file( 'photo' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'trucks' ) );
-            $this->repository->update( [ 'photo' => $filename ], $truck->id );
+        $truck = $this->repository->create($request->except(['agent_ids']));
+        if ($request->hasFile('photo')) {
+            $filename = ImageUploader::upload($request->file('photo'));
+            $this->dispatch(new ProcessImageUpload($filename, 'trucks'));
+            $this->repository->update(['photo' => $filename], $truck->id);
         }
 
-        $truck = fractal( $truck, new TruckTransformer )
-            ->withResourceName( 'trucks' )
+        $truck = fractal($truck, new TruckTransformer)
+            ->withResourceName('trucks')
             ->toArray();
 
-        return response()->json( [ 'truck' => $truck ], Response::HTTP_CREATED );
+        return response()->json(['truck' => $truck], Response::HTTP_CREATED);
     }
 
     /**
@@ -90,14 +91,14 @@ class TruckController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show( int $id ): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $truck = $this->repository->find( $id );
-        $truck = fractal( $truck, new TruckTransformer )
-            ->withResourceName( 'trucks' )
+        $truck = $this->repository->find($id);
+        $truck = fractal($truck, new TruckTransformer)
+            ->withResourceName('trucks')
             ->toArray();
 
-        return response()->json( [ 'truck' => $truck ], Response::HTTP_OK );
+        return response()->json(['truck' => $truck], Response::HTTP_OK);
     }
 
     /**
@@ -108,14 +109,18 @@ class TruckController extends Controller
      * @return JsonResponse
      * @throws ValidatorException
      */
-    public function update( Request $request, int $id ): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
-        $truck = $this->repository->update( $request->all(), $id );
-        $truck = fractal( $truck, new TruckTransformer )
-            ->withResourceName( 'trucks' )
+        $truck = $this->repository->update($request->except(['agent_ids']), $id);
+
+        if ($request->has('agent_ids')) {
+            $truck->agents()->sync($request['agent_ids']);
+        }
+        $truck = fractal($truck, new TruckTransformer)
+            ->withResourceName('trucks')
             ->toArray();
 
-        return response()->json( [ 'truck' => $truck ], Response::HTTP_OK );
+        return response()->json(['truck' => $truck], Response::HTTP_OK);
     }
 
     /**
@@ -124,9 +129,19 @@ class TruckController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function destroy( int $id ): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $this->repository->delete( $id );
-        return response()->json( [], Response::HTTP_OK );
+        $this->repository->delete($id);
+        return response()->json([], Response::HTTP_OK);
+    }
+
+    public function assignTruckToCollector(int $id, Request $request)
+    {
+        $agent_ids = [3, 5, 6, 7, 8, 9, 13, 14, 16, 17, 19, 21, 23, 25];
+
+        $truck = $this->repository->find($id);
+
+        $truck->agents()->sync($agent_ids);
+
     }
 }
