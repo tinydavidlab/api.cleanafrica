@@ -157,7 +157,7 @@ class CompanyAgentController extends Controller
         return response()->json(['agents' => $agents], Response::HTTP_OK);
     }
 
-    public function getTripsForSpecificTruckAndAgent(int $id): JsonResponse
+    public function getTripsForSpecificTruckAndAgent(int $id , $date, $status): JsonResponse
     {
         $collector = $this->repository->find($id);
         $trips = collect();
@@ -165,7 +165,9 @@ class CompanyAgentController extends Controller
             $trips[] = $truck->trips;
         }
 
-        $trips = $trips->flatten()->where('collector_date','2021-02-12');
+        $trips = $trips->flatten()
+            ->where('collector_date',$date)
+        ->where('delivery_status', $status);
 
         $trips = fractal($trips, new TripTransformer)
             ->withResourceName('trips')

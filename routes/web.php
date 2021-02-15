@@ -73,7 +73,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'companies/{id}/agents', 'CompanyAgentController@store' );
     $router->delete( 'companies/{id}/agents/{agent_id}', 'CompanyAgentController@destroy' );
     $router->get( 'companies/{id}/type/{type}', 'CompanyAgentController@getCompanyAgentByType' );
-    $router->get( 'collectors/{id}', 'CompanyAgentController@getTripsForSpecificTruckAndAgent' );
+    $router->get( 'collectors/{id}/{date}/{status}', 'CompanyAgentController@getTripsForSpecificTruckAndAgent' );
 
     /* ============= Company Customer ============= */
     $router->get( 'companies/{id}/customers', 'CompanyCustomerController@index' );
