@@ -21,7 +21,7 @@ class TicketTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        'customer', 'admin'
+        'customer', 'admin', 'category'
     ];
 
     /**
@@ -35,10 +35,12 @@ class TicketTransformer extends TransformerAbstract
     {
         return [
             'id' => $ticket->getAttribute( 'id' ),
+            'category' => $ticket->category->name ?? null,
             'subject' => $ticket->getAttribute( 'subject' ),
             'content' => $ticket->getAttribute( 'content' ),
             'priority' => $ticket->getAttribute( 'priority' ),
             'status' => $ticket->getAttribute( 'status' ),
+            'created_at' => $ticket->getAttribute( 'created_at' )->diffForHumans(),
         ];
     }
 
@@ -56,5 +58,12 @@ class TicketTransformer extends TransformerAbstract
         if ( !$admin ) return null;
 
         return $this->item( $admin, new AdminTransformer, 'admins' );
+    }
+
+    public function includeCategory( Ticket $ticket ): ?Item
+    {
+        $category = $ticket->category;
+        if ( !$category ) return null;
+        return $this->item( $ticket->category, new CategoryTransformer, 'categories' );
     }
 }

@@ -68,6 +68,7 @@ $app->configure( 'app' );
 $app->configure( 'auth' );
 $app->configure( 'deploy' );
 $app->configure( 'debugbar' );
+$app->configure( 'jwt' );
 $app->configure( 'fractal' );
 $app->configure( 'repository' );
 $app->configure( 'filesystems' );

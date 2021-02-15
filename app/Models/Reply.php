@@ -9,5 +9,8 @@ class Reply extends Model
 {
     use ReplyRelations;
 
-    protected $fillable = [ 'content', 'ticket_id', 'photo' ];
+    protected $fillable = [
+        'content', 'ticket_id', 'photo',
+        'replyable_type', 'replyable_id'
+    ];
 }

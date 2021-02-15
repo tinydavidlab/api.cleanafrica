@@ -3,9 +3,9 @@
 namespace App\Transformers;
 
 use App\Models\Customer;
-use App\Models\Trip;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
@@ -47,26 +47,30 @@ class CustomerTransformer extends TransformerAbstract
             'subdivision' => $customer->getAttribute( 'subdivision' ),
             'country' => $customer->getAttribute( 'country' ),
             'phone_number' => $customer->getAttribute( 'phone_number' ),
-            'property_photo' => $this->getImageUrl($customer),
+            'property_photo' => $this->getImageUrl( $customer ),
             'apartment_number' => $customer->getAttribute( 'apartment_number' ),
-            'date_joined' =>Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
+            'date_joined' => Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
             'link' => $customer->getLinkAttribute()
         ];
     }
 
-    private function getImageUrl(Customer $customer): ?string
+    private function getImageUrl( Customer $customer ): ?string
     {
-        if ( $customer->getAttribute('property_photo') == null ) {
+        if ( $customer->getAttribute( 'property_photo' ) == null ) {
             return null;
         }
 
-        return Storage::url('properties/' . $customer->getAttribute('property_photo'));
+        if ( Str::startsWith( $customer->getAttribute( 'property_photo' ), 'http' ) ) {
+            return $customer->getAttribute( 'property_photo' );
+        }
+
+        return Storage::url( 'properties/' . $customer->getAttribute( 'property_photo' ) );
     }
 
 
-    public function includeCompany(Customer $admin): ?Item
+    public function includeCompany( Customer $admin ): ?Item
     {
-        if ( is_null($admin->company) ) return null;
-        return $this->item($admin->company, new CompanyTransformer, 'companies');
+        if ( is_null( $admin->company ) ) return null;
+        return $this->item( $admin->company, new CompanyTransformer, 'companies' );
     }
 }
