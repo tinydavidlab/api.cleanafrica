@@ -144,7 +144,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
 
     /* ============= CSV Uploader ============= */
-    $router->post('uploadcsv/{id}', 'CSVImporter@import');
+    $router->post('uploadcsv/{id}','CSVImporter@import');
 } );
 
 $router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
