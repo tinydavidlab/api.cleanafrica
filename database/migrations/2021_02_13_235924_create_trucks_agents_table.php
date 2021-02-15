@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCreateTrucksCollectorTable extends Migration
+class CreateTrucksAgentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -28,6 +28,6 @@ class AddCreateTrucksCollectorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trucks_collectors');
+        Schema::dropIfExists('trucks_agents');
     }
 }
