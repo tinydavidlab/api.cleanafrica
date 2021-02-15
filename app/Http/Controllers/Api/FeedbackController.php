@@ -60,8 +60,6 @@ class FeedbackController extends Controller
             'photo' => 'required',
         ] );
 
-//        dd( $request->get( 'stamp' ) );
-
         $feedback = $this->repository->create( $request->except( 'photo' ) );
         if ( $request->hasFile( 'photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'photo' ) );

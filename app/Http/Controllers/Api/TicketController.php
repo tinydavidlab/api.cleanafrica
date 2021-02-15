@@ -91,7 +91,7 @@ class TicketController extends Controller
             ->withResourceName( 'tickets' )
             ->toArray();
 
-        return response()->json( [ 'tickets' => $ticket ], Response::HTTP_OK );
+        return response()->json( [ 'ticket' => $ticket ], Response::HTTP_OK );
     }
 
     /**

@@ -8,7 +8,6 @@ use App\Repositories\CustomerRepository;
 use App\Transformers\AdminTransformer;
 use App\Transformers\AgentTransformer;
 use App\Transformers\CustomerTransformer;
-use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -121,12 +121,13 @@ class AuthController extends Controller
      */
     protected function respondWithToken( string $type, string $token ): JsonResponse
     {
+        $payload = JWTAuth::setToken( $token )->getPayload();
+
         $token = [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Carbon::now()->addYear()->timestamp,
+            'expires_in' => $payload->get( 'exp' ),
         ];
-
 
         if ( $type == 'collector' ) {
             $user = fractal( auth()->guard( $type )->user(), new AgentTransformer() )
@@ -159,7 +160,7 @@ class AuthController extends Controller
     public function register( Request $request ): JsonResponse
     {
         $table = Str::plural( $request->get( 'type', 'customer' ) );
-        $table = ($table == "collectors") ? "admins" : (($table == "super_admins") ? "admins" : $table) ;
+        $table = ( $table == "collectors" ) ? "admins" : ( ( $table == "super_admins" ) ? "admins" : $table );
 
         $this->validate( $request, [
             'name' => 'required',

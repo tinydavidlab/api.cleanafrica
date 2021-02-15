@@ -5,8 +5,10 @@ namespace App\Traits;
 
 
 use App\Models\Admin;
+use App\Models\Category;
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 trait TicketRelations
 {
@@ -28,5 +30,15 @@ trait TicketRelations
     public function admin(): BelongsTo
     {
         return $this->belongsTo( Admin::class );
+    }
+
+    /**
+     * Category relationship.
+     *
+     * @return BelongsTo
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo( Category::class );
     }
 }

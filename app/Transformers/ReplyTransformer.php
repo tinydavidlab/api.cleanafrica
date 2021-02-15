@@ -6,6 +6,8 @@ use App\Models\Reply;
 use App\Models\Ticket;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use ReflectionClass;
+use ReflectionException;
 
 class ReplyTransformer extends TransformerAbstract
 {
@@ -22,7 +24,7 @@ class ReplyTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        'customer', 'agent'
+        'replier', 'ticket'
     ];
 
     /**
@@ -30,13 +32,23 @@ class ReplyTransformer extends TransformerAbstract
      *
      * @param Reply $reply
      * @return array
+     * @throws ReflectionException
      */
     public function transform( Reply $reply ): array
     {
+        $replyable = $reply->replyable;
+        $reflect   = new ReflectionClass( $replyable );
+        $replier   = [
+            'name' => $replyable->name,
+            'type' => strtolower( $reflect->getShortName() ),
+        ];
+
         return [
             'id' => $reply->getAttribute( 'id' ),
             'content' => $reply->getAttribute( 'content' ),
             'photo' => $reply->getAttribute( 'photo' ),
+            'created_at' => $reply->getAttribute( 'created_at' )->diffForHumans(),
+            'replier' => $replier
         ];
     }
 
@@ -44,6 +56,7 @@ class ReplyTransformer extends TransformerAbstract
     {
         $customer = $ticket->customer;
         if ( !$customer ) return null;
+
         return $this->item( $customer, new CustomerTransformer, 'customers' );
     }
 
@@ -53,5 +66,25 @@ class ReplyTransformer extends TransformerAbstract
         if ( !$agent ) return null;
 
         return $this->item( $agent, new AgentTransformer, 'agents' );
+    }
+
+    public function includeTicket( Reply $reply ): Item
+    {
+        return $this->item( $reply->ticket, new TicketTransformer, 'tickets' );
+    }
+
+    /**
+     * @param Reply $reply
+     * @return Item
+     * @throws ReflectionException
+     */
+    public function includeReplier( Reply $reply ): Item
+    {
+        $replyable = $reply->replyable;
+        $reflect   = new ReflectionClass( $replyable );
+        if ( $reflect->getShortName() == "Customer" ) {
+            return $this->item( $replyable, new CustomerTransformer, 'customers' );
+        }
+        return $this->item( $replyable, new AdminTransformer, 'admins' );
     }
 }
