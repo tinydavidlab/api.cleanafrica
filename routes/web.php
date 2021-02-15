@@ -136,7 +136,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
 
     /* ============= Tickets ============= */
     $router->get( 'tickets', 'TicketController@index' );
-    $router->get( 'tickets/{id}', 'TicketController@show' );
+    $router->get( 'tickets/{id}', 'TicketController@index' );
     $router->post( 'tickets', 'TicketController@store' );
 
     /* ============= Ticket Replies ============= */
