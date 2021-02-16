@@ -91,6 +91,9 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->get( 'truncate_trips', 'CompanyTripController@truncateTrips' );
     $router->get( 'companies/{id}/weekly_trips', 'CompanyTripController@getCompanyTripsForTheWeek' );
 
+    /* ============= Company Trips ============= */
+    $router->get( 'companies/{id}/categories', 'CompanyCategoryController@index' );
+
     /* ============= Agents ============= */
     $router->get( 'agents', 'AgentController@index' );
     $router->get( 'agents/{id}', 'AgentController@show' );
@@ -156,7 +159,6 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     /* ============= CSV Uploader ============= */
     $router->post( 'uploadcsv/{type}', 'CSVImporter@import' );
 } );
-
 
 $router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
     $router->get( 'user/tickets', 'UserTicketController@index' );

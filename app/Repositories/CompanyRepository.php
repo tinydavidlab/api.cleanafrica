@@ -13,7 +13,7 @@ class CompanyRepository extends BaseRepository
         return 'App\Models\Company';
     }
 
-    public function countAllCompanies()
+    public function countAllCompanies(): int
     {
         return $this->count();
     }

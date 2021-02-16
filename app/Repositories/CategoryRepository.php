@@ -13,4 +13,9 @@ class CategoryRepository extends BaseRepository
         return 'App\Models\Category';
     }
 
+    public function getCategoriesForCompany( int $id )
+    {
+        return $this->findWhere( [ 'company_id' => $id ] );
+    }
+
 }
