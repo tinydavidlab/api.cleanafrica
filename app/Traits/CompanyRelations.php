@@ -4,6 +4,7 @@
 namespace App\Traits;
 
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Feedback;
 use App\Models\Ticket;
@@ -51,5 +52,15 @@ trait CompanyRelations
     public function tickets(): HasManyThrough
     {
         return $this->hasManyThrough( Ticket::class, Customer::class );
+    }
+
+    /**
+     * Category relationship.
+     *
+     * @return HasMany
+     */
+    public function categories(): HasMany
+    {
+        return $this->hasMany( Category::class );
     }
 }

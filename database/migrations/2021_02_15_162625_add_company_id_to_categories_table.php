@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCompanyIdToFeedbackTable extends Migration
+class AddCompanyIdToCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,13 @@ class AddCompanyIdToFeedbackTable extends Migration
      */
     public function up()
     {
-        Schema::table( 'feedback', function ( Blueprint $table ) {
-            $table->unsignedBigInteger( 'company_id' )->after( 'id' )->nullable();
+        Schema::table( 'categories', function ( Blueprint $table ) {
+            $table->unsignedBigInteger( 'company_id' );
+
+            $table->foreign( 'company_id' )
+                ->references( 'id' )
+                ->on( 'companies' )
+                ->cascadeOnDelete();
         } );
     }
 
@@ -25,7 +30,7 @@ class AddCompanyIdToFeedbackTable extends Migration
      */
     public function down()
     {
-        Schema::table( 'feedback', function ( Blueprint $table ) {
+        Schema::table( 'categories', function ( Blueprint $table ) {
             $table->dropColumn( 'company_id' );
         } );
     }
