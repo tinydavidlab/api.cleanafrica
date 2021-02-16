@@ -11,6 +11,9 @@ class Reply extends Model
 
     protected $fillable = [
         'content', 'ticket_id', 'photo',
-        'replyable_type', 'replyable_id'
+        'replyable_type', 'replyable_id',
+        'address',
     ];
+
+    protected $casts = [ 'address' => 'array' ];
 }

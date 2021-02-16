@@ -6,6 +6,7 @@ namespace App\Traits;
 
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 trait ReplyRelations
 {
@@ -19,7 +20,12 @@ trait ReplyRelations
         return $this->belongsTo( Customer::class );
     }
 
-    public function replyable()
+    /**
+     * Admin|User relationship.
+     *
+     * @return MorphTo
+     */
+    public function replyable(): MorphTo
     {
         return $this->morphTo();
     }

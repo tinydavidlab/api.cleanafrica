@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use App\Models\Reply;
 use App\Models\Ticket;
+use Illuminate\Support\Arr;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use ReflectionClass;
@@ -43,10 +44,19 @@ class ReplyTransformer extends TransformerAbstract
             'type' => strtolower( $reflect->getShortName() ),
         ];
 
+        $address = json_decode( $reply->getAttribute( 'address' ), true );
+
         return [
             'id' => $reply->getAttribute( 'id' ),
             'content' => $reply->getAttribute( 'content' ),
             'photo' => $reply->getAttribute( 'photo' ),
+            'snoocode' => Arr::get( $address, 'code' ),
+            'country' => Arr::get( $address, 'country' ),
+            'subdivision' => Arr::get( $address, 'subdivision' ),
+            'division' => Arr::get( $address, 'division' ),
+            'latitude' => Arr::get( $address, 'latitude' ),
+            'longitude' => Arr::get( $address, 'longitude' ),
+            'signature' => Arr::get( $address, 'stamp_string' ),
             'created_at' => $reply->getAttribute( 'created_at' )->diffForHumans(),
             'replier' => $replier
         ];
