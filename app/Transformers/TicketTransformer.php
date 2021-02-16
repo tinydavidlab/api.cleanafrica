@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Ticket;
+use Illuminate\Support\Arr;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
@@ -40,6 +41,16 @@ class TicketTransformer extends TransformerAbstract
             'content' => $ticket->getAttribute( 'content' ),
             'priority' => $ticket->getAttribute( 'priority' ),
             'status' => $ticket->getAttribute( 'status' ),
+            'snoocode' => Arr::get( $ticket->getAttribute( 'stamp' ), 'code' ),
+            'day' => Arr::get( $ticket->getAttribute( 'stamp' ), 'day' ),
+            'date' => Arr::get( $ticket->getAttribute( 'stamp' ), 'date' ),
+            'time' => Arr::get( $ticket->getAttribute( 'stamp' ), 'time' ),
+            'country' => Arr::get( $ticket->getAttribute( 'stamp' ), 'country' ),
+            'subdivision' => Arr::get( $ticket->getAttribute( 'stamp' ), 'subdivision' ),
+            'division' => Arr::get( $ticket->getAttribute( 'stamp' ), 'division' ),
+            'latitude' => Arr::get( $ticket->getAttribute( 'stamp' ), 'latitude' ),
+            'longitude' => Arr::get( $ticket->getAttribute( 'stamp' ), 'longitude' ),
+            'signature' => Arr::get( $ticket->getAttribute( 'stamp' ), 'stamp_string' ),
             'created_at' => $ticket->getAttribute( 'created_at' )->diffForHumans(),
         ];
     }
