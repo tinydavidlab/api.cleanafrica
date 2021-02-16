@@ -23,6 +23,6 @@ trait AgentRelations
 
     public function trucks(): BelongsToMany
     {
-        return $this->belongsToMany(Truck::class, 'trucks_agents','agent_id','truck_id');
+        return $this->belongsToMany(Truck::class, 'trucks_agents','agent_id','truck_id')->withTimestamps();
     }
 }

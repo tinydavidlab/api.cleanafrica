@@ -30,7 +30,7 @@ trait TruckRelations
 
     public function agents():BelongsToMany
     {
-       return $this->belongsToMany(Agent::class, 'trucks_agents','truck_id','agent_id');
+       return $this->belongsToMany(Agent::class, 'trucks_agents','truck_id','agent_id')->withTimestamps();
     }
 
 }
