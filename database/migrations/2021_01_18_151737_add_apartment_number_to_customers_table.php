@@ -26,7 +26,7 @@ class AddApartmentNumberToCustomersTable extends Migration
     public function down()
     {
         Schema::table( 'customers', function ( Blueprint $table ) {
-            $table->dropColumn( 'apartment_number§' );
+            $table->dropColumn( 'apartment_number' );
         } );
     }
 }
