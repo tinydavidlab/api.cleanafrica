@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Filters\TripFilter;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
+use App\Models\Trip;
 use App\Repositories\TripRepository;
 use App\Transformers\TripTransformer;
 use App\Utilities\ImageUploader;
@@ -158,5 +159,11 @@ class TripController extends Controller
         ->toArray();
 
         return response()->json(['trips' => $trips], Response::HTTP_OK);
+    }
+
+    public function assignMultipleTrucksToTrips(Request $request)
+    {
+        $ids = $request['trip_ids'];
+        Trip::whereIn('id', $ids)->update(['truck_id' => $request['truck_id']]);
     }
 }

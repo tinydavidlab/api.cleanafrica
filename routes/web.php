@@ -45,6 +45,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->delete( 'trips/{id}', 'TripController@destroy' );
     $router->get( 'trips/{date}/per_date', 'TripController@getTripsPerDate' );
     $router->get( 'trips_per_week', 'TripController@getTripsForThisWeek' );
+    $router->post( 'assign_trips', 'TripController@assignMultipleTrucksToTrips' );
 
     /* ============= Completed Trips ============= */
     $router->post( 'trips/{id}/completed', 'CompletedTripController@store' );
