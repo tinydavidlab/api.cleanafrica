@@ -126,7 +126,8 @@ class AuthController extends Controller
         $token = [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $payload->get( 'exp' ),
+            'expires_in' => 2000,
+//            'expires_in' => $payload->get( 'exp' ),
         ];
 
         if ( $type == 'collector' ) {
