@@ -6,6 +6,7 @@ namespace App\Traits;
 
 use App\Models\Customer;
 use App\Models\Feedback;
+use App\Models\Ticket;
 use App\Models\Trip;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -40,5 +41,15 @@ trait CompanyRelations
     public function feedback(): HasManyThrough
     {
         return $this->hasManyThrough( Feedback::class, Customer::class );
+    }
+
+    /**
+     * Tickets relationship.
+     *
+     * @return HasManyThrough
+     */
+    public function tickets(): HasManyThrough
+    {
+        return $this->hasManyThrough( Ticket::class, Customer::class );
     }
 }

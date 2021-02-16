@@ -22,4 +22,6 @@ class Company extends Model
     ];
 
     protected $dates = [ 'activated_at' ];
+
+    protected $withCount = [ 'tickets' ];
 }
