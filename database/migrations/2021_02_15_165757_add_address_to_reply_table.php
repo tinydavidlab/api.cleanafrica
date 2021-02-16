@@ -13,7 +13,7 @@ class AddAddressToReplyTable extends Migration
      */
     public function up()
     {
-        Schema::table( 'reply', function ( Blueprint $table ) {
+        Schema::table( 'replies', function ( Blueprint $table ) {
             $table->json( 'address' )->nullable();
         } );
     }
@@ -25,7 +25,7 @@ class AddAddressToReplyTable extends Migration
      */
     public function down()
     {
-        Schema::table( 'reply', function ( Blueprint $table ) {
+        Schema::table( 'replies', function ( Blueprint $table ) {
             $table->dropColumn( 'address' );
         } );
     }
