@@ -44,7 +44,11 @@ class ReplyTransformer extends TransformerAbstract
             'type' => strtolower( $reflect->getShortName() ),
         ];
 
-        $address = json_decode( $reply->getAttribute( 'address' ), true );
+
+        $address = $reply->getAttribute( 'address' );
+        if ( is_string( $reply->getAttribute( 'address' ) ) ) {
+            $address = json_decode( $address, true );
+        }
 
         return [
             'id' => $reply->getAttribute( 'id' ),

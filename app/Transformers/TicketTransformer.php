@@ -34,6 +34,11 @@ class TicketTransformer extends TransformerAbstract
      */
     public function transform( Ticket $ticket ): array
     {
+        $stamp = $ticket->getAttribute( 'stamp' );
+        if ( is_string( $ticket->getAttribute( 'stamp' ) ) ) {
+            $stamp = json_decode( $stamp, true );
+        }
+
         return [
             'id' => $ticket->getAttribute( 'id' ),
             'category' => $ticket->category->name ?? null,
