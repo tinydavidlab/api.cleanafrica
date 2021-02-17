@@ -46,7 +46,7 @@ class TicketTransformer extends TransformerAbstract
             'content' => $ticket->getAttribute( 'content' ),
             'priority' => $ticket->getAttribute( 'priority' ),
             'status' => $ticket->getAttribute( 'status' ),
-            'snoocode' => Arr::get( $ticket->getAttribute( 'stamp' ), 'code' ),
+            'snoocode' => Arr::get( $stamp, 'code' ),
             'day' => Arr::get( $stamp, 'day' ),
             'date' => Arr::get( $stamp, 'date' ),
             'time' => Arr::get( $stamp, 'time' ),
