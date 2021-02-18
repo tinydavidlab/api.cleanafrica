@@ -4,6 +4,7 @@
 namespace App\Traits;
 
 
+use App\Models\Admin;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Feedback;
@@ -62,5 +63,15 @@ trait CompanyRelations
     public function categories(): HasMany
     {
         return $this->hasMany( Category::class );
+    }
+
+    /**
+     * Admin relationship.
+     *
+     * @return HasMany
+     */
+    public function admins(): HasMany
+    {
+        return $this->hasMany( Admin::class );
     }
 }

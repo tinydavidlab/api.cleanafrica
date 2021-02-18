@@ -2,9 +2,11 @@
 
 namespace App\Transformers;
 
+use App\Models\Company;
 use App\Models\Reply;
 use App\Models\Ticket;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use ReflectionClass;
@@ -37,13 +39,17 @@ class ReplyTransformer extends TransformerAbstract
      */
     public function transform( Reply $reply ): array
     {
-        $replyable = $reply->replyable;
-        $reflect   = new ReflectionClass( $replyable );
-        $replier   = [
+        $replyable    = $reply->replyable;
+        $reflect      = new ReflectionClass( $replyable );
+        $replier_type = strtolower( $reflect->getShortName() );
+        $replier      = [
             'name' => $replyable->name,
-            'type' => strtolower( $reflect->getShortName() ),
+            'type' => $replier_type,
         ];
 
+        if ( $replier_type == 'admin' ) {
+            $replier[ 'logo' ] = $this->getImageUrl( $replyable->company );
+        }
 
         $address = $reply->getAttribute( 'address' );
         if ( is_string( $reply->getAttribute( 'address' ) ) ) {
@@ -100,5 +106,13 @@ class ReplyTransformer extends TransformerAbstract
             return $this->item( $replyable, new CustomerTransformer, 'customers' );
         }
         return $this->item( $replyable, new AdminTransformer, 'admins' );
+    }
+
+    public function getImageUrl( Company $company ): ?string
+    {
+        if ( $company->getAttribute( 'logo' ) == null ) {
+            return null;
+        }
+        return Storage::disk( 's3' )->url( 'companies/' . $company->getAttribute( 'logo' ) );
     }
 }

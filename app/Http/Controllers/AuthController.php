@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewUserRegistered;
 use App\Repositories\AdminRepository;
 use App\Repositories\AgentRepository;
 use App\Repositories\CustomerRepository;
@@ -11,6 +12,7 @@ use App\Transformers\CustomerTransformer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -170,7 +172,7 @@ class AuthController extends Controller
             'company_id' => 'exists:companies,id'
         ] );
 
-        $this->createUserWithType( $request->all(), $request->get( 'type' ) );
+        $user = $this->createUserWithType( $request->all(), $request->get( 'type' ) );
 
         $credentials = [
             'phone_number' => $request->get( 'phone_number' ),
@@ -181,6 +183,8 @@ class AuthController extends Controller
         if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
             return response()->json( [ 'message' => 'Unauthorized' ], Response::HTTP_UNAUTHORIZED );
         }
+
+        event( new NewUserRegistered( $user ) );
 
         return $this->respondWithToken( $request->get( 'type' ), $token );
     }
@@ -198,7 +202,7 @@ class AuthController extends Controller
                 array_merge(
                     $data,
                     [ 'password' => Hash::make( $data[ 'phone_number' ] ),
-                        'snoocode' => $data[ 'code' ] ]
+                        'snoocode' => Arr::get( $data, 'code' ) ]
                 )
             );
         }

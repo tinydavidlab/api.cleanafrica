@@ -147,7 +147,6 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->put( 'categories/{id}', 'CategoryController@update' );
     $router->delete( 'categories/{id}', 'CategoryController@destroy' );
 
-
     /* ============= Tickets ============= */
     $router->get( 'tickets', 'TicketController@index' );
     $router->get( 'tickets/{id}', 'TicketController@show' );
@@ -155,7 +154,6 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
 
     /* ============= Ticket Replies ============= */
     $router->get( 'tickets/{id}/replies', 'TicketReplyController@index' );
-    $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
 
     /* ============= CSV Uploader ============= */
     $router->post( 'uploadcsv/{type}', 'CSVImporter@import' );
@@ -165,4 +163,9 @@ $router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace'
     $router->get( 'user/tickets', 'UserTicketController@index' );
     $router->post( 'user/tickets', 'UserTicketController@store' );
     $router->post( 'user/tickets/{id}/replies', 'UserTicketController@reply' );
+} );
+
+$router->group( [ 'middleware' => 'auth:admin', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+    /* ============= Ticket Replies ============= */
+    $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
 } );

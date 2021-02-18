@@ -4,22 +4,12 @@
 namespace App\Traits;
 
 
-use App\Models\Customer;
+use App\Models\Ticket;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 trait ReplyRelations
 {
-    /**
-     * Customer relatoionship.
-     *
-     * @return BelongsTo
-     */
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo( Customer::class );
-    }
-
     /**
      * Admin|User relationship.
      *
@@ -28,5 +18,15 @@ trait ReplyRelations
     public function replyable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Ticket relationship.
+     *
+     * @return BelongsTo
+     */
+    public function ticket(): BelongsTo
+    {
+        return $this->belongsTo( Ticket::class );
     }
 }

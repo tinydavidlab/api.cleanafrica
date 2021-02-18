@@ -6,10 +6,8 @@ namespace App\Traits;
 
 use Illuminate\Notifications\Notification;
 
-trait CustomerProps
+trait AdminProps
 {
-    use LatLongProp;
-
     /**
      * Route notifications for the FCM channel.
      *

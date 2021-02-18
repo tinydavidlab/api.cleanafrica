@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\TicketStatus;
+use App\Events\UserNewTicket;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
 use App\Repositories\CategoryRepository;
@@ -101,6 +102,8 @@ class UserTicketController extends Controller
             $this->dispatch( new ProcessImageUpload( $filename, 'support_tickets' ) );
             $this->repository->update( [ 'photo' => $filename ], $ticket->id );
         }
+
+        event( new UserNewTicket( auth()->user(), $ticket, $status ) );
 
         $ticket = fractal( $ticket->fresh(), new TicketTransformer )
             ->withResourceName( 'tickets' )

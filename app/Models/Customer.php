@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -18,6 +19,7 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
     use Authenticatable,
         Authorizable,
         HasFactory,
+        Notifiable,
         CustomerProps,
         CustomerRelations,
         JWTProps;
@@ -37,6 +39,7 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
         'property_photo',
         'device_id',
         'apartment_number',
-        'company_id'
+        'company_id',
+        'device_token'
     ];
 }
