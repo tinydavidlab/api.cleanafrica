@@ -28,15 +28,13 @@ class NotifyManagementTicket
      */
     public function handle( UserNewTicket $event )
     {
-        $company = $event->customer->company;
+        $admins = $event->customer->company->admins->filter( fn( $admin ) => !is_null( $admin->device_token ) );
 
         $notification = new UserComplaint( $event->customer, $event->ticket );
         if ( $event->ticketStatus === TicketStatus::CLOSED() ) {
             $notification = new UserFeedback( $event->customer, $event->ticket );
         }
 
-        Notification::send(
-            $company->admins, $notification,
-        );
+        Notification::send( $admins, $notification );
     }
 }

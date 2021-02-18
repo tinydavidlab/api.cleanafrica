@@ -29,6 +29,7 @@ class NotifyCustomerTicketReplied
         $customer = $event->reply->ticket->customer;
         $reply    = $event->reply;
 
+        if ( is_null( $customer->device_token ) ) return;
         Notification::send( $customer, new TicketWasReplied( $reply ) );
     }
 }

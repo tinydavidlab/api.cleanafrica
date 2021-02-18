@@ -25,8 +25,7 @@ class SendManagementNotification
      */
     public function handle( NewUserRegistered $event )
     {
-        $company = $event->customer->company;
-
-        Notification::send( $company->admins, new NewUserAlertManagement( $event->customer ) );
+        $admins = $event->customer->company->admins->filter( fn( $admin ) => !is_null( $admin->device_token ) );
+        Notification::send( $admins, new NewUserAlertManagement( $event->customer ) );
     }
 }
