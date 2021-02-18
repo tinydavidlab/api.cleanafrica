@@ -2,7 +2,6 @@
 
 use App\Http\Middleware\CorsMiddleware;
 use BenSampo\Enum\EnumServiceProvider;
-use Laravel\Tinker\TinkerServiceProvider;
 use Lorisleiva\LaravelDeployer\LaravelDeployerServiceProvider;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -71,6 +70,7 @@ $app->configure( 'debugbar' );
 $app->configure( 'jwt' );
 $app->configure( 'fractal' );
 $app->configure( 'repository' );
+$app->configure( 'services' );
 $app->configure( 'filesystems' );
 
 /*
@@ -105,18 +105,16 @@ $app->routeMiddleware( [
 
 $app->register( App\Providers\AppServiceProvider::class );
 $app->register( App\Providers\AuthServiceProvider::class );
+$app->register( App\Providers\EventServiceProvider::class );
 $app->register( Spatie\Fractal\FractalServiceProvider::class );
 
 /*======== Custom Providers ============*/
-//$app->register( TinkerServiceProvider::class );
 $app->register( EnumServiceProvider::class );
 $app->register( Tymon\JWTAuth\Providers\LumenServiceProvider::class );
 $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
 $app->register( Prettus\Repository\Providers\LumenRepositoryServiceProvider::class );
 $app->register( LaravelDeployerServiceProvider::class );
-if ( env( 'APP_ENV' ) == 'local' ) {
-    $app->register( Barryvdh\Debugbar\LumenServiceProvider::class );
-}
+$app->register( Benwilkins\FCM\FcmNotificationServiceProvider::class, );
 
 
 /*
@@ -132,7 +130,7 @@ if ( env( 'APP_ENV' ) == 'local' ) {
 
 $app->router->group( [
     'namespace' => 'App\Http\Controllers',
-], function ($router) {
+], function ( $router ) {
     require __DIR__ . '/../routes/web.php';
 } );
 

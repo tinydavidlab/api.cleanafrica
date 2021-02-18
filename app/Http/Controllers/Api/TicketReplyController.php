@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\AdminRepliedTicket;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
 use App\Repositories\ReplyRepository;
@@ -67,22 +68,27 @@ class TicketReplyController extends Controller
             'photo' => 'image'
         ] );
 
+        $admin = auth()->guard( 'admin' )->user();
+
         $reply = $this->replyRepository->create(
             array_merge(
                 $request->except( 'photo' ),
-                [ 'ticket_id' => $id ]
+                [ 'ticket_id' => $id, 'replyable_id' => $admin->id, 'replyable_type' => get_class( $admin ) ]
             )
         );
+
         if ( $request->hasFile( 'photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'photo' ) );
             $this->dispatch( new ProcessImageUpload( $filename, 'replies' ) );
             $this->repository->update( [ 'photo' => $filename ], $id );
         }
 
+        event( new AdminRepliedTicket( $reply ) );
+
         $reply = fractal( $reply, new ReplyTransformer )
             ->withResourceName( 'replies' )
             ->toArray();
 
-        return response()->json( [ 'reply' => $reply ], Response::HTTP_OK );
+        return response()->json( [ 'reply' => $reply ], Response::HTTP_CREATED );
     }
 }

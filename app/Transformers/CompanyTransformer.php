@@ -38,7 +38,7 @@ class CompanyTransformer extends TransformerAbstract
         return [
             'id' => $company->getAttribute( 'id' ),
             'name' => $company->getAttribute( 'name' ),
-            'logo' => $this->getImageUrl($company),
+            'logo' => $this->getImageUrl( $company ),
             'tagline' => $company->getAttribute( 'tagline' ),
             'email' => $company->getAttribute( 'email' ),
             'phone_number' => $company->getAttribute( 'phone_number' ),
@@ -48,13 +48,12 @@ class CompanyTransformer extends TransformerAbstract
         ];
     }
 
-    public function getImageUrl(Company $company)
+    public function getImageUrl( Company $company ): ?string
     {
-        if ($company->getAttribute( 'logo' ) == null) {
+        if ( $company->getAttribute( 'logo' ) == null ) {
             return null;
         }
         return Storage::disk( 's3' )->url( 'companies/' . $company->getAttribute( 'logo' ) );
-
     }
 
     public function includeCustomers( Company $company ): Collection

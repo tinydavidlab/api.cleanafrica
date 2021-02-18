@@ -16,6 +16,7 @@
         "benwilkins/laravel-fcm-notification": "^4.0",
         "doctrine/dbal": "^3.0",
         "flipbox/lumen-generator": "^8.2",
+        "laravel/horizon": "^5.7",
         "laravel/lumen-framework": "^8.0",
         "laravel/tinker": "^2.6",
         "league/csv": "^9.0",
