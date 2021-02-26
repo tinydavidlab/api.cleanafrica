@@ -22,7 +22,7 @@ class TicketTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        'customer', 'admin', 'category'
+        'customer', 'admin', 'category', 'company'
     ];
 
     /**

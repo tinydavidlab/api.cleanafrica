@@ -56,7 +56,7 @@ class CompanyTripController extends Controller
     public function getCompanyTripsPerStatusAndDate(int $id, $status, $date): JsonResponse
     {
         $trips = $this->repository->scopeQuery(function ($query) {
-            return $query->orderBy('created_at', 'desc');
+            return $query->orderBy('collector_date', 'desc');
         })->getTripsForCompany($id, $status, $date);
 
         $trips = fractal($trips, new TripTransformer)
@@ -69,7 +69,7 @@ class CompanyTripController extends Controller
     public function getCompanyTripsPerStatus(int $id, $status): JsonResponse
     {
         $trips = $this->repository->scopeQuery(function ($query) {
-            return $query->orderBy('created_at', 'desc');
+            return $query->orderBy('collector_date', 'desc');
         })->getTripsByStatusForCompany($id, $status);
 
         $trips = fractal($trips, new TripTransformer)
@@ -213,7 +213,7 @@ class CompanyTripController extends Controller
     {
         $trips = $this->repository->scopeQuery(function ($query) use ($id) {
             return $query->where(['company_id' => $id])
-                ->orderBy('created_at', 'desc');
+                ->orderBy('collector_date', 'desc');
         })->getAllTripsForThisWeek();
         $trips = fractal($trips, new TripTransformer())
             ->withResourceName('trips')
