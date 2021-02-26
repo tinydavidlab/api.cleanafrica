@@ -147,6 +147,9 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->put( 'categories/{id}', 'CategoryController@update' );
     $router->delete( 'categories/{id}', 'CategoryController@destroy' );
 
+    /* ============= Company Tickets ============= */
+    $router->get('companies/{id}/tickets', 'CompanyTicketController@getTicketsForCompany');
+
     /* ============= Tickets ============= */
     $router->get( 'tickets', 'TicketController@index' );
     $router->get( 'tickets/{id}', 'TicketController@show' );

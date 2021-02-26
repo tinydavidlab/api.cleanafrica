@@ -36,7 +36,7 @@ class TicketController extends Controller
      */
     public function index(): JsonResponse
     {
-        $tickets = $this->repository->orderBy( 'created_at' )->get();
+        $tickets = $this->repository->orderBy( 'created_at', 'desc' )->get();
         $tickets = fractal( $tickets, new TicketTransformer )
             ->withResourceName( 'tickets' )
             ->toArray();
@@ -129,4 +129,6 @@ class TicketController extends Controller
 
         return response()->json( [], Response::HTTP_OK );
     }
+
+
 }

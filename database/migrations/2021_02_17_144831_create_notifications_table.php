@@ -14,7 +14,8 @@ class CreateNotificationsTable extends Migration
      */
     public function up()
     {
-        DB::statement( 'SET SESSION sql_require_primary_key=0' );
+        if ( app()->environment() == 'production' )
+            DB::statement( 'SET SESSION sql_require_primary_key=0' );
         Schema::create( 'notifications', function ( Blueprint $table ) {
             $table->uuid( 'id' )->primary();
             $table->string( 'type' );
@@ -23,7 +24,9 @@ class CreateNotificationsTable extends Migration
             $table->timestamp( 'read_at' )->nullable();
             $table->timestamps();
         } );
-        DB::statement( 'SET SESSION sql_require_primary_key=1' );
+
+        if ( app()->environment() == 'production' )
+            DB::statement( 'SET SESSION sql_require_primary_key=1' );
     }
 
     /**
