@@ -162,7 +162,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'uploadcsv/{type}', 'CSVImporter@import' );
 } );
 
-$router->group( [ 'middleware' => 'aUSERuth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+$router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
     $router->get( 'user/tickets', 'UserTicketController@index' );
     $router->post( 'user/tickets', 'UserTicketController@store' );
     $router->post( 'user/tickets/{id}/replies', 'UserTicketController@reply' );

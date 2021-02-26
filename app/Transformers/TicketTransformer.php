@@ -42,6 +42,10 @@ class TicketTransformer extends TransformerAbstract
         return [
             'id' => $ticket->getAttribute( 'id' ),
             'category' => $ticket->category->name ?? null,
+            'customer_id' => $ticket->getAttribute( 'customer_id' ),
+            'customer_name' => $ticket->customer->name ?? null,
+            'admin_id' => $ticket->getAttribute( 'admin_id' ),
+            'assigned_to' => $ticket->admin->name ?? null,
             'subject' => $ticket->getAttribute( 'subject' ),
             'content' => $ticket->getAttribute( 'content' ),
             'priority' => $ticket->getAttribute( 'priority' ),
