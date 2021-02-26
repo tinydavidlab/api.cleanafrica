@@ -73,7 +73,11 @@ class AuthController extends Controller
         ];
 
         if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
-            return response()->json( [ 'message' => 'Unauthorized' ], Response::HTTP_UNAUTHORIZED );
+            return response()->json( [
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'type' => 'Authentication',
+                'message' => 'Please check your phone number and try again.'
+            ], Response::HTTP_UNAUTHORIZED );
         }
 
         return $this->respondWithToken( $request->get( 'type' ), $token );
@@ -170,6 +174,9 @@ class AuthController extends Controller
             'type' => 'required|in:customer,collector,admin,super_admin',
             'phone_number' => 'required|unique:' . $table . ',phone_number',
             'company_id' => 'exists:companies,id'
+        ], [], [
+            'type' => 'validation',
+            'code' => Response::HTTP_UNPROCESSABLE_ENTITY
         ] );
 
         $user = $this->createUserWithType( $request->all(), $request->get( 'type' ) );
@@ -181,7 +188,11 @@ class AuthController extends Controller
         ];
 
         if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
-            return response()->json( [ 'message' => 'Unauthorized' ], Response::HTTP_UNAUTHORIZED );
+            return response()->json( [
+                'code' => Response::HTTP_UNAUTHORIZED,
+                'type' => 'Authentication',
+                'message' => 'Please check your phone number and try again.'
+            ], Response::HTTP_UNAUTHORIZED );
         }
 
         event( new NewUserRegistered( $user ) );

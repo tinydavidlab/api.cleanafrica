@@ -24,6 +24,10 @@ $router->group( [ 'prefix' => 'auth' ], function ( $router ) {
     $router->post( 'register', 'AuthController@register' );
 } );
 
+$router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+    $router->post( 'auth/token', 'UserTokenController@store' );
+} );
+
 $router->group( [ 'prefix' => 'auth' ], function () use ( $router ) {
     $router->get( 'me', 'AuthController@me' );
 } );
