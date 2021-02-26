@@ -12,7 +12,7 @@ class TripFilter extends QueryFilter
     {
         if ($filter == 'all') {
             return $this->builder
-                ->orderBy('created_at', 'desc')
+                ->orderBy('collector_date', 'desc')
                 ->get();
         }
 

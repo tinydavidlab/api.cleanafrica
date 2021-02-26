@@ -43,7 +43,7 @@ class CompanyTripController extends Controller
     {
 
         $trips = $this->repository->scopeQuery(function ($query) {
-            return $query->orderBy('created_at', 'desc');
+            return $query->orderBy('collector_date', 'desc');
         })->getForCompany($id);
 
         $trips = fractal($trips, new TripTransformer)
