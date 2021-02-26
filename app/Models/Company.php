@@ -24,4 +24,15 @@ class Company extends Model
     protected $dates = [ 'activated_at' ];
 
     protected $withCount = [ 'tickets' ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created( function ( $company ) {
+            $company->categories()->createMany( [
+                [ 'name' => 'Complaints', 'type' => 'support' ],
+                [ 'name' => 'Feedback', 'type' => 'support' ],
+            ] );
+        } );
+    }
 }
