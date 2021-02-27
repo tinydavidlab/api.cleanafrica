@@ -13,7 +13,7 @@ class Ticket extends Model
         'status', 'customer_id',
         'subject', 'content',
         'priority', 'agent_id',
-        'category_id', 'stamp'
+        'category_id', 'stamp', 'photo'
     ];
 
     protected $casts = [ 'stamp' => 'array' ];

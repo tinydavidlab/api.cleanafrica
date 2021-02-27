@@ -5,6 +5,7 @@ namespace App\Transformers;
 use App\Models\Company;
 use App\Models\Reply;
 use App\Models\Ticket;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
@@ -45,6 +46,7 @@ class ReplyTransformer extends TransformerAbstract
         $replier      = [
             'name' => $replyable->name,
             'type' => $replier_type,
+            'is_admin' => $replier_type == 'admin' ? true : false
         ];
 
         if ( $replier_type == 'admin' ) {
@@ -59,7 +61,7 @@ class ReplyTransformer extends TransformerAbstract
         return [
             'id' => $reply->getAttribute( 'id' ),
             'content' => $reply->getAttribute( 'content' ),
-            'photo' => $reply->getAttribute( 'photo' ),
+            'photo' => $this->getReplyImageUrl($reply),
             'snoocode' => Arr::get( $address, 'code' ),
             'country' => Arr::get( $address, 'country' ),
             'subdivision' => Arr::get( $address, 'subdivision' ),
@@ -67,10 +69,13 @@ class ReplyTransformer extends TransformerAbstract
             'latitude' => Arr::get( $address, 'latitude' ),
             'longitude' => Arr::get( $address, 'longitude' ),
             'signature' => Arr::get( $address, 'stamp_string' ),
+            'sent_at' => Carbon::parse($reply->getAttribute( 'created_at' ))->format( 'l, d F Y H:i:s' ),
             'created_at' => $reply->getAttribute( 'created_at' )->diffForHumans(),
             'replier' => $replier
         ];
     }
+
+
 
     public function includeCustomer( Ticket $ticket ): ?Item
     {
@@ -114,5 +119,13 @@ class ReplyTransformer extends TransformerAbstract
             return null;
         }
         return Storage::disk( 's3' )->url( 'companies/' . $company->getAttribute( 'logo' ) );
+    }
+
+    public function getReplyImageUrl(Reply $reply)
+    {
+        if ($reply->getAttribute('photo') == null) {
+            return null;
+        }
+        return Storage::disk('s3')->url('replies/'. $reply->getAttribute('photo'));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use App\Models\Ticket;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
@@ -48,6 +49,7 @@ class TicketTransformer extends TransformerAbstract
             'assigned_to' => $ticket->admin->name ?? null,
             'subject' => $ticket->getAttribute( 'subject' ),
             'content' => $ticket->getAttribute( 'content' ),
+            'photo' => $this->getImageUrl($ticket),
             'priority' => $ticket->getAttribute( 'priority' ),
             'status' => $ticket->getAttribute( 'status' ),
             'snoocode' => Arr::get( $stamp, 'code' ),
@@ -62,6 +64,14 @@ class TicketTransformer extends TransformerAbstract
             'signature' => Arr::get( $stamp, 'stamp_string' ),
             'created_at' => $ticket->getAttribute( 'created_at' )->diffForHumans(),
         ];
+    }
+
+    public function getImageUrl(Ticket $ticket)
+    {
+        if ( $ticket->getAttribute( 'photo' ) == null ) {
+            return null;
+        }
+        return Storage::disk('s3')->url('support_tickets/' . $ticket->getAttribute( 'photo'));
     }
 
     public function includeCustomer( Ticket $ticket ): ?Item

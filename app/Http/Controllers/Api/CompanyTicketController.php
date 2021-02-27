@@ -25,7 +25,7 @@ class CompanyTicketController extends Controller
     {
         $company = $this->companyRepository->find($id);
 
-        $tickets = $company->tickets;
+        $tickets = $company->tickets()->orderBy('created_at','desc')->get();
 
         $tickets = fractal( $tickets, new TicketTransformer() )
         ->withResourceName('tickets')

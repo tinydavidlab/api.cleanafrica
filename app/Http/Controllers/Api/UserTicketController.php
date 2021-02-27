@@ -138,7 +138,7 @@ class UserTicketController extends Controller
         if ( $request->hasFile( 'photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'photo' ) );
             $this->dispatch( new ProcessImageUpload( $filename, 'replies' ) );
-            $this->repository->update( [ 'photo' => $filename ], $id );
+            $this->replyRepository->update( [ 'photo' => $filename ], $reply->id );
         }
 
         $reply = fractal( $reply, new ReplyTransformer )

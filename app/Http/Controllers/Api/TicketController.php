@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
+use App\Models\Ticket;
 use App\Repositories\TicketRepository;
 use App\Transformers\TicketTransformer;
 use App\Utilities\ImageUploader;
