@@ -62,6 +62,7 @@ class ReplyTransformer extends TransformerAbstract
             'id' => $reply->getAttribute( 'id' ),
             'content' => $reply->getAttribute( 'content' ),
             'photo' => $this->getReplyImageUrl($reply),
+            //'photo' => $reply->getAttribute('photo'),
             'snoocode' => Arr::get( $address, 'code' ),
             'country' => Arr::get( $address, 'country' ),
             'subdivision' => Arr::get( $address, 'subdivision' ),
