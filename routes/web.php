@@ -153,11 +153,13 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
 
     /* ============= Company Tickets ============= */
     $router->get('companies/{id}/tickets', 'CompanyTicketController@getTicketsForCompany');
+    $router->get('companies/{id}/ticket_date/{date}', 'CompanyTicketController@getCompanyTicketsPerDate');
 
     /* ============= Tickets ============= */
     $router->get( 'tickets', 'TicketController@index' );
     $router->get( 'tickets/{id}', 'TicketController@show' );
     $router->post( 'tickets', 'TicketController@store' );
+    $router->get( 'tickets/{id}/close', 'TicketController@closeTicket' );
 
     /* ============= Ticket Replies ============= */
     $router->get( 'tickets/{id}/replies', 'TicketReplyController@index' );

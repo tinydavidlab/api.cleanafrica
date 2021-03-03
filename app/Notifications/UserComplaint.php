@@ -4,6 +4,8 @@ namespace App\Notifications;
 
 use App\Models\Customer;
 use App\Models\Ticket;
+use App\Transformers\CustomerTransformer;
+use App\Transformers\TicketTransformer;
 use Benwilkins\FCM\FcmMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -89,8 +91,8 @@ class UserComplaint extends Notification
         ] )->data( [
             'type' => 'complaint',
             'data' => [
-                'customer' => $this->customer,
-                'ticket' => $this->ticket
+                'customer' => fractal($this->customer, new CustomerTransformer())->withResourceName('customers')->toArray(),
+                'ticket' => fractal($this->ticket, new TicketTransformer())->withResourceName('tickets')->toArray()
             ]
         ] )->priority( FcmMessage::PRIORITY_HIGH );
 

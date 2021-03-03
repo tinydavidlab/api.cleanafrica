@@ -87,7 +87,6 @@ class TicketWasReplied extends Notification
         ] )->data( [
             'type' => 'reply',
             'data' => [
-//                'reply' => fractal( $this->reply, new ReplyTransformer )->withResourceName( 'replies' )->toArray(),
                 'ticket' => fractal( $this->reply->ticket, new TicketTransformer )->withResourceName( 'tickets' )->toArray(),
             ]
         ] )->priority( FcmMessage::PRIORITY_HIGH );

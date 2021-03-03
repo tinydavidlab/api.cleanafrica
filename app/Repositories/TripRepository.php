@@ -78,6 +78,8 @@ class TripRepository extends BaseRepository
 
     /** ======== Statistics ========* */
 
+
+
     public function countCompanyTripsPerStatusPerDate(int $id, $status, $date)
     {
         return $this->count([

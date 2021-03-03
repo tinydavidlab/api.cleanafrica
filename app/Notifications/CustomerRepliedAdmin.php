@@ -77,7 +77,7 @@ class CustomerRepliedAdmin extends Notification
         $message = new FcmMessage();
         $message->content( [
             'title' => "Ticket Reply",
-            'body' => "{$this->reply->replyable->name} sent a reply on {$this->reply->ticket->subject} ",
+            'body' => " {$this->reply->replyable->name} sent a reply on {$this->reply->ticket->subject} ",
             'sound' => '',       // Optional
             'icon' => '',        // Optional
             'click_action' => '' // Optional

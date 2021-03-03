@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use App\Repositories\TicketRepository;
 use App\Transformers\TicketTransformer;
 use App\Utilities\ImageUploader;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -131,5 +132,18 @@ class TicketController extends Controller
         return response()->json( [], Response::HTTP_OK );
     }
 
+    public function closeTicket( int $id ): JsonResponse
+    {
+        try {
+            $ticket = $this->repository->update( [ 'status' => 'CLOSED' ], $id );
+            $ticket = fractal( $ticket, new TicketTransformer )
+                ->withResourceName( 'tickets' )
+                ->toArray();
+
+            return response()->json( [ 'ticket' => $ticket ], Response::HTTP_OK );
+        } catch ( ModelNotFoundException $e ) {
+            return response()->json(['message' => 'No ticket found with id: '. $id]);
+        }
+    }
 
 }

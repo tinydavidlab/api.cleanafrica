@@ -12,4 +12,16 @@ class TicketRepository extends BaseRepository
     {
         return 'App\Models\Ticket';
     }
+
+    public function getCountOfTickets(  )
+    {
+        return $this->count();
+    }
+
+    public function getCountOfTicketsPerStatus( $status )
+    {
+        return $this->count(['status' => $status]);
+    }
+
+
 }

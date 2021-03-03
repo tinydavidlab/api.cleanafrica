@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Customer;
+use App\Transformers\CustomerTransformer;
 use Benwilkins\FCM\FcmMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -65,7 +66,7 @@ class NewUserAlertManagement extends Notification
             'body' => 'A new customer has just registered',
             'data' => [
                 'type' => 'customer',
-                'data' => $this->customer
+                'customer' => fractal($this->customer, new CustomerTransformer())->withResourceName('customers')->toArray()
             ]
         ];
     }
@@ -81,7 +82,10 @@ class NewUserAlertManagement extends Notification
             'click_action' => '' // Optional
         ] )->data( [
             'type' => 'customer',
-            'data' => $this->customer
+            'data' => [
+                'customer' => fractal($this->customer, new CustomerTransformer())->withResourceName('customers')->toArray()
+
+            ]
         ] )->priority( FcmMessage::PRIORITY_HIGH );
 
         return $message;
