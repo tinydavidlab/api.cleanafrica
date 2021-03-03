@@ -24,7 +24,7 @@ $router->group( [ 'prefix' => 'auth' ], function ( $router ) {
     $router->post( 'register', 'AuthController@register' );
 } );
 
-$router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+$router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
     $router->post( 'auth/token', 'UserTokenController@store' );
 } );
 

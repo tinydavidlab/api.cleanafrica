@@ -25,7 +25,7 @@ class Admin extends Model implements AuthenticatableContract, AuthorizableContra
         HasFactory;
 
     protected $fillable = [
-        'name', 'type', 'phone_number', 'password', 'company_id'
+        'name', 'type', 'phone_number', 'password', 'company_id', 'device_token'
     ];
 
     protected $hidden = [ 'password' ];

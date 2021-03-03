@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\TicketStatus;
+use App\Events\CustomerRepliedTicket;
 use App\Events\UserNewTicket;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
@@ -140,6 +141,8 @@ class UserTicketController extends Controller
             $this->dispatch( new ProcessImageUpload( $filename, 'replies' ) );
             $this->replyRepository->update( [ 'photo' => $filename ], $reply->id );
         }
+
+        event(new CustomerRepliedTicket( $reply ));
 
         $reply = fractal( $reply, new ReplyTransformer )
             ->withResourceName( 'replies' )
