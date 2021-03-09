@@ -134,7 +134,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->delete( 'admins/{id}', 'AdminController@destroy' );
     $router->get( 'companies/{id}/admins', 'AdminController@getAdminForCompany' );
 
-    /* ============= Propert Registration ============= */
+    /* ============= Property Registration ============= */
     $router->post( 'property/registration', 'PropertyRegistrationController@store' );
     $router->get( 'property/registration/check', 'PropertyRegistrationController@check' );
 
@@ -166,6 +166,13 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
 
     /* ============= CSV Uploader ============= */
     $router->post( 'uploadcsv/{type}', 'CSVImporter@import' );
+
+    /* ============= Announcements ============= */
+    $router->get( 'companies/{id}/announcements', 'AnnouncementController@index' );
+    $router->post( 'announcements', 'AnnouncementController@store' );
+    $router->get( 'announcements/{id}', 'AnnouncementController@show' );
+    $router->put( 'announcements/{id}/', 'AnnouncementController@update' );
+    $router->delete( 'announcements/{id}', 'AnnouncementController@destroy' );
 } );
 
 $router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {

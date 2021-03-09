@@ -2,12 +2,20 @@
 
 namespace App\Providers;
 
-use App\Events\{AdminRepliedTicket, CustomerRepliedTicket, NewUserRegistered, UserNewTicket};
-use App\Listeners\{NotifyAdminCustomerRepliedTicket,
+use App\Events\{AdminRepliedTicket,
+    CollectorCanceledTripEvent,
+    CollectorUpdatedTripEvent,
+    CustomerRepliedTicket,
+    NewUserRegistered,
+    SendAnnouncementToCollector,
+    UserNewTicket};
+use App\Listeners\{NotifyAdminCollectorCanceledTrip,
+    NotifyAdminCollectorUpdatedTrip,
+    NotifyAdminCustomerRepliedTicket,
+    NotifyCollectorOfAnnouncement,
     NotifyCustomerTicketReplied,
     NotifyManagementTicket,
-    SendManagementNotification
-};
+    SendManagementNotification};
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -29,6 +37,15 @@ class EventServiceProvider extends ServiceProvider
         ],
         CustomerRepliedTicket::class => [
             NotifyAdminCustomerRepliedTicket::class
+        ],
+        CollectorUpdatedTripEvent::class => [
+            NotifyAdminCollectorUpdatedTrip::class
+        ],
+        CollectorCanceledTripEvent::class => [
+            NotifyAdminCollectorCanceledTrip::class
+        ],
+        SendAnnouncementToCollector::class => [
+            NotifyCollectorOfAnnouncement::class
         ]
     ];
 }

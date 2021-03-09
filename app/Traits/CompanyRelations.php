@@ -5,6 +5,8 @@ namespace App\Traits;
 
 
 use App\Models\Admin;
+use App\Models\Agent;
+use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Feedback;
@@ -23,6 +25,11 @@ trait CompanyRelations
     public function customers(): HasMany
     {
         return $this->hasMany( Customer::class );
+    }
+
+    public function agents()
+    {
+        return $this->hasMany(Agent::class);
     }
 
     /**
@@ -73,5 +80,10 @@ trait CompanyRelations
     public function admins(): HasMany
     {
         return $this->hasMany( Admin::class );
+    }
+
+    public function announcements()
+    {
+        return $this->hasMany(Announcement::class);
     }
 }

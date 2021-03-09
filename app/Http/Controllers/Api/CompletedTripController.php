@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CollectorCanceledTripEvent;
+use App\Events\CollectorUpdatedTripEvent;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageUpload;
 use App\Repositories\TripRepository;
@@ -59,6 +61,8 @@ class CompletedTripController extends Controller
             $id
         );
 
+        event( new CollectorUpdatedTripEvent( $trip ) );
+
         $trip = fractal( $trip->fresh(), new TripTransformer() )
             ->withResourceName( 'trips' )
             ->toArray();
@@ -73,6 +77,8 @@ class CompletedTripController extends Controller
             $id
         );
 
+        event( new CollectorUpdatedTripEvent( $trip ) );
+
         $trip = fractal( $trip->fresh(), new TripTransformer() )
             ->withResourceName( 'trips' )
             ->toArray();
@@ -83,6 +89,8 @@ class CompletedTripController extends Controller
     public function cancelTrip(int $id)
     {
         $trip = $this->repository->update(['delivery_status' => 'canceled'], $id);
+
+        event(new CollectorCanceledTripEvent($trip));
 
         $trip = fractal( $trip->fresh(), new TripTransformer() )
             ->withResourceName( 'trips' )

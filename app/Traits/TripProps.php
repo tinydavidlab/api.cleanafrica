@@ -16,8 +16,5 @@ trait TripProps
         return "http://maps.google.com/maps?q={$latitude},{$longitude}";
     }
 
-    /*public function setCollectorDateAttribute($value)
-    {
-        $this->attributes['collector_date'] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
-    }*/
+
 }
