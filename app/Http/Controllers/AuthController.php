@@ -84,40 +84,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated User.
-     *
-     * @return JsonResponse
-     */
-    public function me(): JsonResponse
-    {
-        $guard = request( 'type' );
-        $me    = fractal( auth()->guard( $guard )->user(), $guard == 'customer' ? new CustomerTransformer : new AdminTransformer )->withResourceName( Str::plural( $guard ) )->toArray();
-        return response()->json( [ 'me' => $me ] );
-    }
-
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return JsonResponse
-     */
-    public function logout(): JsonResponse
-    {
-        auth()->logout();
-
-        return response()->json( [ 'message' => 'Successfully logged out' ] );
-    }
-
-    /**
-     * Refresh a token.
-     *
-     * @return JsonResponse
-     */
-    public function refresh(): JsonResponse
-    {
-        return $this->respondWithToken( auth()->refresh() );
-    }
-
-    /**
      * Get the token array structure.
      *
      * @param string $type
@@ -156,6 +122,40 @@ class AuthController extends Controller
                 $type => $user
             ]
         ] );
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return JsonResponse
+     */
+    public function me(): JsonResponse
+    {
+        $guard = request( 'type' );
+        $me    = fractal( auth()->guard( $guard )->user(), $guard == 'customer' ? new CustomerTransformer : new AdminTransformer )->withResourceName( Str::plural( $guard ) )->toArray();
+        return response()->json( [ 'me' => $me ] );
+    }
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return JsonResponse
+     */
+    public function logout(): JsonResponse
+    {
+        auth()->logout();
+
+        return response()->json( [ 'message' => 'Successfully logged out' ] );
+    }
+
+    /**
+     * Refresh a token.
+     *
+     * @return JsonResponse
+     */
+    public function refresh(): JsonResponse
+    {
+        return $this->respondWithToken( auth()->refresh() );
     }
 
     /**

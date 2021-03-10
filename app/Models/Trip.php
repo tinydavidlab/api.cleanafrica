@@ -46,4 +46,12 @@ class Trip extends Model
         'bin_liner_quantity',
 
     ];
+
+    /*protected $dates = [
+        'collector_date'
+    ];
+
+    protected $casts = [
+        'collector_date' => 'datetime:Y-m-d',
+    ];*/
 }
