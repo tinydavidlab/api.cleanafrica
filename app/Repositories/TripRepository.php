@@ -61,17 +61,17 @@ class TripRepository extends BaseRepository
 
     public function getAllTripsForThisWeek()
     {
-        return $this->findWhereBetween('collector_date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
     }
 
     public function getAllTripsForThisMonth()
     {
-        return $this->findWhereBetween('collector_date', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
     }
 
     public function getAllTripsForThisYear()
     {
-        return $this->findWhereBetween('collector_date', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+        return $this->findWhereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
     }
 
 
