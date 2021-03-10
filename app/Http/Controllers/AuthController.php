@@ -80,7 +80,7 @@ class AuthController extends Controller
             ], Response::HTTP_UNAUTHORIZED );
         }
 
-        return $this->respondWithToken( $request->get( 'type' ), $token );
+        return $this->respondWithToken( $request->get( 'type' ), $token, $request );
     }
 
     /**
@@ -88,30 +88,34 @@ class AuthController extends Controller
      *
      * @param string $type
      * @param string $token
-     *
+     * @param Request $request
      * @return JsonResponse
      */
-    protected function respondWithToken( string $type, string $token ): JsonResponse
+    protected function respondWithToken( string $type, string $token, Request $request ): JsonResponse
     {
         $payload = JWTAuth::setToken( $token )->getPayload();
 
         $token = [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => 2000,
-//            'expires_in' => $payload->get( 'exp' ),
+            'expires_in' => $payload->get( 'exp' ),
         ];
 
+        $user = auth()->guard( $type )->user();
+        if ( $request->has( 'device_token' ) ) {
+            $user->update( [ 'device_token' => $request->get( 'device_token' ) ] );
+        }
+
         if ( $type == 'collector' ) {
-            $user = fractal( auth()->guard( $type )->user(), new AgentTransformer() )
+            $user = fractal( $user, new AgentTransformer() )
                 ->withResourceName( Str::plural( $type ) )
                 ->toArray();
         } else if ( $type == 'customer' ) {
-            $user = fractal( auth()->guard( $type )->user(), new CustomerTransformer() )
+            $user = fractal( $user, new CustomerTransformer() )
                 ->withResourceName( Str::plural( $type ) )
                 ->toArray();
         } else {
-            $user = fractal( auth()->guard( $type )->user(), new AdminTransformer() )
+            $user = fractal( $user, new AdminTransformer() )
                 ->withResourceName( Str::plural( $type ) )
                 ->toArray();
         }
@@ -197,7 +201,7 @@ class AuthController extends Controller
 
         event( new NewUserRegistered( $user ) );
 
-        return $this->respondWithToken( $request->get( 'type' ), $token );
+        return $this->respondWithToken( $request->get( 'type' ), $token, $request );
     }
 
     /**
