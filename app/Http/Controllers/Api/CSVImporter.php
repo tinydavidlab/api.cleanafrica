@@ -24,15 +24,16 @@ class CSVImporter extends Controller
     {
         $type = strtolower($type);
         $key = request('company_id');
+        $date = request( 'date' );
 
         if (method_exists($this, $type)) {
-            return $this->$type($type, $key);
+            return $this->$type($type, $key, $date);
         }
 
         return response()->json(['message' => 'Method not found'], Response::HTTP_FORBIDDEN);
     }
 
-    public function trip($type, $key): \Illuminate\Http\JsonResponse
+    public function trip($type, $key, $date): \Illuminate\Http\JsonResponse
     {
         if (request()->hasFile('csv')) {
             $csv = request()->file( 'csv' );
@@ -50,7 +51,7 @@ class CSVImporter extends Controller
                     'customer_division' => $record[ 'Customer Division' ],
                     'customer_subdivision' => $record[ 'Customer Subdivision' ],
                     'customer_snoocode' => $record[ 'Customer Snoocode' ],
-                    'collector_date' => $record[ 'Collector Date' ],
+                    'collector_date' => $date,
                     'collector_time' => $record[ 'Collector Time' ],
                     'bin_liner_quantity' => $record[ 'Bin Liner Quantity' ],
                     //'delivery_status' => $record[ 'Status' ],
@@ -66,7 +67,7 @@ class CSVImporter extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function customer($type, $key)
+    public function customer($type, $key, $date)
     {
         if (request()->hasFile('csv')) {
             $csv = request()->file( 'csv' );
@@ -95,7 +96,7 @@ class CSVImporter extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function agent($type, $key)
+    public function agent($type, $key, $date)
     {
         if (request()->hasFile('csv')) {
             $csv = request()->file( 'csv' );
@@ -116,7 +117,7 @@ class CSVImporter extends Controller
             'message' => 'File uploaded successfully...'
         ], Response::HTTP_OK);
     }
-    public function admin($type, $key)
+    public function admin($type, $key, $date)
     {
         if (request()->hasFile('csv')) {
             $csv = request()->file( 'csv' );
