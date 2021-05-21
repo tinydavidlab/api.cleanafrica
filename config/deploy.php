@@ -93,7 +93,7 @@ return [
 
     'options' => [
         'application' => env('APP_NAME', 'Laravel'),
-        'repository' => 'https://github.com/CleanKenya/api',
+        'repository' => 'git@github.com:CleanKenya/api.git',
         'php_fpm_service' => 'php7.4-fpm',
     ],
 
