@@ -68,7 +68,7 @@ class AgentController extends Controller
             'phone_number' => $request['phone_number'],
             'type' => $request['type'],
             'company_id' => $request['company_id'],
-
+            'can_optimise' => $request['can_optimise'],
         ] );
         $agent = fractal( $agent, new AgentTransformer() )
             ->withResourceName( 'agents' )

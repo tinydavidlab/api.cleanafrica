@@ -37,6 +37,7 @@ class AgentTransformer extends TransformerAbstract
             'name' => $agent->getAttribute( 'name' ),
             'type' => $agent->getAttribute( 'type' ),
             'phone_number' => $agent->getAttribute( 'phone_number' ),
+            'can_optimise' => $agent->getAttribute( 'can_optimise' ),
             'activated_at' => $agent->getAttribute( 'activated_at' ),
         ];
     }

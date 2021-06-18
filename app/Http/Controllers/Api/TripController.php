@@ -9,7 +9,6 @@ use App\Models\Trip;
 use App\Repositories\TripRepository;
 use App\Transformers\TripTransformer;
 use App\Utilities\ImageUploader;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -70,7 +69,7 @@ class TripController extends Controller
             'customer_longitude' => 'required',
         ] );
 
-        $trip = $this->repository->create($request->except([ 'bin_image', 'property_image']));
+        $trip = $this->repository->create( $request->except( [ 'bin_image', 'property_image' ] ) );
 
         if ( $request->hasFile( 'bin_image' ) ) {
             $filename = ImageUploader::upload( $request->file( 'bin_image' ) );
@@ -140,32 +139,51 @@ class TripController extends Controller
         return response()->json( [], Response::HTTP_NO_CONTENT );
     }
 
-    public function getTripsPerDate($date): JsonResponse
+    public function getTripsPerDate( $date ): JsonResponse
     {
-        $trips = $this->repository->getTripsPerDate($date);
+        $trips = $this->repository->getTripsPerDate( $date );
 
-        $trips = fractal($trips, new TripTransformer())
-            ->withResourceName('trips')
+        $trips = fractal( $trips, new TripTransformer() )
+            ->withResourceName( 'trips' )
             ->toArray();
 
-        return response()->json(['trips' => $trips], Response::HTTP_OK);
+        return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
     }
 
     public function getTripsForThisWeek(): JsonResponse
     {
         $trips = $this->repository->scopeQuery( function ( $query ) {
-            return $query->orderBy('collector_date', 'desc');
-        })->getAllTripsForThisWeek();
-        $trips = fractal($trips, new TripTransformer())
-        ->withResourceName('trips')
-        ->toArray();
+            return $query->orderBy( 'collector_date', 'desc' );
+        } )->getAllTripsForThisWeek();
+        $trips = fractal( $trips, new TripTransformer() )
+            ->withResourceName( 'trips' )
+            ->toArray();
 
-        return response()->json(['trips' => $trips], Response::HTTP_OK);
+        return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
     }
 
-    public function assignMultipleTrucksToTrips(Request $request)
+    public function assignMultipleTrucksToTrips( Request $request )
     {
-        $ids = $request['trip_ids'];
-        Trip::whereIn('id', $ids)->update(['truck_id' => $request['truck_id']]);
+        $ids = $request[ 'trip_ids' ];
+        Trip::whereIn( 'id', $ids )->update( [ 'truck_id' => $request[ 'truck_id' ] ] );
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function optimiseTrips( Request $request )
+    {
+        $trips = $request->all();
+
+        foreach ( $trips as $trip ) {
+            Trip::where( 'id', $trip[ 'id' ] )->update(
+                [
+                    'order' => $trip[ 'order' ],
+                    'customer_apartment_number' => $trip[ 'customer_apartment_number' ]
+                ]
+            );
+        }
+
+        return response()->json( [ "message" => "Optimised trips uploaded successfully" ], Response::HTTP_OK );
     }
 }

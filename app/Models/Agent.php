@@ -31,6 +31,7 @@ class Agent extends Model implements AuthenticatableContract,
         'activated_at',
         'type',
         'company_id',
+        'can_optimise',
         'device_id',
         'password',
         'device_token'

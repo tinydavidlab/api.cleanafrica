@@ -38,6 +38,7 @@ class TripTransformer extends TransformerAbstract
             'id' => $trip->getAttribute( 'id' ),
             'company_id' => $trip->getAttribute( 'company_id' ),
             'truck_id' => $trip->getAttribute( 'truck_id' ),
+            'order' => $trip->getAttribute( 'order' ),
             'customer_name' => $trip->getAttribute( 'customer_name' ),
             'customer_primary_phone_number' => $trip->getAttribute( 'customer_primary_phone_number' ),
             'customer_secondary_phone_number' => $trip->getAttribute( 'customer_secondary_phone_number' ),

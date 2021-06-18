@@ -50,6 +50,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->get( 'trips/{date}/per_date', 'TripController@getTripsPerDate' );
     $router->get( 'trips_per_week', 'TripController@getTripsForThisWeek' );
     $router->post( 'assign_trips', 'TripController@assignMultipleTrucksToTrips' );
+    $router->post( 'optimise_trips', 'TripController@optimiseTrips' );
 
     /* ============= Completed Trips ============= */
     $router->post( 'trips/{id}/completed', 'CompletedTripController@store' );
@@ -78,6 +79,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'companies/{id}/agents', 'CompanyAgentController@store' );
     $router->delete( 'companies/{id}/agents/{agent_id}', 'CompanyAgentController@destroy' );
     $router->get( 'companies/{id}/type/{type}', 'CompanyAgentController@getCompanyAgentByType' );
+    // get trips for collector
     $router->get( 'collectors/{id}/{date}/{status}', 'CompanyAgentController@getTripsForSpecificTruckAndAgent' );
 
     /* ============= Company Customer ============= */
@@ -113,7 +115,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'trucks', 'TruckController@store' );
     $router->put( 'trucks/{id}', 'TruckController@update' );
     $router->delete( 'trucks/{id}', 'TruckController@destroy' );
-    $router->post( 'assign_trucks/{id}/agents', 'TruckController@assignTruckToCollector' );
+    //$router->post( 'assign_trucks/{id}/agents', 'TruckController@assignTruckToCollector' );
 
     /* ============= Company Trucks ============= */
     $router->get( 'companies/{id}/trucks', 'TruckController@trucksForCompany' );
