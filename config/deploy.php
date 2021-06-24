@@ -61,7 +61,7 @@ return [
 
         // Deployment is done and live
         'done' => [
-            'fpm:reload',
+            //'fpm:reload',
         ],
 
         // Deployment succeeded.
@@ -76,7 +76,7 @@ return [
 
         // After a deployment has been rolled back.
         'rollback' => [
-            'fpm:reload',
+           // 'fpm:reload',
         ],
     ],
 
