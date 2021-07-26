@@ -42,9 +42,9 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->post( 'register', 'Auth\LoginController@new' );
 
     /* ============= Trips ============= */
+    $router->post( 'trips', 'TripController@store' );
     $router->get( 'trips', 'TripController@index' );
     $router->get( 'trips/{id}', 'TripController@show' );
-    $router->post( 'trips', 'TripController@store' );
     $router->put( 'trips/{id}', 'TripController@update' );
     $router->delete( 'trips/{id}', 'TripController@destroy' );
     $router->get( 'trips/{date}/per_date', 'TripController@getTripsPerDate' );

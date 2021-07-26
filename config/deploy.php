@@ -93,7 +93,7 @@ return [
 
     'options' => [
         'application' => env('APP_NAME', 'Laravel'),
-        'repository' => 'http://tinydavid.git/clean/kenya/api',
+        'repository' => 'git@github.com:CleanKenya/api.git',
         'php_fpm_service' => 'php7.4-fpm',
     ],
 
@@ -109,9 +109,14 @@ return [
     */
 
     'hosts' => [
-        'api.cleankenya.com' => [
+        'api.cathan.io' => [
             'deploy_path' => '/var/www/api.cleankenya.com',
             'user' => 'root',
+        ],
+        'tinydavid.cleankenya.com' => [
+            'deploy_path' => '/var/www/api.cleankenya.com',
+            'user' => 'root',
+            'stage' => 'tinydavid',
         ],
     ],
 
