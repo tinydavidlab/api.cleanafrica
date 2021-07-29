@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Filters\TripFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateTripRequest;
 use App\Jobs\ProcessImageUpload;
 use App\Models\Trip;
 use App\Repositories\TripRepository;
@@ -11,7 +12,6 @@ use App\Transformers\TripTransformer;
 use App\Utilities\ImageUploader;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -51,24 +51,12 @@ class TripController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param CreateTripRequest $request
      * @return JsonResponse
-     * @throws ValidationException|ValidatorException
+     * @throws ValidatorException
      */
-    public function store( Request $request ): JsonResponse
+    public function store( CreateTripRequest $request ): JsonResponse
     {
-        $this->validate( $request, [
-            'customer_name' => 'required',
-            'customer_primary_phone_number' => 'required',
-            'customer_apartment_number' => 'required',
-            'customer_country' => 'required',
-            'customer_division' => 'required',
-            'customer_subdivision' => 'required',
-            'customer_snoocode' => 'required',
-            'customer_latitude' => 'required',
-            'customer_longitude' => 'required',
-        ] );
-
         $trip = $this->repository->create( $request->except( [ 'bin_image', 'property_image' ] ) );
 
         if ( $request->hasFile( 'bin_image' ) ) {
@@ -105,7 +93,6 @@ class TripController extends Controller
             ->toArray();
 
         return response()->json( [ 'trip' => $trip ], Response::HTTP_OK );
-
     }
 
     /**
@@ -139,6 +126,10 @@ class TripController extends Controller
         return response()->json( [], Response::HTTP_NO_CONTENT );
     }
 
+    /**
+     * @param $date
+     * @return JsonResponse
+     */
     public function getTripsPerDate( $date ): JsonResponse
     {
         $trips = $this->repository->getTripsPerDate( $date );
@@ -150,6 +141,9 @@ class TripController extends Controller
         return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function getTripsForThisWeek(): JsonResponse
     {
         $trips = $this->repository->scopeQuery( function ( $query ) {
@@ -162,23 +156,29 @@ class TripController extends Controller
         return response()->json( [ 'trips' => $trips ], Response::HTTP_OK );
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function assignMultipleTrucksToTrips( Request $request )
     {
         $ids = $request[ 'trip_ids' ];
         Trip::whereIn( 'id', $ids )->update( [ 'truck_id' => $request[ 'truck_id' ] ] );
+        return response()->json( [], Response::HTTP_NO_CONTENT );
     }
 
     /**
-     * @throws ValidatorException
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function optimiseTrips( Request $request )
+    public function optimiseTrips( Request $request ): JsonResponse
     {
         $trips = $request->all();
 
         foreach ( $trips as $trip ) {
             Trip::where( 'id', $trip[ 'id' ] )->update(
                 [
-                    'order' => $trip[ 'order' ],
+                    'order'                     => $trip[ 'order' ],
                     'customer_apartment_number' => $trip[ 'customer_apartment_number' ]
                 ]
             );

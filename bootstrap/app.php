@@ -1,27 +1,28 @@
 <?php
 
-use App\Http\Middleware\CorsMiddleware;
-use BenSampo\Enum\EnumServiceProvider;
-use Lorisleiva\LaravelDeployer\LaravelDeployerServiceProvider;
+    use App\Http\Middleware\AcceptJson;
+    use App\Http\Middleware\CorsMiddleware;
+    use BenSampo\Enum\EnumServiceProvider;
+    use Lorisleiva\LaravelDeployer\LaravelDeployerServiceProvider;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+    require_once __DIR__ . '/../vendor/autoload.php';
 
-( new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
-    dirname( __DIR__ )
-) )->bootstrap();
+    ( new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
+        dirname( __DIR__ )
+    ) )->bootstrap();
 
-date_default_timezone_set( env( 'APP_TIMEZONE', 'UTC' ) );
+    date_default_timezone_set( env( 'APP_TIMEZONE', 'UTC' ) );
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| Here we will load the environment and create the application instance
-| that serves as the central piece of this framework. We'll use this
-| application as an "IoC" container and router for this framework.
-|
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | Create The Application
+    |--------------------------------------------------------------------------
+    |
+    | Here we will load the environment and create the application instance
+    | that serves as the central piece of this framework. We'll use this
+    | application as an "IoC" container and router for this framework.
+    |
+    */
 
 $app = new Laravel\Lumen\Application(
     dirname( __DIR__ )
@@ -86,6 +87,7 @@ $app->configure( 'filesystems' );
 
 $app->middleware( [
     CorsMiddleware::class,
+    AcceptJson::class,
 ] );
 
 $app->routeMiddleware( [
@@ -104,29 +106,30 @@ $app->routeMiddleware( [
 */
 
 $app->register( App\Providers\AppServiceProvider::class );
-$app->register( App\Providers\AuthServiceProvider::class );
-$app->register( App\Providers\EventServiceProvider::class );
-$app->register( Spatie\Fractal\FractalServiceProvider::class );
+    $app->register( App\Providers\AuthServiceProvider::class );
+    $app->register( App\Providers\EventServiceProvider::class );
+    $app->register( Spatie\Fractal\FractalServiceProvider::class );
 
-/*======== Custom Providers ============*/
-$app->register( EnumServiceProvider::class );
-$app->register( Tymon\JWTAuth\Providers\LumenServiceProvider::class );
-$app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
-$app->register( Prettus\Repository\Providers\LumenRepositoryServiceProvider::class );
-$app->register( LaravelDeployerServiceProvider::class );
-$app->register( Benwilkins\FCM\FcmNotificationServiceProvider::class, );
+    /*======== Custom Providers ============*/
+    $app->register( EnumServiceProvider::class );
+    $app->register( Tymon\JWTAuth\Providers\LumenServiceProvider::class );
+    $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
+    $app->register( Prettus\Repository\Providers\LumenRepositoryServiceProvider::class );
+    $app->register( LaravelDeployerServiceProvider::class );
+    $app->register( Benwilkins\FCM\FcmNotificationServiceProvider::class );
+    $app->register( Pearl\RequestValidate\RequestServiceProvider::class );
 
 
-/*
-|--------------------------------------------------------------------------
-| Load The Application Routes
-|--------------------------------------------------------------------------
-|
-| Next we will include the routes file so that they can all be added to
-| the application. This will provide all of the URLs the application
-| can respond to, as well as the controllers that may handle them.
-|
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | Load The Application Routes
+    |--------------------------------------------------------------------------
+    |
+    | Next we will include the routes file so that they can all be added to
+    | the application. This will provide all of the URLs the application
+    | can respond to, as well as the controllers that may handle them.
+    |
+    */
 
 $app->router->group( [
     'namespace' => 'App\Http\Controllers',

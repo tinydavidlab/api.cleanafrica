@@ -95,10 +95,12 @@ class AuthController extends Controller
     {
         $payload = JWTAuth::setToken( $token )->getPayload();
 
+//        dd($payload);
+
         $token = [
             'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => $payload->get( 'exp' ),
+            'token_type'   => 'bearer',
+            'expires_in'   => $payload->get( 'exp' ),
         ];
 
         $user = auth()->guard( $type )->user();

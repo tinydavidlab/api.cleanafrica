@@ -44,7 +44,11 @@ class AdminController extends Controller
         return response()->json( [ 'admins' => $admins ], Response::HTTP_OK );
     }
 
-    public function getAdminForCompany( int $id )
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getAdminForCompany( int $id ): JsonResponse
     {
         $admins = $this->repository->getForCompany( $id );
         $admins = fractal( $admins, new AdminTransformer )

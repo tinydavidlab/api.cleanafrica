@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateTicketRequest;
 use App\Jobs\ProcessImageUpload;
-use App\Models\Ticket;
 use App\Repositories\TicketRepository;
 use App\Transformers\TicketTransformer;
 use App\Utilities\ImageUploader;
@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 class TicketController extends Controller
@@ -49,23 +48,12 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param CreateTicketRequest $request
      * @return JsonResponse
      * @throws ValidatorException
-     * @throws ValidationException
      */
-    public function store( Request $request ): JsonResponse
+    public function store( CreateTicketRequest $request ): JsonResponse
     {
-        $this->validate( $request, [
-            'category_id' => 'required|exists:categories,id',
-            'customer_id' => 'required|exists:customers,id',
-            'agent_id' => 'nullable|exists:agents,id',
-            'subject' => 'required',
-            'content' => 'required',
-            'photo' => 'required|image',
-            'priority' => 'required',
-        ] );
-
         $ticket = $this->repository->create( $request->except( 'photo' ) );
         if ( $request->hasFile( 'photo' ) ) {
             $filename = ImageUploader::upload( $request->file( 'photo' ) );
