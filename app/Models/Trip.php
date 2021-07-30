@@ -16,6 +16,7 @@ class Trip extends Model
         TripRelations;
 
     protected $fillable = [
+        'customer_id',
         'customer_name',
         'customer_primary_phone_number',
         'customer_secondary_phone_number',
@@ -29,6 +30,7 @@ class Trip extends Model
         'customer_latitude_number',
         'customer_longitude_number',
 
+        'collector_id',
         'collector_name',
         'collector_date',
         'collector_time',

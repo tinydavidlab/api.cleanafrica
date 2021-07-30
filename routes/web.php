@@ -13,19 +13,20 @@
 |
 */
 
-use Laravel\Lumen\Routing\Router;
+    use Laravel\Lumen\Routing\Router;
 
-$router->get( '/', function () {
-} );
+    $router->get( '/', function () {
+        return "Clean Kenya API Projecct";
+    } );
 
-/* ============= Authentication ============= */
-$router->group( [ 'prefix' => 'auth' ], function ( $router ) {
-    $router->post( 'login', 'AuthController@login' );
-    $router->post( 'register', 'AuthController@register' );
-} );
+    /* ============= Authentication ============= */
+    $router->group( [ 'prefix' => 'auth' ], function ( $router ) {
+        $router->post( 'login', 'AuthController@login' );
+        $router->post( 'register', 'AuthController@register' );
+    } );
 
-$router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
-    $router->post( 'auth/token', 'UserTokenController@store' );
+    $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+        $router->post( 'auth/token', 'UserTokenController@store' );
 } );
 
 $router->group( [ 'prefix' => 'auth' ], function () use ( $router ) {
@@ -183,7 +184,12 @@ $router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace'
     $router->post( 'user/tickets/{id}/replies', 'UserTicketController@reply' );
 } );
 
-$router->group( [ 'middleware' => 'auth:admin', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
-    /* ============= Ticket Replies ============= */
-    $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
-} );
+    $router->group( [ 'middleware' => 'auth:admin', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+        /* ============= Ticket Replies ============= */
+        $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
+    } );
+
+    $router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+        $router->post( 'me/trips', 'UserTripController@store' );
+        $router->get( 'me/trips', 'UserTripController@index' );
+    } );
