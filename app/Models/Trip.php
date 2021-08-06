@@ -41,7 +41,7 @@ class Trip extends Model
         'collector_snoocode',
 
         'bin_image',
-        'property_photo',
+        'property_image',
         'company_id',
         'truck_id',
         'delivery_status',

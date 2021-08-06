@@ -62,7 +62,7 @@ class TripTransformer extends TransformerAbstract
             'collector_signature'   => $trip->getAttribute( 'collector_signature' ),
 
             'bin_image'          => $this->getImageUrl( $trip ),
-            'property_photo'     => $trip->getAttribute( 'property_photo' ),
+            'property_photo'     => $trip->getAttribute( 'property_image' ),
             'status'             => $trip->getAttribute( 'delivery_status' ),
             'assigned_to'        => $trip->getAttribute( 'assigned_to' ),
             'bin_liner_quantity' => $trip->getAttribute( 'bin_liner_quantity' ),
