@@ -61,8 +61,8 @@ class TripTransformer extends TransformerAbstract
             'collector_time'        => $trip->getAttribute( 'collector_time' ),
             'collector_signature'   => $trip->getAttribute( 'collector_signature' ),
 
-            'bin_image'          => $this->getImageUrl( $trip ),
-            'property_photo'     => $trip->getAttribute( 'property_image' ),
+            'bin_image'          => $this->getImageUrl( $trip->getAttribute( 'bin_image' ), 'bin' ),
+            'property_photo'     => $this->getImageUrl( $trip->getAttribute( 'property_image' ), 'properties' ),
             'status'             => $trip->getAttribute( 'delivery_status' ),
             'assigned_to'        => $trip->getAttribute( 'assigned_to' ),
             'bin_liner_quantity' => $trip->getAttribute( 'bin_liner_quantity' ),
@@ -73,16 +73,15 @@ class TripTransformer extends TransformerAbstract
     }
 
     /**
-     * @param Trip $trip
+     * @param string|null $image
+     * @param string $folder
      * @return string|null
      */
-    private function getImageUrl( Trip $trip ): ?string
+    private function getImageUrl( ?string $image, string $folder ): ?string
     {
-        if ( $trip->getAttribute( 'bin_image' ) == null ) {
-            return null;
-        }
+        if ( $image == null ) return null;
 
-        return Storage::disk( 's3' )->url( 'bins/' . $trip->getAttribute( 'bin_image' ) );
+        return Storage::disk( 's3' )->url( $folder . '/' . $image );
     }
 
     /**
