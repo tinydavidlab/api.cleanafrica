@@ -147,7 +147,7 @@ class TripController extends Controller
     public function getTripsForThisWeek(): JsonResponse
     {
         $trips = $this->repository->scopeQuery( function ( $query ) {
-            return $query->orderBy( 'collector_date', 'desc' );
+            return $query->latest();
         } )->getAllTripsForThisWeek();
         $trips = fractal( $trips, new TripTransformer() )
             ->withResourceName( 'trips' )
