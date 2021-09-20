@@ -15,6 +15,7 @@
         "bensampo/laravel-enum": "^3.2",
         "benwilkins/laravel-fcm-notification": "^4.0",
         "doctrine/dbal": "^3.0",
+        "dusterio/lumen-passport": "^0.3.4",
         "flipbox/lumen-generator": "^8.2",
         "laravel/lumen-framework": "^8.0",
         "laravel/tinker": "^2.6",
@@ -23,8 +24,7 @@
         "lorisleiva/laravel-deployer": "^0.3.5",
         "pearl/lumen-request-validate": "^1.6",
         "prettus/l5-repository": "^2.7",
-        "spatie/laravel-fractal": "^5.8",
-        "tymon/jwt-auth": "^1.0"
+        "spatie/laravel-fractal": "^5.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
