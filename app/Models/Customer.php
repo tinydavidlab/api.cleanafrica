@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\AuthPassportTrait;
 use App\Traits\CustomerProps;
 use App\Traits\CustomerRelations;
-use App\Traits\JWTProps;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -12,17 +12,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Lumen\Auth\Authorizable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Laravel\Passport\HasApiTokens;
 
-class Customer extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class Customer extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable,
         Authorizable,
         HasFactory,
         Notifiable,
+        HasApiTokens,
+        AuthPassportTrait,
         CustomerProps,
-        CustomerRelations,
-        JWTProps;
+        CustomerRelations;
 
     protected $fillable = [
         'name',

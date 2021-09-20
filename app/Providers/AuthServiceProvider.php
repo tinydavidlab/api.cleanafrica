@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Dusterio\LumenPassport\LumenPassport;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -27,5 +29,9 @@ class AuthServiceProvider extends ServiceProvider
         // application. The callback which receives the incoming request instance
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
+
+        LumenPassport::routes( $this->app );
+        LumenPassport::allowMultipleTokens();
+        LumenPassport::tokensExpireIn( Carbon::now()->addYears( 1 ) );
     }
 }

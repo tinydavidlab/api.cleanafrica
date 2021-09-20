@@ -8,19 +8,19 @@ return [
 
     'guards' => [
         'admin' => [
-            'driver' => 'jwt',
+            'driver'   => 'passport',
             'provider' => 'admins',
         ],
         'super_admin' => [
-            'driver' => 'jwt',
+            'driver'   => 'passport',
             'provider' => 'admins',
         ],
         'customer' => [
-            'driver' => 'jwt',
+            'driver'   => 'passport',
             'provider' => 'customers',
         ],
         'collector' => [
-            'driver' => 'jwt',
+            'driver'   => 'passport',
             'provider' => 'collectors',
         ],
     ],

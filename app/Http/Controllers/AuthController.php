@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewUserRegistered;
+use App\Models\Admin;
+use App\Models\Agent;
+use App\Models\Customer;
 use App\Repositories\AdminRepository;
 use App\Repositories\AgentRepository;
 use App\Repositories\CustomerRepository;
 use App\Transformers\AdminTransformer;
 use App\Transformers\AgentTransformer;
 use App\Transformers\CustomerTransformer;
+use Exception;
+use Firebase\JWT\JWT;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -56,58 +61,66 @@ class AuthController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws Exception
      */
     public function login( Request $request ): JsonResponse
     {
         $this->validate( $request, [
-            'username' => 'required',
-            'type' => 'required|in:customer,collector,admin,super_admin',
+            'username'      => 'required',
+            'grant_type'    => 'in:password',
+            'client_id'     => 'required',
+            'client_secret' => 'required',
+            'type'          => 'in:customer,collector,admin,super_admin',
         ] );
 
-        $login_type = filter_var( $request->get( 'username' ), FILTER_VALIDATE_EMAIL ) ? 'email' : 'phone_number';
+        $type = $request->get( 'type', 'admin' );
 
         $credentials = [
-            $login_type => $request->get( 'username' ),
-            'password' => $request->get( 'username' ),
-            'type' => $request->get( 'type' )
+            'grant_type'    => $request->get( 'grant_type', 'password' ),
+            'username'      => $request->get( 'username' ),
+            'password'      => $request->get( 'username' ),
+            'client_id'     => $request->get( 'client_id' ),
+            'client_secret' => $request->get( 'client_secret' ),
+            'scope'         => $request->get( 'scope', '' ),
         ];
 
-        if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
+        $request    = Request::create( '/oauth/token', 'POST', $credentials );
+        $response   = app()->handle( $request );
+        $auth_token = json_decode( $response->getContent(), true );
+        if ( $response->getStatusCode() != Response::HTTP_OK ) {
             return response()->json( [
-                'code' => Response::HTTP_UNAUTHORIZED,
-                'type' => 'Authentication',
-                'message' => 'Please check your phone number and try again.'
-            ], Response::HTTP_UNAUTHORIZED );
+                'message' => Arr::get( $auth_token, 'message' )
+            ], Response::HTTP_BAD_REQUEST );
         }
 
-        return $this->respondWithToken( $request->get( 'type' ), $token, $request );
+        $user = $this->getUserForGrantType( $type, $auth_token );
+
+        return response()->json( [
+            'auth_token' => $auth_token,
+            $type        => $this->getTransformedUserType( $user, $type )
+        ], Response::HTTP_OK );
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param string $type
-     * @param string $token
-     * @param Request $request
-     * @return JsonResponse
-     */
-    protected function respondWithToken( string $type, string $token, Request $request ): JsonResponse
+    protected function getUserForGrantType( string $type, array $auth_token )
     {
-        $payload = JWTAuth::setToken( $token )->getPayload();
+        $access_token = Arr::get( $auth_token, 'access_token' );
 
-//        dd($payload);
+        if ( !$jwt = $access_token ) return null;
+        [ $headb64, $bodyb64, $cryptob64 ] = explode( '.', $jwt );
+        $body = JWT::jsonDecode( JWT::urlsafeB64Decode( $bodyb64 ) );
+        if ( !$id = data_get( $body, 'sub' ) ) return null;
 
-        $token = [
-            'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => $payload->get( 'exp' ),
-        ];
-
-        $user = auth()->guard( $type )->user();
-        if ( $request->has( 'device_token' ) ) {
-            $user->update( [ 'device_token' => $request->get( 'device_token' ) ] );
+        if ( $type == 'customer' ) {
+            return Customer::find( $id );
+        } elseif ( $type == 'agent' ) {
+            return Agent::find( $id );
         }
 
+        return Admin::find( $id );
+    }
+
+    private function getTransformedUserType( $user, $type = 'admin' ): array
+    {
         if ( $type == 'collector' ) {
             $user = fractal( $user, new AgentTransformer() )
                 ->withResourceName( Str::plural( $type ) )
@@ -122,10 +135,38 @@ class AuthController extends Controller
                 ->toArray();
         }
 
+        return $user;
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param string $type
+     * @param string $token
+     * @param Request $request
+     * @return JsonResponse
+     */
+    protected function respondWithToken( string $type, string $token, Request $request ): JsonResponse
+    {
+        $payload = JWTAuth::setToken( $token )->getPayload();
+
+        $token = [
+            'access_token' => $token,
+            'token_type'   => 'bearer',
+            'expires_in'   => $payload->get( 'exp' ),
+        ];
+
+        $user = auth()->guard( $type )->user();
+        if ( $request->has( 'device_token' ) ) {
+            $user->update( [ 'device_token' => $request->get( 'device_token' ) ] );
+        }
+
+        $user = $this->getTransformedUserType( $user, $type );
+
         return response()->json( [
             'auth' => [
                 'token' => $token,
-                $type => $user
+                $type   => $user
             ]
         ] );
     }
