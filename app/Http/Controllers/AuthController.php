@@ -112,7 +112,7 @@ class AuthController extends Controller
 
         if ( $type == 'customer' ) {
             return Customer::find( $id );
-        } elseif ( $type == 'agent' ) {
+        } elseif ( $type == 'collector' ) {
             return Agent::find( $id );
         }
 
