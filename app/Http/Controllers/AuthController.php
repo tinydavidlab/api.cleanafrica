@@ -96,8 +96,10 @@ class AuthController extends Controller
         $user = $this->getUserForGrantType( $type, $auth_token );
 
         return response()->json( [
-            'auth_token' => $auth_token,
-            $type        => $this->getTransformedUserType( $user, $type )
+            'auth' => [
+                'token' => $auth_token,
+                $type   => $this->getTransformedUserType( $user, $type )
+            ]
         ], Response::HTTP_OK );
     }
 
