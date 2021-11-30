@@ -224,8 +224,8 @@ class AuthController extends Controller
             'grant_type'    => $request->get( 'grant_type', 'password' ),
             'username'      => $request->get( 'phone_number' ),
             'password'      => $request->get( 'phone_number' ),
-            'client_id'     => $request->get( 'client_id' ),
-            'client_secret' => $request->get( 'client_secret' ),
+            'client_id'     => $request->get( 'client_id', env('CLIENT_ID') ),
+            'client_secret' => $request->get( 'client_secret', env('CLIENT_SECRET') ),
             'scope'         => $request->get( 'scope', '' ),
         ];
 
