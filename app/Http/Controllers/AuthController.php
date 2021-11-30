@@ -84,23 +84,7 @@ class AuthController extends Controller
             'scope'         => $request->get( 'scope', '' ),
         ];
 
-        $request    = Request::create( '/oauth/token', 'POST', $credentials );
-        $response   = app()->handle( $request );
-        $auth_token = json_decode( $response->getContent(), true );
-        if ( $response->getStatusCode() != Response::HTTP_OK ) {
-            return response()->json( [
-                'message' => Arr::get( $auth_token, 'message' )
-            ], Response::HTTP_BAD_REQUEST );
-        }
-
-        $user = $this->getUserForGrantType( $type, $auth_token );
-
-        return response()->json( [
-            'auth' => [
-                'token' => $auth_token,
-                $type   => $this->getTransformedUserType( $user, $type )
-            ]
-        ], Response::HTTP_OK );
+        return $this->handleAuthentication( $credentials, $request, $type );
     }
 
     protected function getUserForGrantType( string $type, array $auth_token )
@@ -219,34 +203,35 @@ class AuthController extends Controller
         $table = ( $table == "collectors" ) ? "admins" : ( ( $table == "super_admins" ) ? "admins" : $table );
 
         $this->validate( $request, [
-            'name' => 'required',
-            'type' => 'required|in:customer,collector,admin,super_admin',
-            'phone_number' => 'required|unique:' . $table . ',phone_number',
-            'company_id' => 'exists:companies,id'
+            'name'          => 'required',
+            'type'          => 'required|in:customer,collector,admin,super_admin',
+            'phone_number'  => 'required|unique:' . $table . ',phone_number',
+            'company_id'    => 'exists:companies,id',
+            'grant_type'    => 'in:password',
+            'client_id'     => 'required',
+            'client_secret' => 'required',
+            'scope'         => 'nullable',
         ], [], [
             'type' => 'validation',
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY
         ] );
 
-        $user = $this->createUserWithType( $request->all(), $request->get( 'type' ) );
+        $type = $request->get( 'type' );
+
+        $user = $this->createUserWithType( $request->all(), $type );
 
         $credentials = [
-            'phone_number' => $request->get( 'phone_number' ),
-            'password' => $request->get( 'phone_number' ),
-            'company_id' => $request->get( 'company_id' ),
+            'grant_type'    => $request->get( 'grant_type', 'password' ),
+            'username'      => $request->get( 'phone_number' ),
+            'password'      => $request->get( 'phone_number' ),
+            'client_id'     => $request->get( 'client_id' ),
+            'client_secret' => $request->get( 'client_secret' ),
+            'scope'         => $request->get( 'scope', '' ),
         ];
-
-        if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
-            return response()->json( [
-                'code' => Response::HTTP_UNAUTHORIZED,
-                'type' => 'Authentication',
-                'message' => 'Please check your phone number and try again.'
-            ], Response::HTTP_UNAUTHORIZED );
-        }
 
         event( new NewUserRegistered( $user ) );
 
-        return $this->respondWithToken( $request->get( 'type' ), $token, $request );
+        return $this->handleAuthentication( $credentials, $request, $type );
     }
 
     /**
@@ -282,5 +267,32 @@ class AuthController extends Controller
                 [ 'password' => Hash::make( $data[ 'phone_number' ] ) ]
             )
         );
+    }
+
+    /**
+     * @param array $credentials
+     * @param Request $request
+     * @param $type
+     * @return JsonResponse
+     */
+    protected function handleAuthentication( array $credentials, Request $request, $type ): JsonResponse
+    {
+        $request    = Request::create( '/oauth/token', 'POST', $credentials );
+        $response   = app()->handle( $request );
+        $auth_token = json_decode( $response->getContent(), true );
+        if ( $response->getStatusCode() != Response::HTTP_OK ) {
+            return response()->json( [
+                'message' => Arr::get( $auth_token, 'message' )
+            ], Response::HTTP_BAD_REQUEST );
+        }
+
+        $user = $this->getUserForGrantType( $type, $auth_token );
+
+        return response()->json( [
+            'auth' => [
+                'token' => $auth_token,
+                $type   => $this->getTransformedUserType( $user, $type )
+            ]
+        ], Response::HTTP_OK );
     }
 }
