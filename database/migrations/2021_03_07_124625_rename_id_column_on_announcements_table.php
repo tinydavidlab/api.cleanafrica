@@ -15,7 +15,7 @@ class RenameIdColumnOnAnnouncementsTable extends Migration
     {
         Schema::table( 'announcements', function ( Blueprint $table ) {
             $table->id()->change();
-        });
+        } );
     }
 
     /**
@@ -26,7 +26,7 @@ class RenameIdColumnOnAnnouncementsTable extends Migration
     public function down()
     {
         Schema::table( 'announcements', function ( Blueprint $table ) {
-            $table->uuid('id')->change();
-        });
+            $table->uuid( 'id' )->change();
+        } );
     }
 }

@@ -20,9 +20,9 @@ class CreateTrucksTable extends Migration
             $table->string( 'license_number' )->nullable();
             $table->timestamps();
 
-           /* $table->foreign( 'company_id' )
-                ->references( 'id' )
-                ->on( 'companies' );*/
+            /* $table->foreign( 'company_id' )
+                 ->references( 'id' )
+                 ->on( 'companies' );*/
         } );
     }
 

@@ -13,9 +13,9 @@ class AddOrderFieldToTripsTable extends Migration
      */
     public function up()
     {
-        Schema::table('trips', function (Blueprint $table) {
-            $table->string( 'order' )->default('999999')->after('truck_id');
-        });
+        Schema::table( 'trips', function ( Blueprint $table ) {
+            $table->string( 'order' )->default( '999999' )->after( 'truck_id' );
+        } );
     }
 
     /**
@@ -25,8 +25,8 @@ class AddOrderFieldToTripsTable extends Migration
      */
     public function down()
     {
-        Schema::table('trips', function (Blueprint $table) {
+        Schema::table( 'trips', function ( Blueprint $table ) {
             $table->dropColumn( 'order' );
-        });
+        } );
     }
 }

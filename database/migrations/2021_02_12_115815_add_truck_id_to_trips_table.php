@@ -13,9 +13,9 @@ class AddTruckIdToTripsTable extends Migration
      */
     public function up()
     {
-        Schema::table('trips', function (Blueprint $table) {
-            $table->unsignedBigInteger('truck_id')->after( 'company_id' )->nullable();
-        });
+        Schema::table( 'trips', function ( Blueprint $table ) {
+            $table->unsignedBigInteger( 'truck_id' )->after( 'company_id' )->nullable();
+        } );
     }
 
     /**
@@ -25,8 +25,8 @@ class AddTruckIdToTripsTable extends Migration
      */
     public function down()
     {
-        Schema::table('trips', function (Blueprint $table) {
+        Schema::table( 'trips', function ( Blueprint $table ) {
             $table->dropColumn( 'truck_id' );
-        });
+        } );
     }
 }

@@ -22,18 +22,18 @@ class  CreateTicketsTable extends Migration
             $table->string( 'subject' );
             $table->longText( 'content' );
             $table->string( 'photo' )->nullable();
-            $table->enum( 'priority', TicketPriority::getValues() )->default( TicketPriority::LOW() );
-            $table->enum( 'status', TicketStatus::getValues() )->default( TicketStatus::OPEN() );
+            $table->enum( 'priority', [ 'LOW', 'MEDIUM', 'URGENT', 'VERY_URGENT' ] )->default( TicketPriority::LOW->value );
+            $table->enum( 'status', [ 'OPEN', 'CLOSED' ] )->default( TicketStatus::OPEN->value );
 
             $table->timestamps();
 
-           /* $table->foreign( 'customer_id' )
-                ->references( 'id' )
-                ->on( 'customers' );
+            /* $table->foreign( 'customer_id' )
+                 ->references( 'id' )
+                 ->on( 'customers' );
 
-            $table->foreign( 'admin_id' )
-                ->references( 'id' )
-                ->on( 'admins' );*/
+             $table->foreign( 'admin_id' )
+                 ->references( 'id' )
+                 ->on( 'admins' );*/
         } );
     }
 

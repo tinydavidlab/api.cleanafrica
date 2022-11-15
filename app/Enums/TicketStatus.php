@@ -2,14 +2,13 @@
 
 namespace App\Enums;
 
-use BenSampo\Enum\Enum;
 
 /**
  * @method static static OPEN()
  * @method static static CLOSED()
  */
-final class TicketStatus extends Enum
+enum TicketStatus: string
 {
-    const OPEN   = 'OPEN';
-    const CLOSED = 'CLOSED';
+    case OPEN = "OPEN";
+    case CLOSED = "CLOSED";
 }

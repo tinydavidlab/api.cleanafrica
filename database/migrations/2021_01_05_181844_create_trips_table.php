@@ -39,10 +39,10 @@ class CreateTripsTable extends Migration
             $table->string( 'collector_time' )->nullable();
             $table->string( 'collector_signature' )->nullable();
 
-            $table->string( 'delivery_status' )->default('pending');
+            $table->string( 'delivery_status' )->default( 'pending' );
             $table->string( 'bin_image' )->nullable();
             $table->string( 'property_image' )->nullable();
-            $table->string( 'bin_liner_quantity' )->default(0);
+            $table->string( 'bin_liner_quantity' )->default( 0 );
 
             $table->string( 'notes' )->nullable();
 

@@ -22,9 +22,9 @@ class CreateRepliesTable extends Migration
             $table->string( 'photo' )->nullable();
             $table->timestamps();
 
-           /* $table->foreign( 'ticket_id' )
-                ->references( 'id' )
-                ->on( 'tickets' );*/
+            /* $table->foreign( 'ticket_id' )
+                 ->references( 'id' )
+                 ->on( 'tickets' );*/
         } );
     }
 

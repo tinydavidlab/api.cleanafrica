@@ -13,9 +13,9 @@ class AddDeviceTokenFieldToAgentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('agents', function (Blueprint $table) {
-            $table->string( 'device_token' )->after('phone_number')->nullable();
-        });
+        Schema::table( 'agents', function ( Blueprint $table ) {
+            $table->string( 'device_token' )->after( 'phone_number' )->nullable();
+        } );
     }
 
     /**
@@ -25,8 +25,8 @@ class AddDeviceTokenFieldToAgentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('agents', function (Blueprint $table) {
-            $table->dropColumn('device_token');
-        });
+        Schema::table( 'agents', function ( Blueprint $table ) {
+            $table->dropColumn( 'device_token' );
+        } );
     }
 }

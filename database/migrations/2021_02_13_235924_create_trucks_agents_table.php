@@ -13,12 +13,12 @@ class CreateTrucksAgentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('trucks_agents', function (Blueprint $table) {
+        Schema::create( 'trucks_agents', function ( Blueprint $table ) {
             $table->id();
-            $table->unsignedBigInteger('truck_id')->nullable();
-            $table->unsignedBigInteger('agent_id')->nullable();
+            $table->unsignedBigInteger( 'truck_id' )->nullable();
+            $table->unsignedBigInteger( 'agent_id' )->nullable();
             $table->timestamps();
-        });
+        } );
     }
 
     /**
@@ -28,6 +28,6 @@ class CreateTrucksAgentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trucks_agents');
+        Schema::dropIfExists( 'trucks_agents' );
     }
 }

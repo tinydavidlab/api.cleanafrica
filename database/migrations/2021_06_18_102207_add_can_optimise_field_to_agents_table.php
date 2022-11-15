@@ -13,9 +13,9 @@ class AddCanOptimiseFieldToAgentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('agents', function (Blueprint $table) {
-            $table->string( 'can_optimise' )->after('phone_number')->default('NO');
-        });
+        Schema::table( 'agents', function ( Blueprint $table ) {
+            $table->string( 'can_optimise' )->after( 'phone_number' )->default( 'NO' );
+        } );
     }
 
     /**
@@ -25,8 +25,8 @@ class AddCanOptimiseFieldToAgentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('agents', function (Blueprint $table) {
+        Schema::table( 'agents', function ( Blueprint $table ) {
             $table->dropColumn( 'can_optimise' );
-        });
+        } );
     }
 }

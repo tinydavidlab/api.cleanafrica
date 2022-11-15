@@ -13,9 +13,9 @@ class AddPasswordToAgentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('agents', function (Blueprint $table) {
-            $table->string('password')->after('name');
-        });
+        Schema::table( 'agents', function ( Blueprint $table ) {
+            $table->string( 'password' )->after( 'name' );
+        } );
     }
 
     /**
@@ -25,8 +25,8 @@ class AddPasswordToAgentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('agents', function (Blueprint $table) {
-            $table->dropColumn('password');
-        });
+        Schema::table( 'agents', function ( Blueprint $table ) {
+            $table->dropColumn( 'password' );
+        } );
     }
 }
