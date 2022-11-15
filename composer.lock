@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c23e1f4366a51f67dfda80bce9edbd3",
+    "content-hash": "aed4c05f51d3426bbf849eb52a1484aa",
     "packages": [
         {
             "name": "albertcht/lumen-helpers",
             "version": "dev-l8",
             "dist": {
                 "type": "path",
-                "url": "/Users/samtoya/Projects/PhpstormProjects/lumen-helpers",
+                "url": "./libs/lumen-helpers",
                 "reference": "764e8e26708bef9378437748b5e28702771186cd"
             },
             "require": {
@@ -47,7 +47,7 @@
                 "lumen"
             ],
             "transport-options": {
-                "relative": false
+                "relative": true
             }
         },
         {
@@ -151,16 +151,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.243.0",
+            "version": "3.243.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "34587bd357f352e426856b58c70b59378aaf14b3"
+                "reference": "b9c6d89bc9900910e73890803462dd24bcd994a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/34587bd357f352e426856b58c70b59378aaf14b3",
-                "reference": "34587bd357f352e426856b58c70b59378aaf14b3",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b9c6d89bc9900910e73890803462dd24bcd994a4",
+                "reference": "b9c6d89bc9900910e73890803462dd24bcd994a4",
                 "shasum": ""
             },
             "require": {
@@ -239,9 +239,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.243.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.243.1"
             },
-            "time": "2022-11-14T20:36:57+00:00"
+            "time": "2022-11-14T23:37:20+00:00"
         },
         {
             "name": "benwilkins/laravel-fcm-notification",
