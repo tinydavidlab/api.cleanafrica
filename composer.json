@@ -61,7 +61,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "~/Projects/PhpstormProjects/lumen-helpers"
+            "url": "./libs/lumen-helpers"
         }
     ]
 }
