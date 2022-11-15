@@ -2,7 +2,7 @@
 
 namespace Deployer;
 
-require 'recipe/laravel.php';
+require 'lumen-recipe.php';
 
 // Config
 
