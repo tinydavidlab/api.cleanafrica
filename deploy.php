@@ -8,8 +8,8 @@ require 'lumen-recipe.php';
 
 set( 'repository', 'git@github.com:tinydavidlab/api.cleanafrica.git' );
 
-add( 'shared_files', [] );
-add( 'shared_dirs', [ 'libs' ] );
+add( 'shared_files', [ '.env' ] );
+add( 'shared_dirs', [ 'libs', 'vendor', 'storage' ] );
 add( 'writable_dirs', [] );
 
 // Hosts
