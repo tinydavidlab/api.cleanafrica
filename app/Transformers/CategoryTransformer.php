@@ -12,14 +12,14 @@ class CategoryTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [];
+    protected array $defaultIncludes = [];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [];
+    protected array $availableIncludes = [];
 
     /**
      * A Fractal transformer.
@@ -31,10 +31,10 @@ class CategoryTransformer extends TransformerAbstract
     public function transform( Category $category ): array
     {
         return [
-            'id' => $category->getAttribute( 'id' ),
-            'type' => $category->getAttribute( 'type' ),
-            'name' => $category->getAttribute( 'name' ),
-            'parent' => $category->getAttribute( 'parent' ),
+            'id'          => $category->getAttribute( 'id' ),
+            'type'        => $category->getAttribute( 'type' ),
+            'name'        => $category->getAttribute( 'name' ),
+            'parent'      => $category->getAttribute( 'parent' ),
             'description' => $category->getAttribute( 'description' ),
         ];
     }

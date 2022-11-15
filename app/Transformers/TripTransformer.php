@@ -15,21 +15,23 @@ class TripTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [];
+    protected array $defaultIncludes = [];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
-        'company', 'truck', 'collector', 'customer'
-    ];
+    protected array $availableIncludes
+        = [
+            'company', 'truck', 'collector', 'customer',
+        ];
 
     /**
      * A Fractal transformer.
      *
      * @param Trip $trip
+     *
      * @return array
      */
     public function transform( Trip $trip ): array
@@ -74,7 +76,8 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param string|null $image
-     * @param string $folder
+     * @param string      $folder
+     *
      * @return string|null
      */
     private function getImageUrl( ?string $image, string $folder ): ?string
@@ -86,6 +89,7 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param Trip $trip
+     *
      * @return Item|null
      */
     public function includeCompany( Trip $trip ): ?Item
@@ -96,6 +100,7 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param Trip $trip
+     *
      * @return Item|null
      */
     public function includeTruck( Trip $trip ): ?Item
@@ -107,6 +112,7 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param Trip $trip
+     *
      * @return Item|null
      */
     public function includeCustomer( Trip $trip ): ?Item
@@ -118,6 +124,7 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param Trip $trip
+     *
      * @return Item|null
      */
     public function includeCollector( Trip $trip ): ?Item

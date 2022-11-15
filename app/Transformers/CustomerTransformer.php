@@ -16,41 +16,43 @@ class CustomerTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [];
+    protected array $defaultIncludes = [];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
-        'company'
-    ];
+    protected array $availableIncludes
+        = [
+            'company',
+        ];
 
     /**
      * A Fractal transformer.
      *
      * @param Customer $customer
+     *
      * @return array
      */
     public function transform( Customer $customer ): array
     {
         return [
-            'id' => $customer->getAttribute( 'id' ),
-            'company_id' => $customer->getAttribute( 'company_id' ),
-            'name' => $customer->getAttribute( 'name' ),
-            'address' => $customer->getAttribute( 'address' ),
-            'snoocode' => $customer->getAttribute( 'snoocode' ),
-            'latitude' => $customer->getAttribute( 'latitude' ),
-            'longitude' => $customer->getAttribute( 'longitude' ),
-            'division' => $customer->getAttribute( 'division' ),
-            'subdivision' => $customer->getAttribute( 'subdivision' ),
-            'country' => $customer->getAttribute( 'country' ),
-            'phone_number' => $customer->getAttribute( 'phone_number' ),
-            'property_photo' => $this->getImageUrl( $customer ),
+            'id'               => $customer->getAttribute( 'id' ),
+            'company_id'       => $customer->getAttribute( 'company_id' ),
+            'name'             => $customer->getAttribute( 'name' ),
+            'address'          => $customer->getAttribute( 'address' ),
+            'snoocode'         => $customer->getAttribute( 'snoocode' ),
+            'latitude'         => $customer->getAttribute( 'latitude' ),
+            'longitude'        => $customer->getAttribute( 'longitude' ),
+            'division'         => $customer->getAttribute( 'division' ),
+            'subdivision'      => $customer->getAttribute( 'subdivision' ),
+            'country'          => $customer->getAttribute( 'country' ),
+            'phone_number'     => $customer->getAttribute( 'phone_number' ),
+            'property_photo'   => $this->getImageUrl( $customer ),
             'apartment_number' => $customer->getAttribute( 'apartment_number' ),
-            'date_joined' => Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
-            'link' => $customer->getLinkAttribute()
+            'date_joined'      => Carbon::parse( $customer->getAttribute( 'created_at' ) )->format( 'd M Y H:i:s' ),
+            'link'             => $customer->getLinkAttribute(),
         ];
     }
 

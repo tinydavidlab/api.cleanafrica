@@ -12,29 +12,31 @@ class TruckTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [];
+    protected array $defaultIncludes = [];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
-        'company'
-    ];
+    protected array $availableIncludes
+        = [
+            'company',
+        ];
 
     /**
      * A Fractal transformer.
      *
      * @param Truck $truck
+     *
      * @return array
      */
     public function transform( Truck $truck ): array
     {
         return [
-            'id' => $truck->getAttribute( 'id' ),
-            'company_id' => $truck->company->id,
-            'name' => $truck->getAttribute( 'name' ),
+            'id'             => $truck->getAttribute( 'id' ),
+            'company_id'     => $truck->company->id,
+            'name'           => $truck->getAttribute( 'name' ),
             'license_number' => $truck->getAttribute( 'license_number' ),
         ];
     }

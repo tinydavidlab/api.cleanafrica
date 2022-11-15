@@ -12,30 +12,32 @@ class AgentTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [];
+    protected array $defaultIncludes = [];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
-        'company'
-    ];
+    protected array $availableIncludes
+        = [
+            'company',
+        ];
 
     /**
      * A Fractal transformer.
      *
      * @param Agent $agent
+     *
      * @return array
      */
     public function transform( Agent $agent ): array
     {
         return [
-            'id' => $agent->getAttribute( 'id' ),
-            'company_id' => $agent->getAttribute( 'company_id' ),
-            'name' => $agent->getAttribute( 'name' ),
-            'type' => $agent->getAttribute( 'type' ),
+            'id'           => $agent->getAttribute( 'id' ),
+            'company_id'   => $agent->getAttribute( 'company_id' ),
+            'name'         => $agent->getAttribute( 'name' ),
+            'type'         => $agent->getAttribute( 'type' ),
             'phone_number' => $agent->getAttribute( 'phone_number' ),
             'can_optimise' => $agent->getAttribute( 'can_optimise' ),
             'activated_at' => $agent->getAttribute( 'activated_at' ),

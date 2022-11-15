@@ -20,21 +20,23 @@ class ReplyTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [];
+    protected array $defaultIncludes = [];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
-        'replier', 'ticket'
-    ];
+    protected array $availableIncludes
+        = [
+            'replier', 'ticket',
+        ];
 
     /**
      * A Fractal transformer.
      *
      * @param Reply $reply
+     *
      * @return array
      * @throws ReflectionException
      */
@@ -44,13 +46,13 @@ class ReplyTransformer extends TransformerAbstract
         $reflect      = new ReflectionClass( $replyable );
         $replier_type = strtolower( $reflect->getShortName() );
         $replier      = [
-            'name' => $replyable->name,
-            'type' => $replier_type,
-            'is_admin' => $replier_type == 'admin' ? true : false
+            'name'     => $replyable->name,
+            'type'     => $replier_type,
+            'is_admin' => $replier_type == 'admin' ? true : false,
         ];
 
         if ( $replier_type == 'admin' ) {
-            $replier[ 'logo' ] = $this->getImageUrl( $replyable->company );
+            $replier['logo'] = $this->getImageUrl( $replyable->company );
         }
 
         $address = $reply->getAttribute( 'address' );
@@ -59,23 +61,22 @@ class ReplyTransformer extends TransformerAbstract
         }
 
         return [
-            'id' => $reply->getAttribute( 'id' ),
-            'content' => $reply->getAttribute( 'content' ),
-            'photo' => $this->getReplyImageUrl($reply),
+            'id'          => $reply->getAttribute( 'id' ),
+            'content'     => $reply->getAttribute( 'content' ),
+            'photo'       => $this->getReplyImageUrl( $reply ),
             //'photo' => $reply->getAttribute('photo'),
-            'snoocode' => Arr::get( $address, 'code' ),
-            'country' => Arr::get( $address, 'country' ),
+            'snoocode'    => Arr::get( $address, 'code' ),
+            'country'     => Arr::get( $address, 'country' ),
             'subdivision' => Arr::get( $address, 'subdivision' ),
-            'division' => Arr::get( $address, 'division' ),
-            'latitude' => Arr::get( $address, 'latitude' ),
-            'longitude' => Arr::get( $address, 'longitude' ),
-            'signature' => Arr::get( $address, 'stamp_string' ),
-            'sent_at' => Carbon::parse($reply->getAttribute( 'created_at' ))->format( 'l, d F Y H:i:s' ),
-            'created_at' => $reply->getAttribute( 'created_at' )->diffForHumans(),
-            'replier' => $replier
+            'division'    => Arr::get( $address, 'division' ),
+            'latitude'    => Arr::get( $address, 'latitude' ),
+            'longitude'   => Arr::get( $address, 'longitude' ),
+            'signature'   => Arr::get( $address, 'stamp_string' ),
+            'sent_at'     => Carbon::parse( $reply->getAttribute( 'created_at' ) )->format( 'l, d F Y H:i:s' ),
+            'created_at'  => $reply->getAttribute( 'created_at' )->diffForHumans(),
+            'replier'     => $replier,
         ];
     }
-
 
 
     public function includeCustomer( Ticket $ticket ): ?Item
@@ -101,6 +102,7 @@ class ReplyTransformer extends TransformerAbstract
 
     /**
      * @param Reply $reply
+     *
      * @return Item
      * @throws ReflectionException
      */
@@ -122,11 +124,11 @@ class ReplyTransformer extends TransformerAbstract
         return Storage::disk( 's3' )->url( 'companies/' . $company->getAttribute( 'logo' ) );
     }
 
-    public function getReplyImageUrl(Reply $reply)
+    public function getReplyImageUrl( Reply $reply )
     {
-        if ($reply->getAttribute('photo') == null) {
+        if ( $reply->getAttribute( 'photo' ) == null ) {
             return null;
         }
-        return Storage::disk('s3')->url('replies/'. $reply->getAttribute('photo'));
+        return Storage::disk( 's3' )->url( 'replies/' . $reply->getAttribute( 'photo' ) );
     }
 }

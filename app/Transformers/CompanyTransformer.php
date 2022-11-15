@@ -14,35 +14,38 @@ class CompanyTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
-        //
-    ];
+    protected array $defaultIncludes
+        = [
+            //
+        ];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
-        'customers', 'trips'
-    ];
+    protected array $availableIncludes
+        = [
+            'customers', 'trips',
+        ];
 
     /**
      * A Fractal transformer.
      *
      * @param Company $company
+     *
      * @return array
      */
     public function transform( Company $company ): array
     {
         return [
-            'id' => $company->getAttribute( 'id' ),
-            'name' => $company->getAttribute( 'name' ),
-            'logo' => $this->getImageUrl( $company ),
-            'tagline' => $company->getAttribute( 'tagline' ),
-            'email' => $company->getAttribute( 'email' ),
+            'id'           => $company->getAttribute( 'id' ),
+            'name'         => $company->getAttribute( 'name' ),
+            'logo'         => $this->getImageUrl( $company ),
+            'tagline'      => $company->getAttribute( 'tagline' ),
+            'email'        => $company->getAttribute( 'email' ),
             'phone_number' => $company->getAttribute( 'phone_number' ),
-            'website' => $company->getAttribute( 'website' ),
+            'website'      => $company->getAttribute( 'website' ),
             'is_activated' => $company->getIsActivatedAttribute(),
             'activated_at' => $company->getAttribute( 'activated_at' ),
         ];

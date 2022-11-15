@@ -14,54 +14,57 @@ class AnnouncementTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
+    protected array $defaultIncludes
+        = [
 
-    ];
+        ];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected $availableIncludes = [
-        'company'
-    ];
+    protected array $availableIncludes
+        = [
+            'company',
+        ];
 
     /**
      * A Fractal transformer.
      *
      * @param Announcement $announcement
+     *
      * @return array
      */
-    public function transform(Announcement $announcement)
+    public function transform( Announcement $announcement )
     {
         return [
-            'id' => $announcement->getAttribute('id'),
-            'company_id' => $announcement->getAttribute('company_id'),
+            'id'           => $announcement->getAttribute( 'id' ),
+            'company_id'   => $announcement->getAttribute( 'company_id' ),
             'company_name' => $announcement->company->name ?? null,
-            'title' => $announcement->getAttribute('title'),
-            'content' => $announcement->getAttribute('content'),
-            'type' => $announcement->getAttribute('type'),
-            'photo' => $this->getImageUrl($announcement),
-            'priority' => $announcement->getAttribute('priority'),
-            'created_at' => Carbon::parse( $announcement->getAttribute( 'created_at' ) )->format( 'l, d F Y @ H:i:s' ),
+            'title'        => $announcement->getAttribute( 'title' ),
+            'content'      => $announcement->getAttribute( 'content' ),
+            'type'         => $announcement->getAttribute( 'type' ),
+            'photo'        => $this->getImageUrl( $announcement ),
+            'priority'     => $announcement->getAttribute( 'priority' ),
+            'created_at'   => Carbon::parse( $announcement->getAttribute( 'created_at' ) )->format( 'l, d F Y @ H:i:s' ),
 
         ];
     }
 
-    public function getImageUrl(Announcement $announcement)
+    public function getImageUrl( Announcement $announcement )
     {
-        if ($announcement->getAttribute('photo') == null) {
+        if ( $announcement->getAttribute( 'photo' ) == null ) {
             return null;
         }
 
-        return Storage::disk('s3')->url('announcements/'. $announcement->getAttribute('photo'));
+        return Storage::disk( 's3' )->url( 'announcements/' . $announcement->getAttribute( 'photo' ) );
     }
 
-    public function includeCompany(Announcement $announcement)
+    public function includeCompany( Announcement $announcement )
     {
-        if (!$announcement->company) return null;
+        if ( !$announcement->company ) return null;
 
-        return $this->item($announcement->company, new CompanyTransformer(), 'companies');
+        return $this->item( $announcement->company, new CompanyTransformer(), 'companies' );
     }
 }

@@ -14,9 +14,9 @@ add( 'writable_dirs', [] );
 
 // Hosts
 
-host( 'api.cleanafrica.com' )
+host( 'api.cleanafrica.co.uk' )
     ->set( 'remote_user', 'root' )
-    ->set( 'deploy_path', '~/var/www/api.cleanafrica' );
+    ->set( 'deploy_path', '/var/www/api.cleanafrica' );
 
 // Hooks
 
