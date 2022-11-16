@@ -2,8 +2,6 @@
 
 use App\Http\Middleware\AcceptJson;
 use App\Http\Middleware\CorsMiddleware;
-use BenSampo\Enum\EnumServiceProvider;
-use Lorisleiva\LaravelDeployer\LaravelDeployerServiceProvider;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -24,7 +22,7 @@ date_default_timezone_set( env( 'APP_TIMEZONE', 'UTC' ) );
 |
 */
 
-$app = new Laravel\Lumen\Application(
+$app = new \Dusterio\LumenPassport\Lumen7Application(
     dirname( __DIR__ )
 );
 
@@ -99,7 +97,7 @@ $app->routeMiddleware( [
 | Register Service Providers
 |--------------------------------------------------------------------------
 |
-| Here we will register all of the application's service providers which
+| Here we will register all the application's service providers which
 | are used to bind services into the container. Service providers are
 | totally optional, so you are not required to uncomment this line.
 |

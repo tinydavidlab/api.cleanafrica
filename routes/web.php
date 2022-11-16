@@ -1,6 +1,6 @@
 <?php
 
-/** @var Router $router */
+/** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
 |--------------------------------------------------------------------------
@@ -13,27 +13,25 @@
 |
 */
 
-    use Laravel\Lumen\Routing\Router;
+$router->get( '/', function () {
+    return "Clean Kenya API Project";
+} );
 
-    $router->get( '/', function () {
-        return "Clean Kenya API Projecct";
-    } );
+/* ============= Authentication ============= */
+$router->group( [ 'prefix' => 'auth' ], function () use ( $router ) {
+    $router->post( 'login', 'AuthController@login' );
+    $router->post( 'register', 'AuthController@register' );
+} );
 
-    /* ============= Authentication ============= */
-    $router->group( [ 'prefix' => 'auth' ], function ( $router ) {
-        $router->post( 'login', 'AuthController@login' );
-        $router->post( 'register', 'AuthController@register' );
-    } );
-
-    $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
-        $router->post( 'auth/token', 'UserTokenController@store' );
+$router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function () use ( $router ) {
+    $router->post( 'auth/token', 'UserTokenController@store' );
 } );
 
 $router->group( [ 'prefix' => 'auth' ], function () use ( $router ) {
     $router->get( 'me', 'AuthController@me' );
 } );
 
-$router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+$router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function () use ( $router ) {
     /* ============= Authentication ============= */
     $router->post( 'login', 'Auth\LoginController@store' );
     $router->post( 'register', 'Auth\LoginController@new' );
@@ -155,8 +153,8 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->delete( 'categories/{id}', 'CategoryController@destroy' );
 
     /* ============= Company Tickets ============= */
-    $router->get('companies/{id}/tickets', 'CompanyTicketController@getTicketsForCompany');
-    $router->get('companies/{id}/ticket_date/{date}', 'CompanyTicketController@getCompanyTicketsPerDate');
+    $router->get( 'companies/{id}/tickets', 'CompanyTicketController@getTicketsForCompany' );
+    $router->get( 'companies/{id}/ticket_date/{date}', 'CompanyTicketController@getCompanyTicketsPerDate' );
 
     /* ============= Tickets ============= */
     $router->get( 'tickets', 'TicketController@index' );
@@ -178,18 +176,18 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->delete( 'announcements/{id}', 'AnnouncementController@destroy' );
 } );
 
-$router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
+$router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function () use ( $router ) {
     $router->get( 'user/tickets', 'UserTicketController@index' );
     $router->post( 'user/tickets', 'UserTicketController@store' );
     $router->post( 'user/tickets/{id}/replies', 'UserTicketController@reply' );
 } );
 
-    $router->group( [ 'middleware' => 'auth:admin', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
-        /* ============= Ticket Replies ============= */
-        $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
-    } );
+$router->group( [ 'middleware' => 'auth:admin', 'prefix' => 'v1', 'namespace' => 'Api' ], function () use ( $router ) {
+    /* ============= Ticket Replies ============= */
+    $router->post( 'tickets/{id}/replies', 'TicketReplyController@store' );
+} );
 
-    $router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router ) {
-        $router->post( 'me/trips', 'UserTripController@store' );
-        $router->get( 'me/trips', 'UserTripController@index' );
-    } );
+$router->group( [ 'middleware' => 'auth:customer', 'prefix' => 'v1', 'namespace' => 'Api' ], function () use ( $router ) {
+    $router->post( 'me/trips', 'UserTripController@store' );
+    $router->get( 'me/trips', 'UserTripController@index' );
+} );
