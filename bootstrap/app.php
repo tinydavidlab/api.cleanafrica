@@ -109,15 +109,13 @@ $app->register( App\Providers\EventServiceProvider::class );
 $app->register( Spatie\Fractal\FractalServiceProvider::class );
 
 /*======== Custom Providers ============*/
-//$app->register( EnumServiceProvider::class );
-//$app->register( LaravelDeployerServiceProvider::class );
-
 $app->register( Laravel\Passport\PassportServiceProvider::class );
 $app->register( Dusterio\LumenPassport\PassportServiceProvider::class );
 $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );
 $app->register( Prettus\Repository\Providers\LumenRepositoryServiceProvider::class );
 $app->register( Benwilkins\FCM\FcmNotificationServiceProvider::class );
 $app->register( Anik\Form\FormRequestServiceProvider::class );
+$app->register( PHPOpenSourceSaver\JWTAuth\Providers\LumenServiceProvider::class );
 
 
 /*

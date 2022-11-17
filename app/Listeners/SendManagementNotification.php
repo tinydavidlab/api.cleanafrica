@@ -21,11 +21,14 @@ class SendManagementNotification
      * Handle the event.
      *
      * @param NewUserRegistered $event
+     *
      * @return void
      */
-    public function handle( NewUserRegistered $event )
+    public function handle( NewUserRegistered $event ): void
     {
-        $admins = $event->customer->company->admins->filter( function ( $admin ) { return !is_null( $admin->device_token ); } );
+        $admins = $event->customer->company->admins->filter( function ( $admin ) {
+            return !is_null( $admin->device_token );
+        } );
         Notification::send( $admins, new NewUserAlertManagement( $event->customer ) );
     }
 }

@@ -14,39 +14,38 @@ use App\Transformers\AgentTransformer;
 use App\Transformers\CustomerTransformer;
 use Exception;
 use Firebase\JWT\JWT;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Laravel\Passport\Client;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     /**
      * @var CustomerRepository
      */
-    private $customerRepository;
+    private CustomerRepository $customerRepository;
     /**
      * @var AdminRepository
      */
-    private $adminRepository;
+    private AdminRepository $adminRepository;
     /**
      * @var AgentRepository
      */
-    private $agentRepository;
+    private AgentRepository $agentRepository;
 
 
     /**
      * AuthController constructor.
+     *
      * @param CustomerRepository $customerRepository
-     * @param AdminRepository $adminRepository
-     * @param AgentRepository $agentRepository
+     * @param AdminRepository    $adminRepository
+     * @param AgentRepository    $agentRepository
      */
     public function __construct( CustomerRepository $customerRepository, AdminRepository $adminRepository, AgentRepository $agentRepository )
     {
@@ -59,6 +58,7 @@ class AuthController extends Controller
      * Get a JWT via given credentials.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      * @throws ValidationException
      * @throws Exception
@@ -89,7 +89,7 @@ class AuthController extends Controller
         $auth_token = json_decode( $response->getContent(), true );
         if ( $response->getStatusCode() != Response::HTTP_OK ) {
             return response()->json( [
-                'message' => Arr::get( $auth_token, 'message' )
+                'message' => Arr::get( $auth_token, 'message' ),
             ], Response::HTTP_BAD_REQUEST );
         }
 
@@ -98,8 +98,8 @@ class AuthController extends Controller
         return response()->json( [
             'auth' => [
                 'token' => $auth_token,
-                $type   => $this->getTransformedUserType( $user, $type )
-            ]
+                $type   => $this->getTransformedUserType( $user, $type ),
+            ],
         ], Response::HTTP_OK );
     }
 
@@ -143,22 +143,14 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param string $type
-     * @param string $token
+     * @param string  $type
+     * @param array   $token
      * @param Request $request
+     *
      * @return JsonResponse
      */
-    protected function respondWithToken( string $type, string $token, Request $request ): JsonResponse
+    protected function respondWithToken( Admin|Customer|Agent $user, string $type, array $token, Request $request ): JsonResponse
     {
-        $payload = JWTAuth::setToken( $token )->getPayload();
-
-        $token = [
-            'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => $payload->get( 'exp' ),
-        ];
-
-        $user = auth()->guard( $type )->user();
         if ( $request->has( 'device_token' ) ) {
             $user->update( [ 'device_token' => $request->get( 'device_token' ) ] );
         }
@@ -168,8 +160,8 @@ class AuthController extends Controller
         return response()->json( [
             'auth' => [
                 'token' => $token,
-                $type   => $user
-            ]
+                $type   => $user,
+            ],
         ] );
     }
 
@@ -209,59 +201,78 @@ class AuthController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      * @throws ValidationException
      * @throws ValidatorException
      */
     public function register( Request $request ): JsonResponse
     {
-        $table = Str::plural( $request->get( 'type', 'customer' ) );
-        $table = ( $table == "collectors" ) ? "admins" : ( ( $table == "super_admins" ) ? "admins" : $table );
+        $userType = Str::plural( $request->get( 'type', 'customer' ) );
+        $table    = ( $userType == "collectors" ) ? "admins" : ( ( $userType == "super_admins" ) ? "admins" : $userType );
 
-        $this->validate( $request, [
-            'name' => 'required',
-            'type' => 'required|in:customer,collector,admin,super_admin',
+        $valid_fields = $this->validate( $request, [
+            'name'         => 'required',
+            'type'         => 'required|in:customer,collector,admin,super_admin,agent',
             'phone_number' => 'required|unique:' . $table . ',phone_number',
-            'company_id' => 'exists:companies,id'
+            'company_id'   => 'exists:companies,id',
         ], [], [
             'type' => 'validation',
-            'code' => Response::HTTP_UNPROCESSABLE_ENTITY
+            'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
         ] );
 
-        $user = $this->createUserWithType( $request->all(), $request->get( 'type' ) );
+        $client = Client::whereProvider( $userType )
+            ->where( [ 'password_client' => true ] )
+            ->firstOrFail();
+        $user = $this->createUserWithType( $valid_fields, $request->get( 'type' ) );
 
         $credentials = [
-            'phone_number' => $request->get( 'phone_number' ),
-            'password' => $request->get( 'phone_number' ),
+            'username'   => $request->get( 'phone_number' ),
+            'password'   => $request->get( 'phone_number' ),
             'company_id' => $request->get( 'company_id' ),
         ];
 
-        if ( !$token = auth()->guard( $request->get( 'type' ) )->attempt( $credentials ) ) {
+        $login_request = Request::create( '/oauth/token', 'POST', [
+            ...$credentials,
+            'client_id'     => $client->id,
+            'client_secret' => $client->secret,
+            'grant_type'    => 'password',
+        ] );
+        $response      = app()->handle( $login_request );
+
+        if ( $response->getStatusCode() != Response::HTTP_OK ) {
+            $jsonDecode = json_decode( $response->getContent(), true );
             return response()->json( [
-                'code' => Response::HTTP_UNAUTHORIZED,
-                'type' => 'Authentication',
-                'message' => 'Please check your phone number and try again.'
-            ], Response::HTTP_UNAUTHORIZED );
+                'code'    => $response->getStatusCode(),
+                'type'    => 'Authentication',
+                'message' => $jsonDecode['error_description'],
+            ], $response->getStatusCode() );
         }
 
-        event( new NewUserRegistered( $user ) );
+        $token = json_decode( $response->getContent(), true );
 
-        return $this->respondWithToken( $request->get( 'type' ), $token, $request );
+        if ( $user instanceof Customer ) {
+            event( new NewUserRegistered( $user ) );
+        }
+
+        return $this->respondWithToken( $user, $request->get( 'type' ), $token, $request );
     }
 
     /**
-     * @param array $data
+     * @param array  $data
      * @param string $type
-     * @return LengthAwarePaginator|Collection|mixed
+     *
+     * @return Customer|Admin|Agent
      * @throws ValidatorException
      */
-    private function createUserWithType( array $data, string $type )
+    private function createUserWithType( array $data, string $type ): Agent|Admin|Customer
     {
         if ( $type == 'customer' ) {
             return $this->customerRepository->create(
                 array_merge(
                     $data,
-                    [ 'password' => Hash::make( $data[ 'phone_number' ] ),
+                    [
+                        'password' => Hash::make( $data['phone_number'] ),
                         'snoocode' => Arr::get( $data, 'code' ) ]
                 )
             );
@@ -271,7 +282,7 @@ class AuthController extends Controller
             return $this->agentRepository->create(
                 array_merge(
                     $data,
-                    [ 'password' => Hash::make( $data[ 'phone_number' ] ), ]
+                    [ 'password' => Hash::make( $data['phone_number'] ), ]
                 )
             );
         }
@@ -279,7 +290,7 @@ class AuthController extends Controller
         return $this->adminRepository->create(
             array_merge(
                 $data,
-                [ 'password' => Hash::make( $data[ 'phone_number' ] ) ]
+                [ 'password' => Hash::make( $data['phone_number'] ) ]
             )
         );
     }
