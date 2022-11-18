@@ -84,11 +84,11 @@ class UserTicketController extends Controller
             'photo' => 'image',
         ] );
 
-        $status = TicketStatus::OPEN();
+        $status = TicketStatus::OPEN;
         if ( $request->has( 'category_id' ) ) {
             $category = $this->categoryRepository->find( $request->get( 'category_id' ) );
             if ( $category && $category->name == "Feedback" ) {
-                $status = TicketStatus::CLOSED();
+                $status = TicketStatus::CLOSED;
             }
         }
 

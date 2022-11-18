@@ -27,31 +27,16 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
     /**
-     * @var CustomerRepository
-     */
-    private CustomerRepository $customerRepository;
-    /**
-     * @var AdminRepository
-     */
-    private AdminRepository $adminRepository;
-    /**
-     * @var AgentRepository
-     */
-    private AgentRepository $agentRepository;
-
-
-    /**
      * AuthController constructor.
      *
      * @param CustomerRepository $customerRepository
      * @param AdminRepository    $adminRepository
      * @param AgentRepository    $agentRepository
      */
-    public function __construct( CustomerRepository $customerRepository, AdminRepository $adminRepository, AgentRepository $agentRepository )
+    public function __construct( public CustomerRepository $customerRepository,
+                                 public AdminRepository    $adminRepository,
+                                 public AgentRepository    $agentRepository )
     {
-        $this->customerRepository = $customerRepository;
-        $this->adminRepository    = $adminRepository;
-        $this->agentRepository    = $agentRepository;
     }
 
     /**
@@ -173,7 +158,10 @@ class AuthController extends Controller
     public function me(): JsonResponse
     {
         $guard = request( 'type' );
-        $me    = fractal( auth()->guard( $guard )->user(), $guard == 'customer' ? new CustomerTransformer : new AdminTransformer )->withResourceName( Str::plural( $guard ) )->toArray();
+        $me    = fractal( auth()->guard( $guard )->user(),
+            $guard == 'customer' ? new CustomerTransformer : new AdminTransformer )
+            ->withResourceName( Str::plural( $guard ) )
+            ->toArray();
         return response()->json( [ 'me' => $me ] );
     }
 
@@ -224,7 +212,7 @@ class AuthController extends Controller
         $client = Client::whereProvider( $userType )
             ->where( [ 'password_client' => true ] )
             ->firstOrFail();
-        $user = $this->createUserWithType( $valid_fields, $request->get( 'type' ) );
+        $user   = $this->createUserWithType( $valid_fields, $request->get( 'type' ) );
 
         $credentials = [
             'username'   => $request->get( 'phone_number' ),
