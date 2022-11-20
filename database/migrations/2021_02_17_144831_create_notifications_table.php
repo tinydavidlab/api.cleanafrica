@@ -14,7 +14,6 @@ class CreateNotificationsTable extends Migration
      */
     public function up()
     {
-        if ( app()->environment() == 'production' )
 
         Schema::create( 'notifications', function ( Blueprint $table ) {
             $table->uuid( 'id' )->primary();
@@ -25,7 +24,6 @@ class CreateNotificationsTable extends Migration
             $table->timestamps();
         } );
 
-        if ( app()->environment() == 'production' )
 
     }
 
