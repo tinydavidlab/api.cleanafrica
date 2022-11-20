@@ -40,7 +40,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        DB::statement( 'SET SESSION sql_require_primary_key=0' );
+
         $this->schema->create( 'oauth_clients', function ( Blueprint $table ) {
             $table->bigIncrements( 'id' );
             $table->unsignedBigInteger( 'user_id' )->nullable()->index();
@@ -53,7 +53,7 @@ return new class extends Migration {
             $table->boolean( 'revoked' );
             $table->timestamps();
         } );
-        DB::statement( 'SET SESSION sql_require_primary_key=1' );
+
     }
 
     /**

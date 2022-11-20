@@ -15,7 +15,7 @@ class CreateAnnouncementsTable extends Migration
      */
     public function up()
     {
-        DB::statement( 'SET SESSION sql_require_primary_key=0' );
+
         Schema::create( 'announcements', function ( Blueprint $table ) {
             $table->uuid( 'id' )->primary();
             $table->unsignedBigInteger( 'company_id' );
@@ -28,7 +28,7 @@ class CreateAnnouncementsTable extends Migration
             $table->timestamps();
 
         } );
-        DB::statement( 'SET SESSION sql_require_primary_key=1' );
+
     }
 
     /**
