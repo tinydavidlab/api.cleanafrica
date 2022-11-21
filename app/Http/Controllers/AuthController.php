@@ -209,6 +209,8 @@ class AuthController extends Controller
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
         ] );
 
+        $userType = $userType == "super_admins" ? "admins" : $userType;
+
         $client = Client::whereProvider( $userType )
             ->where( [ 'password_client' => true ] )
             ->firstOrFail();
