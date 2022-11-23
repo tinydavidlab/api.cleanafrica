@@ -5,6 +5,7 @@ namespace App\Transformers;
 use App\Models\Company;
 use App\Models\Reply;
 use App\Models\Ticket;
+use App\Utilities\ImageUploader;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
@@ -121,7 +122,8 @@ class ReplyTransformer extends TransformerAbstract
         if ( $company->getAttribute( 'logo' ) == null ) {
             return null;
         }
-        return Storage::disk( 's3' )->url( 'companies/' . $company->getAttribute( 'logo' ) );
+
+        return ImageUploader::getFileURI( $company->getAttribute( 'logo' ), 'companies' );
     }
 
     public function getReplyImageUrl( Reply $reply )
@@ -129,6 +131,7 @@ class ReplyTransformer extends TransformerAbstract
         if ( $reply->getAttribute( 'photo' ) == null ) {
             return null;
         }
-        return Storage::disk( 's3' )->url( 'replies/' . $reply->getAttribute( 'photo' ) );
+
+        return ImageUploader::getFileURI( $reply->getAttribute( 'photo' ), 'replies' );
     }
 }

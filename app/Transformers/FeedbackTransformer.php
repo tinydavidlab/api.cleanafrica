@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Feedback;
+use App\Utilities\ImageUploader;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
@@ -77,7 +78,7 @@ class FeedbackTransformer extends TransformerAbstract
             return null;
         }
 
-        return Storage::disk( 's3' )->url( 'feedback/' . $feedback->getAttribute( 'photo' ) );
+        return ImageUploader::getFileURI( $feedback->getAttribute( 'photo' ), 'feedback' );
     }
 
     public function includeCustomer( Feedback $feedback ): Item

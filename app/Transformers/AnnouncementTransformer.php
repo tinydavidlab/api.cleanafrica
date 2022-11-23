@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Announcement;
+use App\Utilities\ImageUploader;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\TransformerAbstract;
@@ -36,7 +37,7 @@ class AnnouncementTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform( Announcement $announcement )
+    public function transform( Announcement $announcement ): array
     {
         return [
             'id'           => $announcement->getAttribute( 'id' ),
@@ -58,7 +59,7 @@ class AnnouncementTransformer extends TransformerAbstract
             return null;
         }
 
-        return Storage::disk( 's3' )->url( 'announcements/' . $announcement->getAttribute( 'photo' ) );
+        return ImageUploader::getFileURI( $announcement->getAttribute( 'photo' ), 'announcements' );
     }
 
     public function includeCompany( Announcement $announcement )

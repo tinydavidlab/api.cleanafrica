@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Trip;
+use App\Utilities\ImageUploader;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
@@ -84,7 +85,7 @@ class TripTransformer extends TransformerAbstract
     {
         if ( $image == null ) return null;
 
-        return Storage::disk( 's3' )->url( $folder . '/' . $image );
+        return ImageUploader::getFileURI( $image, $folder );
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Customer;
+use App\Utilities\ImageUploader;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -66,7 +67,7 @@ class CustomerTransformer extends TransformerAbstract
             return $customer->getAttribute( 'property_photo' );
         }
 
-        return Storage::url( 'properties/' . $customer->getAttribute( 'property_photo' ) );
+        return ImageUploader::getFileURI( $customer->getAttribute( 'property_photo' ), 'properties' );
     }
 
 

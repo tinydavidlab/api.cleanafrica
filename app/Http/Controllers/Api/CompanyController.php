@@ -10,6 +10,7 @@ use App\Utilities\ImageUploader;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,15 +56,16 @@ class CompanyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      * @throws ValidatorException|ValidationException
      */
     public function store( Request $request ): JsonResponse
     {
         $this->validate( $request, [
-            'name' => 'required|unique:companies,name',
+            'name'         => 'required|unique:companies,name',
             'phone_number' => 'required|unique:companies,phone_number',
-            'logo' => 'image'
+            'logo'         => 'image',
         ] );
 
         $company = $this->repository->create( $request->except( 'logo' ) );
@@ -86,6 +88,7 @@ class CompanyController extends Controller
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return JsonResponse
      */
     public function show( int $id ): JsonResponse
@@ -102,7 +105,8 @@ class CompanyController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param int $id
+     * @param int     $id
+     *
      * @return JsonResponse
      * @throws ValidatorException
      */
@@ -127,6 +131,7 @@ class CompanyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return JsonResponse
      */
     public function destroy( int $id ): JsonResponse

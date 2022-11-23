@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Company;
+use App\Utilities\ImageUploader;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
@@ -56,7 +57,8 @@ class CompanyTransformer extends TransformerAbstract
         if ( $company->getAttribute( 'logo' ) == null ) {
             return null;
         }
-        return Storage::disk( 's3' )->url( 'companies/' . $company->getAttribute( 'logo' ) );
+
+        return ImageUploader::getFileURI( $company->getAttribute( 'logo' ), 'companies' );
     }
 
     public function includeCustomers( Company $company ): Collection

@@ -14,6 +14,7 @@ class ProcessImageUpload extends Job
 
     /**
      * Create a new job instance.
+     *
      * @param string $filename
      * @param string $folder
      */
@@ -28,15 +29,15 @@ class ProcessImageUpload extends Job
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        $file     = storage_path( 'uploads/' . $this->filename );
-        $uploaded = Storage::disk( 's3' )
-            ->put(
-                $this->folder . $this->filename,
-                fopen( $file, 'rb+' ),
-                'public'
-            );
+        $file       = storage_path( 'uploads/' . $this->filename );
+        $filesystem = Storage::disk( 'do_spaces' );
+        $uploaded = $filesystem->put(
+            $this->folder . $this->filename,
+            fopen( $file, 'rb+' ),
+            'public'
+        );
 
         if ( $uploaded ) unlink( $file );
     }

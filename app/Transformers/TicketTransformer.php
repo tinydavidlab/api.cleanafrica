@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Ticket;
+use App\Utilities\ImageUploader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
@@ -72,7 +73,8 @@ class TicketTransformer extends TransformerAbstract
         if ( $ticket->getAttribute( 'photo' ) == null ) {
             return null;
         }
-        return Storage::disk( 's3' )->url( 'support_tickets/' . $ticket->getAttribute( 'photo' ) );
+
+        return ImageUploader::getFileURI( $ticket->getAttribute( 'photo' ), 'support_tickets' );
     }
 
     public function includeCustomer( Ticket $ticket ): ?Item
