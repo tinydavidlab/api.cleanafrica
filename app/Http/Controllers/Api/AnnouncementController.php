@@ -77,8 +77,6 @@ class AnnouncementController extends Controller
 
         $content = strip_tags( $request->get( 'content' ) );
 
-//        dd( $content );
-
         $announcement = $this->announcementRepository->create( array_merge( $request->except( 'photo', 'content' ), [ 'content' => $content ] ) );
 
         if ( $request->hasFile( 'photo' ) ) {
