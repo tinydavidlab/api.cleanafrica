@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Log;
+use function MongoDB\BSON\toJSON;
 
 class PropertyRegistrationController extends Controller
 {
@@ -25,7 +27,7 @@ class PropertyRegistrationController extends Controller
      *
      * @param CustomerRepository $repository
      */
-    public function __construct(CustomerRepository $repository)
+    public function __construct( CustomerRepository $repository )
     {
         $this->repository = $repository;
     }
@@ -37,23 +39,30 @@ class PropertyRegistrationController extends Controller
      * @return JsonResponse
      * @throws ValidationException|ValidatorException
      */
-    public function store(Request $request): JsonResponse
+    public function store( Request $request ): JsonResponse
     {
-        $this->validate($request, [
-            'property_photo' => 'required'
-        ]);
+        $this->validate( $request, [
+            'property_photo' => 'required',
+            'customer_id' => 'required',
+        ] );
 
-        if ( $request->hasFile('property_photo') ) {
-            $filename = ImageUploader::upload($request->file('property_photo'));
-            $this->dispatch(new ProcessImageUpload($filename, 'properties'));
-            $this->repository->update([ 'property_photo' => $filename ], auth()->id());
+        $customerId = $request->customer_id;
+
+        if ( $request->hasFile( 'property_photo' ) ) {
+            $filename = ImageUploader::upload( $request->file( 'property_photo' ) );
+            $this->dispatch( new ProcessImageUpload( $filename, 'properties' ) );
+//            error_log(auth()->user()->address);
+//            Log::debug(auth()->id());
+            $this->repository->update( [ 'property_photo' => $filename ], $customerId );
         }
 
-        $customer = fractal(auth()->user()->fresh(), new CustomerTransformer)
-            ->withResourceName('customers')
+        $customer = $this->repository->find( $customerId );
+
+        $customer = fractal( $customer, new CustomerTransformer() )
+            ->withResourceName( 'customers' )
             ->toArray();
 
-        return response()->json([ 'customer' => $customer ], Response::HTTP_OK);
+        return response()->json( [ 'customer' => $customer ], Response::HTTP_OK );
     }
 
     /**
@@ -61,11 +70,23 @@ class PropertyRegistrationController extends Controller
      *
      * @return JsonResponse
      */
-    public function check(): JsonResponse
+    public function check( Request $request ): JsonResponse
     {
+        $this->validate( $request, [
+            'customer_id' => 'required',
+        ] );
+
+        $customer      = $this->repository->find( $request->customer_id);
+        $propertyPhoto = $customer->property_photo;
+
+        $checker = false;
+        if ( !is_null( $propertyPhoto ) ) {
+            $checker = true;
+        }
+
         $checker = auth()->check() ? (bool)auth()->user()->property_photo : true;
-        return response()->json([
+        return response()->json( [
             'property_photo_exists' => $checker,
-        ]);
+        ] );
     }
 }
