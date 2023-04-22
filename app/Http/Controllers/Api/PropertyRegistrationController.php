@@ -84,7 +84,7 @@ class PropertyRegistrationController extends Controller
             $checker = true;
         }
 
-        $checker = auth()->check() ? (bool)auth()->user()->property_photo : true;
+//        $checker = auth()->check() ? (bool)auth()->user()->property_photo : true;
         return response()->json( [
             'property_photo_exists' => $checker,
         ] );
