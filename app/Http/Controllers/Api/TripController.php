@@ -12,6 +12,7 @@ use App\Transformers\TripTransformer;
 use App\Utilities\ImageUploader;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -160,7 +161,7 @@ class TripController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function assignMultipleTrucksToTrips( Request $request )
+    public function assignMultipleTripsToTruck( Request $request )
     {
         $ids = $request[ 'trip_ids' ];
         Trip::whereIn( 'id', $ids )->update( [ 'truck_id' => $request[ 'truck_id' ] ] );

@@ -9,22 +9,24 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.3||^8.0",
         "ext-json": "*",
         "albertcht/lumen-helpers": "dev-l8",
-        "bensampo/laravel-enum": "^3.2",
-        "benwilkins/laravel-fcm-notification": "^4.0",
+        "bensampo/laravel-enum": "^6.3",
+        "benwilkins/laravel-fcm-notification": "dev-master",
         "doctrine/dbal": "^3.0",
-        "dusterio/lumen-passport": "^0.3.4",
-        "flipbox/lumen-generator": "^8.2",
-        "laravel/lumen-framework": "^8.0",
+        "dusterio/lumen-passport": "^0.3.6",
+        "flipbox/lumen-generator": "^9.2",
+        "laravel/lumen-framework": "^9.0",
         "laravel/tinker": "^2.6",
         "league/csv": "^9.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "lorisleiva/laravel-deployer": "^0.3.5",
+        "lorisleiva/laravel-deployer": "dev-master",
         "pearl/lumen-request-validate": "^1.6",
         "prettus/l5-repository": "^2.7",
-        "spatie/laravel-fractal": "^5.8"
+        "symfony/var-dumper": "^6.1",
+        "laravel/passport": "^10.4",
+        "spatie/laravel-fractal": "^6.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
@@ -63,6 +65,14 @@
         {
             "type": "vcs",
             "url": "https://github.com/dedongh/lumen-helpers"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/dedongh/laravel-deployer"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/dedongh/laravel-fcm-notification"
         }
     ]
 }

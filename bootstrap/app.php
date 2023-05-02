@@ -111,7 +111,8 @@ $app->routeMiddleware( [
     $app->register( Spatie\Fractal\FractalServiceProvider::class );
 
     /*======== Custom Providers ============*/
-    $app->register( EnumServiceProvider::class );
+    //TODO causing issues find a fix and uncomment
+    //$app->register( BenSampo\Enum\EnumServiceProvider::class );
     $app->register( Laravel\Passport\PassportServiceProvider::class );
     $app->register( Dusterio\LumenPassport\PassportServiceProvider::class );
     $app->register( Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class );

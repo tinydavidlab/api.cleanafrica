@@ -16,7 +16,7 @@
     use Laravel\Lumen\Routing\Router;
 
     $router->get( '/', function () {
-        return "Clean Kenya API Projecct";
+        return "Clean Kenya API Project";
     } );
 
     /* ============= Authentication ============= */
@@ -50,7 +50,7 @@ $router->group( [ 'prefix' => 'v1', 'namespace' => 'Api' ], function ( $router )
     $router->delete( 'trips/{id}', 'TripController@destroy' );
     $router->get( 'trips/{date}/per_date', 'TripController@getTripsPerDate' );
     $router->get( 'trips_per_week', 'TripController@getTripsForThisWeek' );
-    $router->post( 'assign_trips', 'TripController@assignMultipleTrucksToTrips' );
+    $router->post( 'assign_trips', 'TripController@assignMultipleTripsToTruck' );
     $router->post( 'optimise_trips', 'TripController@optimiseTrips' );
 
     /* ============= Completed Trips ============= */
