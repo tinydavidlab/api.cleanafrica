@@ -35,6 +35,7 @@ class TruckTransformer extends TransformerAbstract
         return [
             'id' => $truck->getAttribute( 'id' ),
             'company_id' => $truck->company->id,
+            'company_name' => $truck->company->name,
             'name' => $truck->getAttribute( 'name' ),
             'license_number' => $truck->getAttribute( 'license_number' ),
             'assigned_to' => $this->getAssignedTo($truck),
