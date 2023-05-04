@@ -20,7 +20,7 @@
         "laravel/lumen-framework": "^9.0",
         "laravel/tinker": "^2.6",
         "league/csv": "^9.0",
-        "league/flysystem-aws-s3-v3": "^1.0",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "lorisleiva/laravel-deployer": "dev-master",
         "pearl/lumen-request-validate": "^1.6",
         "prettus/l5-repository": "^2.7",

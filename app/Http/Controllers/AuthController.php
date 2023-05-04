@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -242,6 +243,7 @@ class AuthController extends Controller
      */
     private function createUserWithType( array $data, string $type )
     {
+
         if ( $type == 'customer' ) {
             return $this->customerRepository->create(
                 array_merge(
@@ -256,7 +258,9 @@ class AuthController extends Controller
             return $this->agentRepository->create(
                 array_merge(
                     $data,
-                    [ 'password' => Hash::make( $data[ 'phone_number' ] ), ]
+                    [ 'password' => Hash::make( $data[ 'phone_number' ] ),
+                        'device_token' => $data[ 'device_token' ]
+                        ]
                 )
             );
         }
@@ -275,7 +279,7 @@ class AuthController extends Controller
      * @param $type
      * @return JsonResponse
      */
-    protected function handleAuthentication( array $credentials, Request $request, $type ): JsonResponse
+    protected function handleAuthentication( array $credentials, Request $requestFromApp, $type ): JsonResponse
     {
         $request    = Request::create( '/oauth/token', 'POST', $credentials );
         $response   = app()->handle( $request );
@@ -287,6 +291,10 @@ class AuthController extends Controller
         }
 
         $user = $this->getUserForGrantType( $type, $auth_token );
+
+        if ($type == "collector") {
+            $this->agentRepository->update([ 'device_token' => $requestFromApp->get( 'device_token' ) ], $user->id );
+        }
 
         return response()->json( [
             'auth' => [
