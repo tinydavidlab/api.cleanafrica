@@ -71,7 +71,7 @@ class AuthController extends Controller
             'grant_type' => 'in:password',
             'client_id' => 'required',
             'client_secret' => 'required',
-            'type' => 'in:customer,collector,admin,super_admin',
+            'type' => 'in:customer,collector,admin,super_admin,auditor',
         ]);
 
         $type = $request->get('type', 'admin');
@@ -96,6 +96,8 @@ class AuthController extends Controller
         [$headb64, $bodyb64, $cryptob64] = explode('.', $jwt);
         $body = JWT::jsonDecode(JWT::urlsafeB64Decode($bodyb64));
         if (!$id = data_get($body, 'sub')) return null;
+
+        Log::alert("TYPE: " . $type);
 
         if ($type == 'customer') {
             return Customer::find($id);
@@ -205,7 +207,7 @@ class AuthController extends Controller
 
         $this->validate($request, [
             'name' => 'required',
-            'type' => 'required|in:customer,collector,admin,super_admin',
+            'type' => 'required|in:customer,collector,admin,super_admin,auditor',
             'phone_number' => 'required|unique:' . $table . ',phone_number',
             'company_id' => 'exists:companies,id',
             'grant_type' => 'in:password',
@@ -292,7 +294,9 @@ class AuthController extends Controller
 
         $user = $this->getUserForGrantType($type, $auth_token);
 
-        $this->agentRepository->update(['device_token' => $requestFromApp->get('device_token')], $user->id);
+        if ($requestFromApp->has('device_token') && $type == "collector") {
+            $this->agentRepository->update(['device_token' => $requestFromApp->get('device_token')], $user->id);
+        }
 
         return response()->json([
             'auth' => [

@@ -38,6 +38,7 @@ class CustomerTransformer extends TransformerAbstract
         return [
             'id' => $customer->getAttribute( 'id' ),
             'company_id' => $customer->getAttribute( 'company_id' ),
+            'company_name' => $customer->company->name,
             'name' => $customer->getAttribute( 'name' ),
             'address' => $customer->getAttribute( 'address' ),
             'snoocode' => $customer->getAttribute( 'snoocode' ),
