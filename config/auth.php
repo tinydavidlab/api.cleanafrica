@@ -2,12 +2,12 @@
 
 return [
     'defaults' => [
-        'guard'     => 'customer',
+        'guard' => 'customer',
         'passwords' => 'customers',
     ],
 
     'guards' => [
-        'admin'       => [
+        'admin' => [
             'driver'   => 'passport',
             'provider' => 'admins',
         ],
@@ -15,11 +15,11 @@ return [
             'driver'   => 'passport',
             'provider' => 'admins',
         ],
-        'customer'    => [
+        'customer' => [
             'driver'   => 'passport',
             'provider' => 'customers',
         ],
-        'collector'   => [
+        'collector' => [
             'driver'   => 'passport',
             'provider' => 'collectors',
         ],
@@ -28,17 +28,17 @@ return [
     'providers' => [
         'customers' => [
             'driver' => 'eloquent',
-            'model'  => App\Models\Customer::class,
+            'model' => App\Models\Customer::class,
         ],
 
         'admins' => [
             'driver' => 'eloquent',
-            'model'  => App\Models\Admin::class,
+            'model' => App\Models\Admin::class,
         ],
 
         'collectors' => [
             'driver' => 'eloquent',
-            'model'  => App\Models\Agent::class,
-        ],
+            'model' => App\Models\Agent::class,
+        ]
     ],
 ];

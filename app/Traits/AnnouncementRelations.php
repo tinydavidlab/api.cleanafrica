@@ -5,12 +5,11 @@ namespace App\Traits;
 
 
 use App\Models\Company;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait AnnouncementRelations
 {
-    public function company(): BelongsTo
+    public function company()
     {
-        return $this->belongsTo( Company::class );
+        return $this->belongsTo(Company::class);
     }
 }

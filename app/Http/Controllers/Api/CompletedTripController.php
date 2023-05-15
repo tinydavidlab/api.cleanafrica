@@ -57,10 +57,7 @@ class CompletedTripController extends Controller
         }
 
         $trip = $this->repository->update(
-            [
-                'delivery_status' => 'completed',
-                'notes' => $request->get( 'notes' )
-            ],
+            [ 'delivery_status' => 'completed', 'notes' => $request->get( 'notes' ) ],
             $id
         );
 
@@ -73,10 +70,10 @@ class CompletedTripController extends Controller
         return response()->json( [ 'trip' => $trip ], Response::HTTP_OK );
     }
 
-    public function completeWithoutImages( int $id )
+    public function completeWithoutImages(int $id)
     {
         $trip = $this->repository->update(
-            [ 'delivery_status' => 'completed' ],
+            [ 'delivery_status' => 'completed'],
             $id
         );
 
@@ -89,11 +86,11 @@ class CompletedTripController extends Controller
         return response()->json( [ 'trip' => $trip ], Response::HTTP_OK );
     }
 
-    public function cancelTrip( int $id )
+    public function cancelTrip(int $id)
     {
-        $trip = $this->repository->update( [ 'delivery_status' => 'canceled' ], $id );
+        $trip = $this->repository->update(['delivery_status' => 'canceled'], $id);
 
-        event( new CollectorCanceledTripEvent( $trip ) );
+        event(new CollectorCanceledTripEvent($trip));
 
         $trip = fractal( $trip->fresh(), new TripTransformer() )
             ->withResourceName( 'trips' )

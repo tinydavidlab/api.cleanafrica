@@ -12,6 +12,7 @@ use App\Transformers\TripTransformer;
 use App\Utilities\ImageUploader;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,7 +25,6 @@ class TripController extends Controller
 
     /**
      * TripController constructor.
-     *
      * @param TripRepository $repository
      */
     public function __construct( TripRepository $repository )
@@ -36,7 +36,6 @@ class TripController extends Controller
      * Display a listing of the resource.
      *
      * @param TripFilter $filter
-     *
      * @return JsonResponse
      */
     public function index( TripFilter $filter ): JsonResponse
@@ -54,7 +53,6 @@ class TripController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CreateTripRequest $request
-     *
      * @return JsonResponse
      * @throws ValidatorException
      */
@@ -85,7 +83,6 @@ class TripController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     *
      * @return JsonResponse
      */
     public function show( int $id ): JsonResponse
@@ -103,8 +100,7 @@ class TripController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param int     $id
-     *
+     * @param int $id
      * @return JsonResponse
      * @throws ValidatorException
      */
@@ -122,7 +118,6 @@ class TripController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     *
      * @return JsonResponse
      */
     public function destroy( int $id ): JsonResponse
@@ -134,7 +129,6 @@ class TripController extends Controller
 
     /**
      * @param $date
-     *
      * @return JsonResponse
      */
     public function getTripsPerDate( $date ): JsonResponse
@@ -165,19 +159,17 @@ class TripController extends Controller
 
     /**
      * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function assignMultipleTrucksToTrips( Request $request )
+    public function assignMultipleTripsToTruck( Request $request )
     {
-        $ids = $request['trip_ids'];
-        Trip::whereIn( 'id', $ids )->update( [ 'truck_id' => $request['truck_id'] ] );
+        $ids = $request[ 'trip_ids' ];
+        Trip::whereIn( 'id', $ids )->update( [ 'truck_id' => $request[ 'truck_id' ] ] );
         return response()->json( [], Response::HTTP_NO_CONTENT );
     }
 
     /**
      * @param Request $request
-     *
      * @return JsonResponse
      */
     public function optimiseTrips( Request $request ): JsonResponse
@@ -185,10 +177,10 @@ class TripController extends Controller
         $trips = $request->all();
 
         foreach ( $trips as $trip ) {
-            Trip::where( 'id', $trip['id'] )->update(
+            Trip::where( 'id', $trip[ 'id' ] )->update(
                 [
-                    'order'                     => $trip['order'],
-                    'customer_apartment_number' => $trip['customer_apartment_number'],
+                    'order'                     => $trip[ 'order' ],
+                    'customer_apartment_number' => $trip[ 'customer_apartment_number' ]
                 ]
             );
         }

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env( 'FILESYSTEM_DRIVER', 'uploads' ),
+    'default' => env('FILESYSTEM_DRIVER', 's3'),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'cloud' => env( 'FILESYSTEM_CLOUD', "s3" ),
+    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
 
     /*
     |--------------------------------------------------------------------------
@@ -45,39 +45,30 @@ return [
 
         'public' => [
             'driver'     => 'local',
-            'root'       => storage_path( 'app/public' ),
-            'url'        => env( 'APP_URL' ) . '/storage',
+            'root'       => storage_path('app/public'),
+            'url'        => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
 
         'uploads' => [
             'driver' => 'local',
-            'root'   => storage_path( 'uploads' ),
+            'root'   => storage_path('uploads'),
         ],
 
         's3' => [
             'driver'   => 's3',
-            'key'      => env( 'AWS_ACCESS_KEY_ID' ),
-            'secret'   => env( 'AWS_SECRET_ACCESS_KEY' ),
-            'region'   => env( 'AWS_DEFAULT_REGION', 'us-east-1' ),
-            'bucket'   => env( 'AWS_BUCKET' ),
-            'url'      => env( 'AWS_URL' ),
-            'endpoint' => env( 'AWS_ENDPOINT' ),
-        ],
-
-        'do_spaces' => [
-            'driver'   => 's3',
-            'key'      => env( 'DO_ACCESS_KEY_ID' ),
-            'secret'   => env( 'DO_SECRET_ACCESS_KEY' ),
-            'region'   => env( 'DO_DEFAULT_REGION' ),
-            'bucket'   => env( 'DO_BUCKET' ),
-            'endpoint' => env( 'DO_ENDPOINT' ),
+            'key'      => env('AWS_ACCESS_KEY_ID'),
+            'secret'   => env('AWS_SECRET_ACCESS_KEY'),
+            'region'   => env('AWS_DEFAULT_REGION', 'us-east-1'),
+            'bucket'   => env('AWS_BUCKET'),
+            'url'      => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
         ],
 
         'output' => [
             'driver'     => 'local',
-            'root'       => storage_path( 'output' ),
-            'visibility' => 'public',
+            'root'       => storage_path('output'),
+            'visibility' => 'public'
         ],
 
     ],
@@ -94,7 +85,7 @@ return [
     */
 
     'links' => [
-        public_path( 'storage' ) => storage_path( 'app/public' ),
+        public_path('storage') => storage_path('app/public'),
     ],
 
 ];

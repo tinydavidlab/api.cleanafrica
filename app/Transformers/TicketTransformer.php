@@ -3,7 +3,6 @@
 namespace App\Transformers;
 
 use App\Models\Ticket;
-use App\Utilities\ImageUploader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
@@ -23,10 +22,9 @@ class TicketTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected array $availableIncludes
-        = [
-            'customer', 'admin', 'category', 'company',
-        ];
+    protected array $availableIncludes = [
+        'customer', 'admin', 'category', 'company'
+    ];
 
     /**
      * A Fractal transformer.
@@ -43,38 +41,37 @@ class TicketTransformer extends TransformerAbstract
         }
 
         return [
-            'id'            => $ticket->getAttribute( 'id' ),
-            'category'      => $ticket->category->name ?? null,
-            'customer_id'   => $ticket->getAttribute( 'customer_id' ),
+            'id' => $ticket->getAttribute( 'id' ),
+            'category' => $ticket->category->name ?? null,
+            'customer_id' => $ticket->getAttribute( 'customer_id' ),
             'customer_name' => $ticket->customer->name ?? null,
-            'admin_id'      => $ticket->getAttribute( 'admin_id' ),
-            'assigned_to'   => $ticket->admin->name ?? null,
-            'subject'       => $ticket->getAttribute( 'subject' ),
-            'content'       => $ticket->getAttribute( 'content' ),
-            'photo'         => $this->getImageUrl( $ticket ),
-            'priority'      => $ticket->getAttribute( 'priority' ),
-            'status'        => $ticket->getAttribute( 'status' ),
-            'snoocode'      => Arr::get( $stamp, 'code' ),
-            'day'           => Arr::get( $stamp, 'day' ),
-            'date'          => Arr::get( $stamp, 'date' ),
-            'time'          => Arr::get( $stamp, 'time' ),
-            'country'       => Arr::get( $stamp, 'country' ),
-            'subdivision'   => Arr::get( $stamp, 'subdivision' ),
-            'division'      => Arr::get( $stamp, 'division' ),
-            'latitude'      => Arr::get( $stamp, 'latitude' ),
-            'longitude'     => Arr::get( $stamp, 'longitude' ),
-            'signature'     => Arr::get( $stamp, 'stamp_string' ),
-            'created_at'    => $ticket->getAttribute( 'created_at' )->diffForHumans(),
+            'admin_id' => $ticket->getAttribute( 'admin_id' ),
+            'assigned_to' => $ticket->admin->name ?? null,
+            'subject' => $ticket->getAttribute( 'subject' ),
+            'content' => $ticket->getAttribute( 'content' ),
+            'photo' => $this->getImageUrl($ticket),
+            'priority' => $ticket->getAttribute( 'priority' ),
+            'status' => $ticket->getAttribute( 'status' ),
+            'snoocode' => Arr::get( $stamp, 'code' ),
+            'day' => Arr::get( $stamp, 'day' ),
+            'date' => Arr::get( $stamp, 'date' ),
+            'time' => Arr::get( $stamp, 'time' ),
+            'country' => Arr::get( $stamp, 'country' ),
+            'subdivision' => Arr::get( $stamp, 'subdivision' ),
+            'division' => Arr::get( $stamp, 'division' ),
+            'latitude' => Arr::get( $stamp, 'latitude' ),
+            'longitude' => Arr::get( $stamp, 'longitude' ),
+            'signature' => Arr::get( $stamp, 'stamp_string' ),
+            'created_at' => $ticket->getAttribute( 'created_at' )->diffForHumans(),
         ];
     }
 
-    public function getImageUrl( Ticket $ticket )
+    public function getImageUrl(Ticket $ticket)
     {
         if ( $ticket->getAttribute( 'photo' ) == null ) {
             return null;
         }
-
-        return ImageUploader::getFileURI( $ticket->getAttribute( 'photo' ), 'support_tickets' );
+        return Storage::disk('s3')->url('support_tickets/' . $ticket->getAttribute( 'photo'));
     }
 
     public function includeCustomer( Ticket $ticket ): ?Item

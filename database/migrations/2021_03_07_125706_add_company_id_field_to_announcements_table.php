@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDeviceTokenFieldToAgentsTable extends Migration
+class AddCompanyIdFieldToAnnouncementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddDeviceTokenFieldToAgentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('agents', function (Blueprint $table) {
-            $table->string( 'device_token' )->after('phone_number')->nullable();
+        Schema::table('announcements', function (Blueprint $table) {
+            $table->unsignedBigInteger('company_id')->after('id')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddDeviceTokenFieldToAgentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('agents', function (Blueprint $table) {
-            $table->dropColumn('device_token');
+        Schema::table('announcements', function (Blueprint $table) {
+            $table->dropColumn('company_id');
         });
     }
 }

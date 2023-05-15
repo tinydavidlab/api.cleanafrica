@@ -2,16 +2,18 @@
 
 namespace App\Enums;
 
+use BenSampo\Enum\Enum;
+
 /**
  * @method static static LOW()
  * @method static static MEDIUM()
  * @method static static URGENT()
  * @method static static VERY_URGENT()
  */
-enum TicketPriority: string
+final class TicketPriority extends Enum
 {
-    case LOW = "LOW";
-    case MEDIUM = "MEDIUM";
-    case URGENT = "URGENT";
-    case VERY_URGENT = "VERY_URGENT";
+    const LOW         = 'LOW';
+    const MEDIUM      = 'MEDIUM';
+    const URGENT      = 'URGENT';
+    const VERY_URGENT = 'VERY_URGENT';
 }

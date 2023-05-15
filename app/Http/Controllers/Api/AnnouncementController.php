@@ -10,158 +10,155 @@ use App\Repositories\AnnouncementRepository;
 use App\Transformers\AnnouncementTransformer;
 use App\Utilities\ImageUploader;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Http;
 
 class AnnouncementController extends Controller
 {
     /**
+     * @var AnnouncementRepository
+     */
+    private $announcementRepository;
+
+    /**
      * AnnouncementController constructor.
-     *
      * @param AnnouncementRepository $announcementRepository
      */
-    public function __construct( public AnnouncementRepository $announcementRepository )
+    public function __construct(AnnouncementRepository $announcementRepository)
     {
+        $this->announcementRepository = $announcementRepository;
     }
 
 
     /**
      * Display a listing of the resource.
      *
-     * @param int $id
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index( int $id ): JsonResponse
+    public function index(int $id)
     {
         $announcements = $this->announcementRepository
             ->scopeQuery( function ( $query ) {
-                return $query->orderBy( 'created_at', 'desc' );
-            } )
-            ->getForCompany( $id );
+                return $query->orderBy('created_at', 'desc');
+            })
+            ->getForCompany($id);
 
-        $announcements = fractal( $announcements, new AnnouncementTransformer() )
-            ->withResourceName( 'announcements' )
-            ->toArray();
+        $announcements = fractal($announcements, new AnnouncementTransformer())
+        ->withResourceName('announcements')
+        ->toArray();
 
-        return response()->json( [ 'announcements' => $announcements ], ResponseAlias::HTTP_OK );
+        return response()->json(['announcements' => $announcements], Response::HTTP_OK);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function create(): JsonResponse
+    public function create()
     {
-        return response()->json();
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @throws \Prettus\Validator\Exceptions\ValidatorException|\Illuminate\Validation\ValidationException
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store( Request $request ): JsonResponse
+    public function store(Request $request)
     {
-        $this->validate( $request, [
-            'photo'   => 'image',
-            'title'   => 'required',
-            'content' => 'required',
-        ] );
+        $this->validate($request, [
+            'photo' => 'image',
+            'title' => 'required',
+            'content' => 'required'
+        ]);
 
-        $content = strip_tags( $request->get( 'content' ) );
+        $content = strip_tags($request->get('content'));
 
-        $announcement = $this->announcementRepository->create( array_merge( $request->except( 'photo', 'content' ), [ 'content' => $content ] ) );
+        $announcement = $this->announcementRepository->create(array_merge($request->except('photo', 'content'), ['content' => $content]));
 
-        if ( $request->hasFile( 'photo' ) ) {
-            $filename = ImageUploader::upload( $request->file( 'photo' ) );
-            $this->dispatch( new ProcessImageUpload( $filename, 'announcements' ) );
-            $this->announcementRepository->update( [ 'photo' => $filename ], $announcement->id );
+        if ($request->hasFile('photo')) {
+            $filename = ImageUploader::upload($request->file('photo'));
+            $this->dispatch(new ProcessImageUpload($filename, 'announcements'));
+            $this->announcementRepository->update(['photo' => $filename], $announcement->id);
         }
 
-        event( new SendAnnouncementToCollector( $announcement ) );
+        event(new SendAnnouncementToCollector($announcement));
 
-        $announcement = fractal( $announcement->fresh(), new AnnouncementTransformer() )
-            ->withResourceName( 'announcements' )
-            ->toArray();
+        $announcement = fractal($announcement->fresh(), new AnnouncementTransformer())
+        ->withResourceName('announcements')
+        ->toArray();
 
-        return response()->json( [ 'announcement' => $announcement ], ResponseAlias::HTTP_CREATED );
+        return response()->json(['announcement' => $announcement], Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show( int $id ): JsonResponse
+    public function show(int $id)
     {
         try {
-            $announcement = $this->announcementRepository->find( $id );
-            $announcement = fractal( $announcement, new AnnouncementTransformer() )
-                ->withResourceName( 'announcements' )
+            $announcement = $this->announcementRepository->find($id);
+            $announcement = fractal($announcement, new AnnouncementTransformer())
+                ->withResourceName('announcements')
                 ->toArray();
 
-            return response()->json( [ 'announcement' => $announcement ], ResponseAlias::HTTP_CREATED );
-        } catch ( ModelNotFoundException $exception ) {
-            return response()->json( [ 'message' => 'No announcement was found with id: ' . $id ], ResponseAlias::HTTP_NOT_FOUND );
+            return response()->json(['announcement' => $announcement], Response::HTTP_CREATED);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json( [ 'message' => 'No announcement was found with id: ' . $id ], Response::HTTP_NOT_FOUND );
         }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Announcement $announcement
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @param  \App\Models\Announcement  $announcement
+     * @return \Illuminate\Http\Response
      */
-    public function edit( Announcement $announcement ): JsonResponse
+    public function edit(Announcement $announcement)
     {
-        return response()->json();
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     *
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function update( Request $request, int $id ): JsonResponse
+    public function update(Request $request, int $id)
     {
         $announcement = $this->announcementRepository->update( $request->except( [ 'photo' ] ), $id );
         $announcement = fractal( $announcement, new AnnouncementTransformer() )
             ->withResourceName( 'announcements' )
             ->toArray();
 
-        return response()->json( [ 'announcement' => $announcement ], ResponseAlias::HTTP_OK );
+        return response()->json( [ 'announcement' => $announcement ], Response::HTTP_OK );
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     *
+     * @param  \App\Models\Announcement  $announcement
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy( int $id ): JsonResponse
+    public function destroy(int $id)
     {
         try {
             $this->announcementRepository->delete( $id );
-            return response()->json( [], ResponseAlias::HTTP_NO_CONTENT );
+            return response()->json( [], Response::HTTP_NO_CONTENT );
         } catch ( ModelNotFoundException $exception ) {
             return response()->json(
-                [ 'message' => 'No announcement was found with: ' . $id ], ResponseAlias::HTTP_NOT_FOUND );
+                [ 'message' => 'No announcement was found with: ' . $id ], Response::HTTP_NOT_FOUND );
         }
     }
 }

@@ -10,7 +10,8 @@ class ImageUploader
 {
     public static function upload( UploadedFile $file ): string
     {
-        $filename = $file->hashName();
+        $generated_name = static::generateName();
+        $filename       = "{$generated_name}.{$file->extension()}";
         $file->move( storage_path( 'uploads' ), $filename );
 
         return $filename;
@@ -27,10 +28,5 @@ class ImageUploader
     private static function generateName(): string
     {
         return time();
-    }
-
-    public static function getFileURI( string $filename, string $folder ): string
-    {
-        return env( 'DO_URL' ) . "/$folder/$filename";
     }
 }

@@ -9,15 +9,15 @@ use Prettus\Repository\Eloquent\BaseRepository;
 class AnnouncementRepository extends BaseRepository
 {
 
-    public function model(): string
+    public function model()
     {
         return 'App\Models\Announcement';
     }
 
-    public function getForCompany( int $company_id )
+    public function getForCompany(int $company_id)
     {
         return $this->findWhere(
-            [ 'company_id' => $company_id ]
+            ['company_id' => $company_id]
         );
     }
 }

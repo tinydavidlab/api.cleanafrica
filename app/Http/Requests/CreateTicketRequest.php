@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Pearl\RequestValidate\RequestAbstract;
 
-use Anik\Form\FormRequest;
-
-class CreateTicketRequest extends FormRequest
+class CreateTicketRequest extends RequestAbstract
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +26,11 @@ class CreateTicketRequest extends FormRequest
         return [
             'category_id' => 'required|exists:categories,id',
             'customer_id' => 'required|exists:customers,id',
-            'agent_id'    => 'nullable|exists:agents,id',
-            'subject'     => 'required',
-            'content'     => 'required',
-            'photo'       => 'required|image',
-            'priority'    => 'required',
+            'agent_id' => 'nullable|exists:agents,id',
+            'subject' => 'required',
+            'content' => 'required',
+            'photo' => 'required|image',
+            'priority' => 'required',
         ];
     }
 

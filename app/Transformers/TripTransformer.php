@@ -3,7 +3,6 @@
 namespace App\Transformers;
 
 use App\Models\Trip;
-use App\Utilities\ImageUploader;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
@@ -23,16 +22,14 @@ class TripTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected array $availableIncludes
-        = [
-            'company', 'truck', 'collector', 'customer',
-        ];
+    protected array $availableIncludes = [
+        'company', 'truck', 'collector', 'customer'
+    ];
 
     /**
      * A Fractal transformer.
      *
      * @param Trip $trip
-     *
      * @return array
      */
     public function transform( Trip $trip ): array
@@ -41,6 +38,7 @@ class TripTransformer extends TransformerAbstract
             'id'                              => $trip->getAttribute( 'id' ),
             'company_id'                      => $trip->getAttribute( 'company_id' ),
             'truck_id'                        => $trip->getAttribute( 'truck_id' ),
+            'truck_name'                      => $this->getTruckName($trip),
             'order'                           => $trip->getAttribute( 'order' ),
             'customer_name'                   => $trip->getAttribute( 'customer_name' ),
             'customer_primary_phone_number'   => $trip->getAttribute( 'customer_primary_phone_number' ),
@@ -77,20 +75,18 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param string|null $image
-     * @param string      $folder
-     *
+     * @param string $folder
      * @return string|null
      */
     private function getImageUrl( ?string $image, string $folder ): ?string
     {
         if ( $image == null ) return null;
 
-        return ImageUploader::getFileURI( $image, $folder );
+        return Storage::disk( 's3' )->url( $folder . '/' . $image );
     }
 
     /**
      * @param Trip $trip
-     *
      * @return Item|null
      */
     public function includeCompany( Trip $trip ): ?Item
@@ -101,7 +97,6 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param Trip $trip
-     *
      * @return Item|null
      */
     public function includeTruck( Trip $trip ): ?Item
@@ -113,7 +108,6 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param Trip $trip
-     *
      * @return Item|null
      */
     public function includeCustomer( Trip $trip ): ?Item
@@ -125,7 +119,6 @@ class TripTransformer extends TransformerAbstract
 
     /**
      * @param Trip $trip
-     *
      * @return Item|null
      */
     public function includeCollector( Trip $trip ): ?Item
@@ -133,5 +126,12 @@ class TripTransformer extends TransformerAbstract
         if ( !$trip->collector ) return null;
 
         return $this->item( $trip->collector, new AgentTransformer(), 'collectors' );
+    }
+
+    private function getTruckName(Trip $trip)
+    {
+        if (!$trip->truck) return null;
+
+        return $trip->truck->name . "|" . $trip->truck->license_number;
     }
 }

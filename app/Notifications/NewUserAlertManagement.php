@@ -84,6 +84,7 @@ class NewUserAlertManagement extends Notification
             'type' => 'customer',
             'data' => [
                 'customer' => fractal($this->customer, new CustomerTransformer())->withResourceName('customers')->toArray()
+
             ]
         ] )->priority( FcmMessage::PRIORITY_HIGH );
 

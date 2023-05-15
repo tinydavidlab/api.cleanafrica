@@ -15,20 +15,21 @@ class CreateAnnouncementsTable extends Migration
      */
     public function up()
     {
-
-        Schema::create( 'announcements', function ( Blueprint $table ) {
-            $table->uuid( 'id' )->primary();
-            $table->unsignedBigInteger( 'company_id' );
+        if ( app()->environment() == 'production' )
+            DB::statement( 'SET SESSION sql_require_primary_key=0' );
+        Schema::create('announcements', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->string( 'type' );
             $table->morphs( 'announceable' );
             $table->string( 'title' );
             $table->text( 'content' );
             $table->string( 'photo' )->nullable();
-            $table->enum( 'priority', [ 'LOW', 'MEDIUM', 'URGENT', 'VERY_URGENT' ] )->default( TicketPriority::LOW->value );
+            $table->enum( 'priority', TicketPriority::getValues() )->default( TicketPriority::LOW() );
             $table->timestamps();
 
-        } );
-
+        });
+        if ( app()->environment() == 'production' )
+            DB::statement( 'SET SESSION sql_require_primary_key=1' );
     }
 
     /**
@@ -38,6 +39,6 @@ class CreateAnnouncementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists( 'announcements' );
+        Schema::dropIfExists('announcements');
     }
 }

@@ -44,7 +44,6 @@ class Trip extends Model
         'property_image',
         'company_id',
         'truck_id',
-        'notes',
         'delivery_status',
         'bin_liner_quantity',
 

@@ -3,7 +3,6 @@
 namespace App\Transformers;
 
 use App\Models\Company;
-use App\Utilities\ImageUploader;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
@@ -15,38 +14,35 @@ class CompanyTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected array $defaultIncludes
-        = [
-            //
-        ];
+    protected array $defaultIncludes = [
+        //
+    ];
 
     /**
      * List of resources possible to include
      *
      * @var array
      */
-    protected array $availableIncludes
-        = [
-            'customers', 'trips',
-        ];
+    protected array $availableIncludes = [
+        'customers', 'trips'
+    ];
 
     /**
      * A Fractal transformer.
      *
      * @param Company $company
-     *
      * @return array
      */
     public function transform( Company $company ): array
     {
         return [
-            'id'           => $company->getAttribute( 'id' ),
-            'name'         => $company->getAttribute( 'name' ),
-            'logo'         => $this->getImageUrl( $company ),
-            'tagline'      => $company->getAttribute( 'tagline' ),
-            'email'        => $company->getAttribute( 'email' ),
+            'id' => $company->getAttribute( 'id' ),
+            'name' => $company->getAttribute( 'name' ),
+            'logo' => $this->getImageUrl( $company ),
+            'tagline' => $company->getAttribute( 'tagline' ),
+            'email' => $company->getAttribute( 'email' ),
             'phone_number' => $company->getAttribute( 'phone_number' ),
-            'website'      => $company->getAttribute( 'website' ),
+            'website' => $company->getAttribute( 'website' ),
             'is_activated' => $company->getIsActivatedAttribute(),
             'activated_at' => $company->getAttribute( 'activated_at' ),
         ];
@@ -57,8 +53,7 @@ class CompanyTransformer extends TransformerAbstract
         if ( $company->getAttribute( 'logo' ) == null ) {
             return null;
         }
-
-        return ImageUploader::getFileURI( $company->getAttribute( 'logo' ), 'companies' );
+        return Storage::disk( 's3' )->url( 'companies/' . $company->getAttribute( 'logo' ) );
     }
 
     public function includeCustomers( Company $company ): Collection
