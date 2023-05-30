@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Repositories\AdminRepository;
 use App\Repositories\AgentRepository;
 use App\Repositories\CustomerRepository;
+use App\Repositories\TripRepository;
 use App\Transformers\AdminTransformer;
 use App\Transformers\AgentTransformer;
 use App\Transformers\CustomerTransformer;
@@ -42,6 +43,8 @@ class AuthController extends Controller
      */
     private $agentRepository;
 
+    private $tripRepository;
+
 
     /**
      * AuthController constructor.
@@ -49,11 +52,12 @@ class AuthController extends Controller
      * @param AdminRepository $adminRepository
      * @param AgentRepository $agentRepository
      */
-    public function __construct(CustomerRepository $customerRepository, AdminRepository $adminRepository, AgentRepository $agentRepository)
+    public function __construct(CustomerRepository $customerRepository, AdminRepository $adminRepository, AgentRepository $agentRepository, TripRepository $tripRepository)
     {
         $this->customerRepository = $customerRepository;
         $this->adminRepository = $adminRepository;
         $this->agentRepository = $agentRepository;
+        $this->tripRepository = $tripRepository;
     }
 
     /**
@@ -96,8 +100,6 @@ class AuthController extends Controller
         [$headb64, $bodyb64, $cryptob64] = explode('.', $jwt);
         $body = JWT::jsonDecode(JWT::urlsafeB64Decode($bodyb64));
         if (!$id = data_get($body, 'sub')) return null;
-
-        Log::alert("TYPE: " . $type);
 
         if ($type == 'customer') {
             return Customer::find($id);
@@ -223,6 +225,23 @@ class AuthController extends Controller
 
         $user = $this->createUserWithType($request->all(), $type);
 
+        // automatically create a trip when a user signs up
+        if ($type == 'customer') {
+            $this->tripRepository->create([
+                        'company_id' => $request->get('company_id'),
+                        'customer_id' => $user->id,
+                        'customer_name' => $user->name,
+                        'customer_primary_phone_number' => $user->phone_number,
+                        'customer_country' => $user->country,
+                        'customer_division' => $user->division,
+                        'customer_subdivision' => $user->subdivision,
+                        'customer_snoocode' => $user->country,
+                        'customer_latitude' => $user->latitude,
+                        'customer_longitude' => $user->longitude,
+                        'customer_apartment_number' => $user->apartment_number,
+                    ]);
+        }
+
         $credentials = [
             'grant_type' => $request->get('grant_type', 'password'),
             'username' => $request->get('phone_number'),
@@ -250,8 +269,7 @@ class AuthController extends Controller
             return $this->customerRepository->create(
                 array_merge(
                     $data,
-                    ['password' => Hash::make($data['phone_number']),
-                        'snoocode' => Arr::get($data, 'code')]
+                    ['password' => Hash::make($data['phone_number'])]
                 )
             );
         }
@@ -294,8 +312,14 @@ class AuthController extends Controller
 
         $user = $this->getUserForGrantType($type, $auth_token);
 
-        if ($requestFromApp->has('device_token') && $type == "collector") {
-            $this->agentRepository->update(['device_token' => $requestFromApp->get('device_token')], $user->id);
+        if ($requestFromApp->has('device_token')) {
+            if ($type == "collector") {
+                $this->agentRepository->update(['device_token' => $requestFromApp->get('device_token')], $user->id);
+            }
+
+            if ($type == "customer") {
+                $this->customerRepository->update(['device_token' => $requestFromApp->get('device_token')], $user->id);
+            }
         }
 
         return response()->json([
